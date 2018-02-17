@@ -1,0 +1,71 @@
+Microcontrolador
+
+- Rebre dades de l'ordinador
+  . Peticio del ordinador
+  . Peticio a partir del pulsador Get_info (Un cop finestra 2 seg)
+
+  . Desar Correcte:
+	- Tipus senyal
+	- Valor pic a pic
+	- offset
+  . Un cop les dades s'han rebut:
+	- 1Hz LEDs amb HeartBeat
+	- Part inferior 7Seg encesa
+
+  . En cas de cap valor, sin(x), cap offset i 5Vpp
+	- 10Hz LEDs amb HeartBeat
+	- 7Seg?
+
+- Enviar dades RF
+  . Peticio del ordinador
+  . Peticio a partir del pulsador Send_info
+  
+  . Enviar Dades:
+	- Capçalera num grup
+	- Codificacio Manchester
+  	- Mentres s'envien les dades:
+		. 7 Seg 0 = 0%, 1 = 10%, .. F = 100% a partir num Bits
+		. LEDs HeartBeat Per cada % (Opcional)
+		. Avisar al ordinador de cada percentatge, per el JProgressBar
+
+  . Si no hi ha cap info desada:
+	- Barra mig 7Seg
+	- 50% intensitat LEDs
+
+- Esborrar Dades
+  . Dues vegades Get_Info en finestra 2 seg.
+  . Esborrar dades microcontrolador 
+  . Apagar LEDs
+  . Apagar 7Seg.
+
+- Opcionals Placa:
+  . LED ences si el microcontrolador esta conectat al ordinador
+
+
+Interficie Java
+
+Ja esta implementat quasi tot, falta:
+
+- Escolta Activa del Micro
+  . Thread que estigui a l'espera d'instruccions per executar del micro
+
+- Indicador si micro esta conectat
+- JProgressBar per el estat d'enviament tant serie com RF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

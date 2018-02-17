@@ -84,6 +84,7 @@ public class FunctionDisplayPanel extends JPanel {
     public void sinus(double pap, double off) {
         for(int i = 0; i < NUM_MOSTRES; i++){
             mostres[i] = (int)(((pap/5.0)*150 * Math.sin(i * 2*Math.PI/150) + (pap/5.0)*150)  + (off/5 * 300));
+            System.out.print(mostres[i]+"\n");
         }
         this.repaint();
     }
