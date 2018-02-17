@@ -10,6 +10,10 @@
 #define ESTAT_BLINKING_DOWN 0x07
 #define ESTAT_MIG_INTENSITAT 0x09
 
+#define FLAG_ENVIAR_SEG_BATCH 0x05
+#define FLAG_ENVIAR_RF_MSG 0x04
+#define FLAG_DESAR_MSG 0x03
+
 //Variables
 char ESTAT = 0, ESTATP = 0x00, tempsUn = 0x00, tempsLED = 0x00;
 char tempsMAX = 0x00, tempsCANVI = 0x00, quinLED = 0;
@@ -75,10 +79,6 @@ void main(){
 		}
 	}
 
-}
-
-void enviarConfirmacioDesar(){
-	FLAG_DESAR_MSG -> TXREG
 }
 
 void blinking(){
