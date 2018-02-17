@@ -6,10 +6,13 @@
 #define ESTAT_ESPERA_POLSADOR_DOWN EQU 0x01
 #define ESTAT_ESPERA_POLSADOR_DESAR EQU 0x02
 #define ESTAT_ESPERA_POLSADOR_DEL EQU 0x02
-
+#define ESTAT_BLINKING 0x08
+#define ESTAT_BLINKING_DOWN 0x07
+#define ESTAT_MIG_INTENSITAT 0x09
 
 //Variables
-char ESTAT = 0, ESTATP = 0x00, Offset = 0x00, Vpp = 0x00, TypeS = 0x00;
+char ESTAT = 0, ESTATP = 0x00, tempsUn = 0x00, tempsLED = 0x00;
+char tempsMAX = 0x00, tempsCANVI = 0x00, quinLED = 0;
 
 
 void main(){
@@ -65,18 +68,84 @@ void main(){
 			pols_enviar_rf();
 		}
 
-		if(ESTAT == ESTAT_BLINKING_1HZ){
-			blinking_1hz();
-		}
-
 		if(ESTAT == ESTAT_MIG_INTENSITAT){
 			mig_intensitat();
+		}else{
+			blinking();
 		}
+	}
 
-		if(status == ESTAT_BLINKING_10HZ){
-			blinking_10hz();
+}
+
+void enviarConfirmacioDesar(){
+	FLAG_DESAR_MSG -> TXREG
+}
+
+void blinking(){
+
+	if(ESTAT == ESTAT_BLINKING){
+		pujada_LED();
+	}else{
+		baixada_LED();
+	}
+
+}
+
+void pujada_LED(){
+	if(tempsLED < aux){
+		if(!quinLED){
+			LATC.BIT0 = 1;
+		}else{
+			LATC.BIT1 = 1;
 		}
+	}else{
+		if(!quinLED){
+			LATC.BIT0 = 1;
+		}else{
+			LATC.BIT1 = 1;
+		}
+		if(tempsLED >= tempsMAX){
+			tempsLED = 0;
+			aux++;
+			if(aux > tempsCANVI){
+				ESTAT = ESTAT_BLINKING_B1HZ;
+			}
+		}
+	}
+}
 
+void baixada_LED(){
+	if(tempsLED < aux){
+		if(!quinLED){
+			LATC.BIT0 = 1;
+		}else{
+			LATC.BIT1 = 1;
+		}
+	}else{
+		if(!quinLED){
+			LATC.BIT0 = 1;
+		}else{
+			LATC.BIT1 = 1;
+		}
+		if(tempsLED >= tempsMAX){
+			tempsLED = 0;
+			aux--;
+			if(!aux){
+				ESTAT = ESTAT_BLINKING_P1HZ;
+				toggle(quinLED.BIT0);
+			}
+		}
+	}
+}
+
+void mig_intensitat(){
+
+	if(tempsLED < 11){
+		LATC.BIT0 = 1;
+	}else if(tempsLED < 20){
+		LATC.BIT0 = 0;
+	}else{
+		tempsLED = 0;
 	}
 
 }
@@ -125,13 +194,17 @@ void desar(){
 void bucle_desar(){
 	if(PIR1.RCIF == 0){goto bucle_desar();} //Mentres no hem rebut res esperar
 	if(RCREG == END_BYTE_NDEF){ //Quan el ordinador ens envii el end byte pararem
-		ESTAT = ESTAT_BLINKING_1HZ;
+		ESTAT = ESTAT_BLINKING; //1hz
 		7SEG = PART_INFERIOR;
+		tempsMAX = 20; //0-20 la señal
+		tempsCANVI = 25 //25 cops es repetira el 0-20
 		return //Retornara al bucle principal ja que hem vingut a desar amb goto
 	}
 	if(RCREG == END_BYTE_DEF){ //Quan el ordinador ens envii el end byte pararem
-		ESTAT = ESTAT_BLINKING_10HZ;
+		ESTAT = ESTAT_BLINKING;
 		7SEG = PART_SUPERIOR;
+		tempsMAX = 0x00; //Ni idea, ja que sera molt brusc
+		tempsCANVI = 0x00; //Mismo que adalt
 		return //Retornara al bucle principal ja que hem vingut a desar amb goto
 	}
 	POSTINC0 = RCREG;
@@ -160,7 +233,7 @@ void enviaRF(){
 		char byte = 0x00;
 
 		enviarSincronitzacio();
-		
+
 		for(cops = 0; cops < 10; cops++{
 
 			byte = 0;
