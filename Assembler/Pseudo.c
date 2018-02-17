@@ -99,16 +99,18 @@ void pujada_LED(){
 			LATC.BIT1 = 1;
 		}
 	}else{
-		if(!quinLED){
-			LATC.BIT0 = 1;
-		}else{
-			LATC.BIT1 = 1;
+		if(tempsLED < tempsMAX){
+			if(!quinLED){
+				LATC.BIT0 = 0;
+			}else{
+				LATC.BIT1 = 0;
+			}
 		}
-		if(tempsLED >= tempsMAX){
+		if(tempsLED == tempsCANVI){
 			tempsLED = 0;
 			aux++;
 			if(aux > tempsCANVI){
-				ESTAT = ESTAT_BLINKING_B1HZ;
+				ESTAT = ESTAT_BLINKING_DOWN;
 			}
 		}
 	}
@@ -122,16 +124,18 @@ void baixada_LED(){
 			LATC.BIT1 = 1;
 		}
 	}else{
-		if(!quinLED){
-			LATC.BIT0 = 1;
-		}else{
-			LATC.BIT1 = 1;
+		if(tempsLED < tempsMAX){
+			if(!quinLED){
+				LATC.BIT0 = 0;
+			}else{
+				LATC.BIT1 = 0;
+			}
 		}
-		if(tempsLED >= tempsMAX){
+		if(tempsLED == tempsCANVI){
 			tempsLED = 0;
 			aux--;
 			if(!aux){
-				ESTAT = ESTAT_BLINKING_P1HZ;
+				ESTAT = ESTAT_BLINKING;
 				toggle(quinLED.BIT0);
 			}
 		}
