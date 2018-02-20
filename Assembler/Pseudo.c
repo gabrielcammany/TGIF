@@ -16,7 +16,7 @@
 
 //Variables
 char ESTAT = 0, ESTATP = 0x00, tempsUn = 0x00, tempsLED = 0x00;
-char tempsMAX = 0x00, tempsCANVI = 0x00, quinLED = 0;
+char tempsMAX = 0x00, quinLED = 0, signal = 0x00;
 
 
 void main(){
@@ -33,11 +33,15 @@ void main(){
 				espera_pulsador();
 				tempsUn = 0;
 				ESTATP++;
+				FLAG_ENVIAR_LED_ON -> TXREG;
 			}
 
 		}else if(ESTATP == ESTAT_ESPERA_POLSADOR_DOWN){
 
 			if(!LATC.POLS_CARREGA){
+
+				FLAG_ENVIAR_LED_OFF -> TXREG;
+
 				if(tempsUn <= 2000){
 					ESTATP++;
 				}else{
@@ -49,6 +53,9 @@ void main(){
 
 			if(tempsUn <= 2000){
 				if(LATC.POLS_CARREGA){ //Get Info
+
+					FLAG_ENVIAR_LED_ON -> TXREG;
+
 					espera_pulsador();
 					ESTATP++;
 				}
@@ -59,6 +66,9 @@ void main(){
 		}else if(ESTATP == ESTAT_ESPERA_POLSADOR_DEL){
 
 			if(!LATC.POLS_CARREGA){
+
+				FLAG_ENVIAR_LED_OFF -> TXREG;
+
 				if(tempsUn <= 2000){
 					peticio_del_info();
 				}else{
@@ -77,6 +87,22 @@ void main(){
 		}else{
 			blinking();
 		}
+
+		if(LATC.BIT2 == 1){
+
+			if(signal == 0){
+
+				FLAG_ENVIAR_LED_CON -> TXREG;
+				signal = 1;
+
+			}
+
+		}else{
+
+			signal = 0;
+
+		}
+
 	}
 
 }
@@ -85,8 +111,21 @@ void blinking(){
 
 	if(ESTAT == ESTAT_BLINKING){
 		pujada_LED();
-	}else{
+	}else if(ESTAT = ESTAT_BLINKING_ESPERA){
+		espera_cent();
+	}else if(ESTAT = ESTAT_BLINKING_DOWN){
 		baixada_LED();
+	}
+
+}
+
+void espera_cent(){
+
+	if(tempsLED == 100){
+
+		ESTAT = ESTAT_BLINKING_DOWN;
+		tempsLED = 0;
+
 	}
 
 }
@@ -99,19 +138,26 @@ void pujada_LED(){
 			LATC.BIT1 = 1;
 		}
 	}else{
+
 		if(tempsLED < tempsMAX){
+
 			if(!quinLED){
 				LATC.BIT0 = 0;
 			}else{
 				LATC.BIT1 = 0;
 			}
-		}
-		if(tempsLED == tempsCANVI){
-			tempsLED = 0;
-			aux++;
-			if(aux > tempsCANVI){
-				ESTAT = ESTAT_BLINKING_DOWN;
-			}
+
+		}else{
+
+				tempsLED = 0;
+				aux++;
+
+				if(aux == tempsMAX){
+
+					ESTAT = ESTAT_BLINKING_ESPERA;
+
+				}
+
 		}
 	}
 }
@@ -130,13 +176,16 @@ void baixada_LED(){
 			}else{
 				LATC.BIT1 = 0;
 			}
-		}
-		if(tempsLED == tempsCANVI){
+		}else{
+
 			tempsLED = 0;
 			aux--;
+
 			if(!aux){
+
 				ESTAT = ESTAT_BLINKING;
 				toggle(quinLED.BIT0);
+
 			}
 		}
 	}
@@ -197,20 +246,21 @@ void desar(){
 
 void bucle_desar(){
 	if(PIR1.RCIF == 0){goto bucle_desar();} //Mentres no hem rebut res esperar
+
 	if(RCREG == END_BYTE_NDEF){ //Quan el ordinador ens envii el end byte pararem
 		ESTAT = ESTAT_BLINKING; //1hz
 		7SEG = PART_INFERIOR;
 		tempsMAX = 20; //0-20 la señal
-		tempsCANVI = 25 //25 cops es repetira el 0-20
 		return //Retornara al bucle principal ja que hem vingut a desar amb goto
 	}
+
 	if(RCREG == END_BYTE_DEF){ //Quan el ordinador ens envii el end byte pararem
 		ESTAT = ESTAT_BLINKING;
 		7SEG = PART_SUPERIOR;
 		tempsMAX = 0x00; //Ni idea, ja que sera molt brusc
-		tempsCANVI = 0x00; //Mismo que adalt
 		return //Retornara al bucle principal ja que hem vingut a desar amb goto
 	}
+
 	POSTINC0 = RCREG;
 	comptaBytes++;
 	goto bucle_desar();
