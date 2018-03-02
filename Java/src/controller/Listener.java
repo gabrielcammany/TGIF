@@ -1,5 +1,6 @@
 package controller;
 
+import com.SerialPort.SerialPort;
 import view.FunctionDisplayPanel;
 import view.MainView;
 import view.OptionsPanel;
@@ -13,12 +14,18 @@ public class Listener extends MouseAdapter implements ActionListener {
     private FunctionDisplayPanel display;
     private int last = -1;
 
-    public Listener(MainView view) {
+    private SerialPort sp;
+
+    public Listener(MainView view, SerialPort sp) {
         this.view = view;
         this.op = view.getOp();
         this.display = view.getJpTop().getDisplay();
 
+        this.sp = sp;
+
         refreshFunction();
+
+        view.setPortsAndBDs(sp.getPortList(), sp.getAvailableBaudRates());
     }
 
     @Override

@@ -1,7 +1,6 @@
 package view;
 
 import controller.Listener;
-import com.SerialPort.SerialPort;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,8 +18,9 @@ public class SendPanel extends JPanel {
     private JButton jbSend = new JButton("Carrega funció");
     private JButton jbRF = new JButton("Enviar RF");
 
-
     public SendPanel() {
+
+
         this.setLayout(new GridLayout(2, 1, 10, 0));
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
 
@@ -29,6 +29,8 @@ public class SendPanel extends JPanel {
 
         //JPanel botons comunicació PIC
         this.createButtonsPanel();
+
+
 
     }
 
@@ -47,16 +49,6 @@ public class SendPanel extends JPanel {
 
 
         GridBagConstraints gbc = new GridBagConstraints();
-
-        //Obtenim les dades de configuració del serial port UART
-        SerialPort sp = null;
-        try {
-            sp = new SerialPort();
-            setBaudRateList(sp.getAvailableBaudRates());
-            setPortsList(sp.getPortList());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         jcbComboBaud.setPreferredSize(new Dimension(175, 30));
         jcbComboPort.setPreferredSize(new Dimension(175, 30));
@@ -86,6 +78,12 @@ public class SendPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 0;
         jpButtons.add(jbRF, gbc);
+    }
+
+    public void setPortsAndBDs(String[] ports, int[] bds){
+
+        setPortsList(ports);
+        setBaudRateList(bds);
     }
 
     private void setPortsList(String [] lPorts){

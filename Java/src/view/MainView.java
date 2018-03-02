@@ -1,5 +1,6 @@
 package view;
 
+import com.SerialPort.SerialPort;
 import controller.Listener;
 import javax.swing.*;
 import java.awt.*;
@@ -59,6 +60,10 @@ public class MainView extends JFrame {
 
     public FunctionPanel getJpTop() {
         return jpTop;
+    }
+
+    public void setPortsAndBDs(String[] ports, int[] bds){
+        sp.setPortsAndBDs(ports, bds);
     }
 
     public void addListeners(Listener l) {
