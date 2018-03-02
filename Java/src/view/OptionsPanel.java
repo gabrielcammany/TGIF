@@ -12,11 +12,11 @@ public class OptionsPanel extends JPanel {
     private JComboBox JCBtipus;
 
     public OptionsPanel() {
-        this.setLayout(new BorderLayout(10, 10));
-        JPanel optionList = new JPanel(new GridLayout(3, 2, 10, 10));
+        this.setLayout(new BorderLayout(10, 20));
+        JPanel optionList = new JPanel(new GridLayout(4, 2, 10, 20));
         this.add(optionList, BorderLayout.NORTH);
 
-        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
 
         optionList.add(new JLabel("Tipus: "));
 

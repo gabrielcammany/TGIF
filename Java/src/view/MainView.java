@@ -9,6 +9,7 @@ public class MainView extends JFrame {
 
 
     private JPanel jpBottom;
+    private JLabel jStatus;
     private FunctionPanel jpTop;
     private OptionsPanel op = new OptionsPanel();
     private SendPanel sp = new SendPanel();
@@ -48,6 +49,21 @@ public class MainView extends JFrame {
         jpBottom.add(op, BorderLayout.WEST);
         sp = new SendPanel();
         jpBottom.add(sp, BorderLayout.CENTER);
+        //Definim el color per defecte del label per indicar el status del usb
+        jStatus = new JLabel(" ");
+        setRedStatus();
+        jpBottom.add(jStatus, BorderLayout.SOUTH);
+    }
+    public void  setGreenStatus(){
+        this.jStatus.setBackground(new Color(0,150,0));
+        this.jStatus.setOpaque(true);
+        repaint();
+    }
+
+    public void  setRedStatus(){
+        this.jStatus.setBackground(new Color(150,0,0));
+        this.jStatus.setOpaque(true);
+        repaint();
     }
 
     public void makeWindowVisible() {
