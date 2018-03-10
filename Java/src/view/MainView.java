@@ -49,6 +49,7 @@ public class MainView extends JFrame {
         jpBottom.add(op, BorderLayout.WEST);
         sp = new SendPanel();
         jpBottom.add(sp, BorderLayout.CENTER);
+
         //Definim el color per defecte del label per indicar el status del usb
         jStatus = new JLabel(" ");
         setRedStatus();

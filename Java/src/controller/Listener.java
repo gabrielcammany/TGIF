@@ -6,6 +6,7 @@ import view.MainView;
 import view.OptionsPanel;
 import javax.swing.*;
 import java.awt.event.*;
+import java.util.Arrays;
 
 public class Listener extends MouseAdapter implements ActionListener {
 
@@ -43,16 +44,18 @@ public class Listener extends MouseAdapter implements ActionListener {
         }
 
         if(e.getActionCommand().equals("JB_SEND")){
-
-            //TODO ENVIAR DE PC A MICRO
-            view.showMessage("Configura'm!", "Implementa aquesta funció a:\nController.Listener -> ActionPerfomed", null);
+            System.out.println("value of L --> "+Arrays.toString(view.getJpTop().getDisplay().getFullMostresScaled()));
+            System.out.println("value of L2 --> "+ Arrays.toString(Arrays.copyOf(view.getJpTop().getDisplay().getFullMostresScaled(),150)));
+            //view.showMessage("Configura'm!", "Implementa aquesta funció a:\nController.Listener -> ActionPerfomed", null);
 
         }
 
         if(e.getActionCommand().equals("JB_RF")){
-
+            //JCBtipus.getSelectedItem()
+            System.out.println("value of R1 --> "+view.getOp().getType());
+            System.out.println("value of R2 --> "+Arrays.toString(view.getJpTop().getDisplay().getDisplayValue(view)));
             //TODO INFORMAR PLACA QUE ENVII A ESTACIO REMOTA
-            view.showMessage("Configura'm!", "Implementa l'enviament de RF a:\nController.Listener -> ActionPerfomed", null);
+            //view.showMessage("Configura'm!", "Implementa l'enviament de RF a:\nController.Listener -> ActionPerfomed", null);
 
         }
     }

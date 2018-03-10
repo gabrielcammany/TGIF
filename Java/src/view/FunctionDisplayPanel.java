@@ -2,12 +2,19 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
+
+import static java.lang.Math.floor;
 
 
 public class FunctionDisplayPanel extends JPanel {
 
+    //DEFAULT --> private static final int NUM_MOSTRES = 300;
     private static final int NUM_MOSTRES = 300;
     private int[] mostres = new int[NUM_MOSTRES];
+
+
+
     private final Stroke large;
 
     public FunctionDisplayPanel() {
@@ -100,5 +107,40 @@ public class FunctionDisplayPanel extends JPanel {
             mostres[i] = 0;
         }
         this.repaint();
+    }
+
+    public int[] getFullMostresScaled() {
+        int []mostres_scaled = new int[NUM_MOSTRES];
+        int i = 0;
+
+        for(int value:mostres)
+            mostres_scaled[i++]=(int)floor(256 * value / (300+ 1));
+
+        return mostres_scaled;
+    }
+    public int[] getPartMostresScaled() {
+        int []mostres_scaled = new int[150];
+        int i = 0;
+
+        for(int value:Arrays.copyOf(mostres,150))
+            mostres_scaled[i++]=(int)floor(256 * value / (300+ 1));
+
+        return mostres_scaled;
+    }
+    public int[] getFullMostres() {
+        return mostres;
+    }
+    public int[] getPartMostres() {
+        return Arrays.copyOf(mostres,150);
+    }
+
+    public int[] getDisplayValue(MainView view) {
+        switch (view.getOp().getType().toLowerCase()){
+            case "sinusoïdal": case "tren de polsos": case"triangular": case"dent de serra":
+                return getPartMostresScaled();
+            case "aleatori": case"custom":
+                return getFullMostresScaled();
+        }
+        return null;
     }
 }
