@@ -2,6 +2,8 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.Arrays;
 
 import static java.lang.Math.floor;
@@ -12,6 +14,7 @@ public class FunctionDisplayPanel extends JPanel {
     //DEFAULT --> private static final int NUM_MOSTRES = 300;
     private static final int NUM_MOSTRES = 300;
     private int[] mostres = new int[NUM_MOSTRES];
+    private byte[] BMostres;
 
 
 
@@ -142,5 +145,14 @@ public class FunctionDisplayPanel extends JPanel {
                 return getFullMostresScaled();
         }
         return null;
+    }
+
+    public byte[] tobyte(int[]data){
+        ByteBuffer byteBuffer = ByteBuffer.allocate(data.length * 4);
+        IntBuffer intBuffer = byteBuffer.asIntBuffer();
+        intBuffer.put(data);
+        BMostres = byteBuffer.array();
+        return BMostres;
+
     }
 }

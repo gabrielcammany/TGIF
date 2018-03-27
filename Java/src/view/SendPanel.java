@@ -12,6 +12,8 @@ public class SendPanel extends JPanel {
 
     private JLabel jlBaudrate = new JLabel("Baudrate: ");
     private JLabel jlport = new JLabel("Port: ");
+
+
     private JComboBox<Integer> jcbComboBaud = new JComboBox<>();
     private JComboBox<String> jcbComboPort = new JComboBox<>();
 
@@ -19,7 +21,6 @@ public class SendPanel extends JPanel {
     private JButton jbRF = new JButton("Enviar RF");
 
     public SendPanel() {
-
 
         this.setLayout(new GridLayout(2, 1, 10, 0));
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
@@ -98,6 +99,15 @@ public class SendPanel extends JPanel {
         for(int item : lBaudRates){
             jcbComboBaud.addItem(item);
         }
+    }
+
+    public Integer getSelectedBaud() {
+        return (Integer) jcbComboBaud.getSelectedItem();
+    }
+
+
+    public String getSelectedPort() {
+        return (String) jcbComboPort.getSelectedItem();
     }
 
 }

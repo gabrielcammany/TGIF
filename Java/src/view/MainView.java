@@ -3,6 +3,7 @@ package view;
 import com.SerialPort.SerialPort;
 import controller.Listener;
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 
 public class MainView extends JFrame {
@@ -13,6 +14,7 @@ public class MainView extends JFrame {
     private FunctionPanel jpTop;
     private OptionsPanel op = new OptionsPanel();
     private SendPanel sp = new SendPanel();
+    private JProgressBar jProgressBar;
 
     public MainView() {
 
@@ -53,7 +55,9 @@ public class MainView extends JFrame {
         //Definim el color per defecte del label per indicar el status del usb
         jStatus = new JLabel(" ");
         setRedStatus();
-        jpBottom.add(jStatus, BorderLayout.SOUTH);
+        jpBottom.add(jStatus, BorderLayout.AFTER_LAST_LINE);
+
+
     }
     public void  setGreenStatus(){
         this.jStatus.setBackground(new Color(0,150,0));
@@ -73,6 +77,10 @@ public class MainView extends JFrame {
 
     public OptionsPanel getOp() {
         return op;
+    }
+
+    public SendPanel getSp() {
+        return sp;
     }
 
     public FunctionPanel getJpTop() {
