@@ -19,6 +19,9 @@ public class SendPanel extends JPanel {
 
     private JButton jbSend = new JButton("Carrega funció");
     private JButton jbRF = new JButton("Enviar RF");
+    private JButton jbHeart = new JButton("HeartBeat");
+    private JButton jbHalf = new JButton("Mitja Intensitat");
+    private JButton jbConnect = new JButton("Connecta");
 
     public SendPanel() {
 
@@ -31,17 +34,21 @@ public class SendPanel extends JPanel {
         //JPanel botons comunicació PIC
         this.createButtonsPanel();
 
-
-
     }
 
     public void addActionListener(Listener l){
         jbSend.setActionCommand("JB_SEND");
         jbRF.setActionCommand("JB_RF");
+        jbHeart.setActionCommand("JB_HEART");
+        jbHalf.setActionCommand("JB_HALF");
+        jbConnect.setActionCommand("JB_CONNECT");
 
 
         jbSend.addActionListener(l);
         jbRF.addActionListener(l);
+        jbHeart.addActionListener(l);
+        jbHalf.addActionListener(l);
+        jbConnect.addActionListener(l);
     }
 
     private void createConfigPanel() {
@@ -66,6 +73,12 @@ public class SendPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 1;
         jpConfigure.add(jcbComboPort, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 2;
+        jpConfigure.add(new JLabel(" "), gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        jpConfigure.add(jbConnect, gbc);
     }
 
     private void createButtonsPanel() {
@@ -75,10 +88,22 @@ public class SendPanel extends JPanel {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;
+        jpButtons.add(new JLabel(" "), gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 1;
         jpButtons.add(jbSend, gbc);
         gbc.gridx = 1;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         jpButtons.add(jbRF, gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        jpButtons.add(new JLabel(" "), gbc);
+        gbc.gridx = 0;
+        gbc.gridy = 3;
+        jpButtons.add(jbHeart, gbc);
+        gbc.gridx = 1;
+        gbc.gridy = 3;
+        jpButtons.add(jbHalf, gbc);
     }
 
     public void setPortsAndBDs(String[] ports, int[] bds){

@@ -31,8 +31,10 @@ public class Main {
 
             //Vista
             MainView view = new MainView();
+
             //Controlador
             Listener l = new Listener(view, sp);
+
             //Associem vista i controlador
             view.addListeners(l);
 

@@ -1,0 +1,142 @@
+MPLINK 5.08, LINKER
+Linker Map File - Created Wed Mar 28 16:46:50 2018
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000004
+                   .org_1       code   0x000008    program   0x000004
+                   .org_2       code   0x000018    program   0x000086
+                   .cinit    romdata   0x00009e    program   0x000002
+                   .org_3       code   0x0000a0    program   0x00022e
+.config_300001_BUILD/DEFAULT/PRODUCTION/ASSEMBL    romdata   0x300001    program   0x000001
+.config_300003_BUILD/DEFAULT/PRODUCTION/ASSEMBL    romdata   0x300003    program   0x000001
+.config_300005_BUILD/DEFAULT/PRODUCTION/ASSEMBL    romdata   0x300005    program   0x000001
+.config_300006_BUILD/DEFAULT/PRODUCTION/ASSEMBL    romdata   0x300006    program   0x000001
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000003      
+                            0x000008    0x00000b      
+                            0x000018    0x0002cd      
+                            0x300001    0x300001      
+                            0x300003    0x300003      
+                            0x300005    0x300006      
+            706 out of 8472 program addresses used, program memory utilization is 8%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+              ACTIVA_LED0   0x00028e    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              ACTIVA_LEDS   0x0001de    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              BAIXADA_LED   0x000238    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                 BLINKING   0x0001fe    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+        CANVIA_ESTAT_DOWN   0x000212    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+      CANVIA_ESTAT_ESPERA   0x00021a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+          CANVIA_ESTAT_UP   0x00022c    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           COMPROVA_FINAL   0x000182    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                     DESA   0x000152    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           DESACTIVA_LED0   0x000292    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           DESACTIVA_LEDS   0x0001e4    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               DESA_BUCLE   0x000166    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+      DESA_CONTINUA_BUCLE   0x000174    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+          DESA_CPLX_FINAL   0x000190    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+     DESA_CPLX_LAST_BYTES   0x000196    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                DESA_NCON   0x000156    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                ENVIAR_RF   0x000106    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+          ENVIAR_RF_ERROR   0x00010c    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              ESPERA_16MS   0x0001d4    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+      ESPERA_BAIXAR_DESAR   0x0001c4    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+     ESPERA_BAIXAR_ENVIAR   0x0001cc    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              ESPERA_CENT   0x000258    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              FINAL_DESAR   0x000188    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                 HIGH_INT   0x00001a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+            HI_INT_VECTOR   0x000008    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               INIT_ADCON   0x000024    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               INIT_PORTS   0x000060    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                 INIT_SIO   0x00004e    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               INIT_TIMER   0x000082    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                INIT_VARS   0x000032    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                 LEDS_OFF   0x000296    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                  LEDS_ON   0x000284    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                     LOOP   0x0000be    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           LOW_INT_VECTOR   0x000018    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                     MAIN   0x0000aa    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           MIG_INTENSITAT   0x0001ea    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+          POLS_DESAR_INFO   0x00019c    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+         POLS_ENVIAR_INFO   0x0001ac    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               PUJADA_LED   0x000262    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+             REBRE_CONFIG   0x000142    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                    REBUT   0x0000e0    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              RESET_TIMER   0x000092    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+             RESET_VECTOR   0x000000    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              USART_DESAR   0x000122    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              USART_DESAT   0x00012a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+             USART_ENVIAR   0x00011a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+             USART_ESPERA   0x000132    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+        USART_ESPERA_INFO   0x00013a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+        USART_HALF_STATUS   0x0002a0    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+       USART_HEART_STATUS   0x0002ae    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+             RESET_VECTOR   0x000000    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+            HI_INT_VECTOR   0x000008    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           LOW_INT_VECTOR   0x000018    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                 HIGH_INT   0x00001a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               INIT_ADCON   0x000024    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                INIT_VARS   0x000032    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                 INIT_SIO   0x00004e    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               INIT_PORTS   0x000060    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               INIT_TIMER   0x000082    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              RESET_TIMER   0x000092    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                     MAIN   0x0000aa    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                     LOOP   0x0000be    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                    REBUT   0x0000e0    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                ENVIAR_RF   0x000106    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+          ENVIAR_RF_ERROR   0x00010c    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+             USART_ENVIAR   0x00011a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              USART_DESAR   0x000122    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              USART_DESAT   0x00012a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+             USART_ESPERA   0x000132    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+        USART_ESPERA_INFO   0x00013a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+             REBRE_CONFIG   0x000142    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                     DESA   0x000152    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                DESA_NCON   0x000156    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               DESA_BUCLE   0x000166    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+      DESA_CONTINUA_BUCLE   0x000174    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           COMPROVA_FINAL   0x000182    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              FINAL_DESAR   0x000188    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+          DESA_CPLX_FINAL   0x000190    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+     DESA_CPLX_LAST_BYTES   0x000196    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+          POLS_DESAR_INFO   0x00019c    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+         POLS_ENVIAR_INFO   0x0001ac    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+      ESPERA_BAIXAR_DESAR   0x0001c4    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+     ESPERA_BAIXAR_ENVIAR   0x0001cc    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              ESPERA_16MS   0x0001d4    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              ACTIVA_LEDS   0x0001de    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           DESACTIVA_LEDS   0x0001e4    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           MIG_INTENSITAT   0x0001ea    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                 BLINKING   0x0001fe    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+        CANVIA_ESTAT_DOWN   0x000212    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+      CANVIA_ESTAT_ESPERA   0x00021a    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+          CANVIA_ESTAT_UP   0x00022c    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              BAIXADA_LED   0x000238    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              ESPERA_CENT   0x000258    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+               PUJADA_LED   0x000262    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                  LEDS_ON   0x000284    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+              ACTIVA_LED0   0x00028e    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+           DESACTIVA_LED0   0x000292    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+                 LEDS_OFF   0x000296    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+        USART_HALF_STATUS   0x0002a0    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+       USART_HEART_STATUS   0x0002ae    program     static /home/gabriel/Projects/TGIF/Assembler/Assembler.asm
+
+

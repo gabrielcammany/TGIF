@@ -163,6 +163,7 @@ void pujada_LED(){
 }
 
 void baixada_LED(){
+	
 	if(tempsLED < aux){
 		if(!quinLED){
 			LATC.BIT0 = 1;

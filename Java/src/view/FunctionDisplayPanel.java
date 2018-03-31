@@ -112,21 +112,22 @@ public class FunctionDisplayPanel extends JPanel {
         this.repaint();
     }
 
-    public int[] getFullMostresScaled() {
-        int []mostres_scaled = new int[NUM_MOSTRES];
+    public byte[] getFullMostresScaled() {
+        byte []mostres_scaled = new byte[NUM_MOSTRES];
         int i = 0;
 
         for(int value:mostres)
-            mostres_scaled[i++]=(int)floor(256 * value / (300+ 1));
+            mostres_scaled[i++]=(byte)floor(256 * value / (300+ 1));
 
         return mostres_scaled;
     }
-    public int[] getPartMostresScaled() {
-        int []mostres_scaled = new int[150];
+
+    public byte[] getPartMostresScaled() {
+        byte []mostres_scaled = new byte[150];
         int i = 0;
 
-        for(int value:Arrays.copyOf(mostres,150))
-            mostres_scaled[i++]=(int)floor(256 * value / (300+ 1));
+        for(int value: Arrays.copyOf(mostres,150))
+            mostres_scaled[i++]=(byte)floor(256 * value / (300+ 1));
 
         return mostres_scaled;
     }
@@ -137,7 +138,7 @@ public class FunctionDisplayPanel extends JPanel {
         return Arrays.copyOf(mostres,150);
     }
 
-    public int[] getDisplayValue(MainView view) {
+    public byte[] getDisplayValue(MainView view) {
         switch (view.getOp().getType().toLowerCase()){
             case "sinusoïdal": case "tren de polsos": case"triangular": case"dent de serra":
                 return getPartMostresScaled();
