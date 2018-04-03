@@ -22,13 +22,16 @@ TEMPS_MAX EQU 0x05
  
 SIGNAL_TYPE EQU 0x06
 COMPTA_BYTES EQU 0x07
+CONNECTION EQU 0x08
+ 
+TEMPS_CONN EQU 0x09
  
  
 ;*****************
 ;*   CONSTANTS   *
 ;*****************
  
-TAULA7S EQU 0x0000A0
+TAULA7S EQU 0x0000B0
 POSICIO_A_DESAR_RAM EQU 0x80
   
 ;************
@@ -39,10 +42,13 @@ POSICIO_A_DESAR_RAM EQU 0x80
  FLAG_DESAR_NCON EQU 0x81
  FLAG_ENVIAR EQU 0x82
  FLAG_CONTINUAR EQU 0x01
- FLAG_HEART EQU 0x83
- FLAG_HALF EQU 0x84
- FLAG_PROGRESS EQU 0x85
- FLAG_ENVIAR_ERROR EQU 0x86
+ FLAG_ENVIAR_ERROR EQU 0x83
+ FLAG_HEART EQU 0x84
+ FLAG_HALF EQU 0x85
+ FLAG_PROGRESS EQU 0x86
+ FLAG_HEART_DATA EQU 0x87
+ FLAG_CONNECTION EQU 0x88
+ UNBLOCK EQU 0x89
 
 ;*********************************
 ; VECTORS DE RESET I INTERRUPCI� *
@@ -68,6 +74,7 @@ HIGH_INT
     call RESET_TIMER
     incf TEMPS_UN,1,0
     incf TEMPS_LED,1,0
+    incf TEMPS_CONN,1,0
     retfie FAST;2
 
 ;****************************
@@ -91,8 +98,7 @@ INIT_VARS
     movwf LATD,0  
     
     clrf LATC,0
-    movlw 0x02
-    movwf ESTAT,0
+    clrf ESTAT,0
     
     clrf SIGNAL_TYPE,0
     clrf TEMPS_UN,0
@@ -103,6 +109,10 @@ INIT_VARS
     clrf HEART_BEAT,0
     
     clrf TEMPS_MAX,0
+    
+    clrf TEMPS_CONN,0
+    
+    clrf CONNECTION,0
     
     movlw 0x14
     movwf TEMPS_MAX,0
@@ -135,6 +145,7 @@ INIT_PORTS
     bsf TRISB, 0, 0	;SIO IN
     bsf TRISB, 1, 0	;Envia Info
     bsf TRISB, 2, 0	;Desa Info
+    bcf TRISB, 3, 0	;LED SIO
 
     bcf  TRISD, 0, 0 ; 7SEG1
     bcf  TRISD, 1, 0 ; 7SEG2
@@ -235,33 +246,59 @@ LOOP
     btfss ESTAT, 0,0
     call BLINKING
     
+    btfss CONNECTION,0,0
+    call USART_CONNECTAT
+    
+    btfsc PORTB,0,0
+    call USART_DESCONNECTAT
+    
     goto LOOP
     
 REBUT
     btfss RCREG, 7,0 ;Qualsevol byte rebut que tingui aquest bit a 1 es refereix a una resposta del pc
     return ;Si rebem un byte i no esta activat no hauriem dentrar aqui
     
-    
-    
-    movlw FLAG_DESAR ;Valor del RCREG per enviar per RF
-    cpfsgt RCREG,0 ;Si es mes gran no desara el missatge
-    goto DESA ;Desem els bytes
-    
-    movlw FLAG_DESAR_NCON ;Valor del RCREG com a confirmacio del PC per enviar dades
+    movlw FLAG_DESAR 
+    cpfsgt RCREG,0 
+    goto DESA 
+        
+    movlw FLAG_DESAR_NCON 
     cpfsgt RCREG,0
-    goto DESA_NCON ;Desar dades sense enviar confirmacio al PC ja que ja l'hem rebut\
+    goto DESA_NCON 
     
-    movlw FLAG_ENVIAR ;Valor del RCREG com a confirmacio del PC per enviar dades
+    movlw FLAG_ENVIAR 
     cpfsgt RCREG,0
-    goto ENVIAR_RF ;Enviar dades per RF
+    goto ENVIAR_RF 
     
-    movlw FLAG_ENVIAR_ERROR ;Valor del RCREG com a confirmacio del PC per enviar dades
+    movlw FLAG_ENVIAR_ERROR
     cpfsgt RCREG,0
-    goto ENVIAR_RF_ERROR ;Enviar dades per RF
+    goto ENVIAR_RF_ERROR
+    
+    movlw FLAG_HEART 
+    cpfsgt RCREG,0
+    goto ENCENDRE_HEART
+    
+    movlw FLAG_HALF 
+    cpfsgt RCREG,0
+    goto ENCENDRE_HALF 
+    
+    movlw FLAG_HEART_DATA 
+    cpfsgt RCREG,0
+    goto USART_HEART_STATUS 
+    
+    movlw UNBLOCK 
+    cpfsgt RCREG,0
+    goto UNBLOCK_THREAD 
     
     return
 
 
+UNBLOCK_THREAD
+    call USART_DESAT
+    bsf LATC,2,0
+    return
+    
+    
 ;***********************************************************
 ;*********************** - BLOC RF - ***********************
 ;***********************************************************
@@ -298,7 +335,7 @@ USART_DESAR
     goto USART_ESPERA
     
 USART_DESAT
-    movlw FLAG_DESAR_NCON
+    movlw FLAG_CONTINUAR
     movwf TXREG,0
     goto USART_ESPERA
 
@@ -311,26 +348,61 @@ USART_ESPERA_INFO
    btfss PIR1,RCIF,0
     goto USART_ESPERA_INFO
    return  
+   
+USART_CONNECTAT
+   btfsc PORTB,0,0
+   return
+   
+   movlw 0x84
+   cpfsgt TEMPS_CONN,0
+   return
+   
+   clrf TEMPS_CONN,0
+   movlw FLAG_CONNECTION
+   movwf TXREG,0
+   goto USART_ESPERA
+   
+   return
+   
+USART_DESCONNECTAT
+   btfsc CONNECTION,1,0
+   return
+   
+   clrf TEMPS_CONN,0
+   clrf CONNECTION,0
+   bsf CONNECTION,1,0
+   
+   bcf LATB,3,0
+   bsf LATC,3,0
+   
+   return
 
 ;***********************************************************
 ;********************* - BLOC DESAR - **********************
 ;***********************************************************
     
-REBRE_CONFIG
+REBRE_CONFIG   
     btfss PIR1,RCIF,0
     goto REBRE_CONFIG
-	
+    
     movff RCREG, SIGNAL_TYPE ;Movem el caracter a la posicio de la ram corresponent
     
-    call USART_DESAR
+    movff SIGNAL_TYPE,TXREG
+    
+    call USART_ESPERA
+    
     return
     
 DESA
+    clrf TEMPS_UN,0
     call USART_DESAR
 
 DESA_NCON ;Quan ens apreten el boto no necessitem enviar al pc la confirmacio
     clrf RCREG,0
+    clrf SIGNAL_TYPE,0
+    
     call REBRE_CONFIG
+    
     clrf COMPTA_BYTES,0
     clrf ESTAT,0
     clrf FSR0H,0
@@ -342,34 +414,38 @@ DESA_BUCLE
     btfss PIR1,RCIF,0
 	goto DESA_BUCLE ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esperem
 	
-    movlw 0x99 ; 150
+    movlw 0x97 ; 150
     cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
-    goto COMPROVA_FINAL
+	goto COMPROVA_FINAL
 
 DESA_CONTINUA_BUCLE
     movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent
     
     incf COMPTA_BYTES,1,0 ;Incrementem en numero de bytes rebut
     
-    call USART_DESAT ;Confirmarem al ordinador que ho hem desat
+    movff COMPTA_BYTES, TXREG ;Movem el caracter a la posicio de la ram corresponent
+	call USART_ESPERA
     
     goto DESA_BUCLE ;Esperem una nova dada
     
 COMPROVA_FINAL
     btfsc SIGNAL_TYPE,4,0
-    goto DESA_CPLX_FINAL
+	goto DESA_CPLX_FINAL
     
 FINAL_DESAR   
-    call CANVIA_ESTAT_UP
     bcf SIGNAL_TYPE,7,0
-    return
+    clrf COMPTA_BYTES,0
+    goto CANVIA_ESTAT_UP
     
 DESA_CPLX_FINAL
     btfsc SIGNAL_TYPE,7,0
-    goto FINAL_DESAR
+	goto FINAL_DESAR
     
 DESA_CPLX_LAST_BYTES
     bsf SIGNAL_TYPE,7,0
+    clrf COMPTA_BYTES,0
+    incf COMPTA_BYTES,1,0
+    
     goto DESA_CONTINUA_BUCLE
     
 ;***********************************************************
@@ -419,6 +495,21 @@ ESPERA_16MS
 ;***********************************************************
 ;********************* - BLOC LEDS - ***********************
 ;***********************************************************
+    
+ENCENDRE_HEART
+    ;call USART_DESAT
+    call CANVIA_ESTAT_UP
+    ;bsf LATC,3,0
+    return
+    
+ENCENDRE_HALF
+    clrf RCREG,0
+    call USART_DESAT
+    clrf ESTAT,0
+    bsf ESTAT, 0,0
+    clrf TEMPS_LED,0
+    return
+    
     
 ACTIVA_LEDS
     bsf LATC,2,0
@@ -470,8 +561,6 @@ CANVIA_ESTAT_ESPERA
     bsf ESTAT,2,0
     incf HEART_BEAT,1,0
     
-    call USART_HEART_STATUS
-    
     clrf TEMPS_LED
     goto LEDS_ON
     
@@ -483,11 +572,10 @@ CANVIA_ESTAT_UP
     clrf HEART_BEAT,0
     btg QUIN_LED,0,0
     bsf ESTAT,1,0
+    
     return
    
-BAIXADA_LED
-    call USART_HEART_STATUS
-    
+BAIXADA_LED    
     movf HEART_BEAT, 0,0
     cpfsgt TEMPS_LED,0
     goto LEDS_ON
@@ -513,7 +601,6 @@ ESPERA_CENT
     return
     
 PUJADA_LED
-    call USART_HEART_STATUS
     
     movf HEART_BEAT, 0,0
     cpfsgt TEMPS_LED,0
@@ -563,18 +650,18 @@ USART_HALF_STATUS
    return
 
 USART_HEART_STATUS
-   movlw FLAG_HEART
+   
+   movf QUIN_LED,0,0
+   movwf TXREG,0
+   call USART_ESPERA
+   
+   incf HEART_BEAT,0,0
    movwf TXREG,0
    call USART_ESPERA
    
    call USART_ESPERA_INFO
+   call USART_DESAT
    
-   movff QUIN_LED,TXREG
-   call USART_ESPERA
-   
-   call USART_ESPERA_INFO
-   
-   movff HEART_BEAT,TXREG
-   goto USART_ESPERA
+   return
    
     END
