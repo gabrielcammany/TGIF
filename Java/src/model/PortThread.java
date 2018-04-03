@@ -8,8 +8,10 @@ public class PortThread implements Runnable {
 
     private SerialPort sp;
 
-    private boolean listen = false;
-
+    private boolean listen = true;
+    private boolean recieving = false;
+    private boolean connected = false;
+    private boolean half = false;
     private Listener controller = null;
 
     public PortThread(SerialPort sp, Listener controller) {
@@ -25,48 +27,56 @@ public class PortThread implements Runnable {
 
             while (true) {
 
-                Thread.sleep(2);
+                Thread.sleep(100);
+                //System.out.println("Recieving!5");
+
 
                 while (listen) {
 
+                    System.out.println("Recieving!1");
+                    this.recieving = true;
+                    System.out.println("Recieving!2");
+
                     recieved = sp.readByte();
+                    System.out.println("Recieving!4"+ listen);
 
-                    if(recieved == Flags.flag_desar_ncon){
+                    if(listen && recieved != 0){
 
-                        controller.enviar(false);
+                        System.out.println("Recieving!3");
 
-                        controller.restart();
+                        if(recieved == Flags.flag_desar_ncon && listen){
 
-                        controller.updateStatusView(true);
+                            controller.enviar(false);
 
-                    }else if(recieved == Flags.flag_heart){
+                            controller.restart();
 
-                        while ((recieved = sp.readByte()) == 0);
+                            controller.updateStatusView(true);
+                            controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                        sp.writeByte(Flags.confirm);
-                        while (sp.readByte() == 0);
+                        }else if(recieved == Flags.flag_half){
 
-                        led = (recieved == 1);
+                            sp.writeByte(Flags.confirm);
+                            while (sp.readByte() == 0);
 
-                        while ((recieved = sp.readByte()) == 0);
+                            controller.updateHalfView();
+                            this.setHalf(true);
+                            controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                        sp.writeByte(Flags.confirm);
-                        while (sp.readByte() == 0);
+                        }else if(recieved == Flags.flag_progress){
 
-                        controller.updateHeartView(led,(int)recieved);
+                            if(controller.isDataSet())controller.changeProgressBar();
+                            controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                    }else if(recieved == Flags.flag_half){
+                        }else if(recieved == Flags.flag_connection){
 
-                        sp.writeByte(Flags.confirm);
-                        while (sp.readByte() == 0);
+                            System.out.println("Recieving!");
+                            controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                        controller.updateHalfView();
-
-                    }else if(recieved == Flags.flag_progress){
-
-                        if(controller.isDataSet())controller.changeProgressBar();
+                        }
 
                     }
+
+                    this.recieving = false;
 
                 }
 
@@ -76,13 +86,39 @@ public class PortThread implements Runnable {
             e.printStackTrace();
         }
 
+        System.out.println("Done");
+
+    }
+
+
+    public boolean isRecieving() {
+        return recieving;
+    }
+
+    public void setRecieving(boolean recieving) {
+        this.recieving = recieving;
     }
 
     public void setEscolta(boolean escolta) {
         this.listen = escolta;
     }
 
+    public boolean isHalf() {
+        return half;
+    }
+
+    public void setHalf(boolean half) {
+        this.half = half;
+    }
     public void setPort(SerialPort port) {
         this.sp = port;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 }

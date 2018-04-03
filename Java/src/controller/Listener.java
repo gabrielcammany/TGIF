@@ -1,6 +1,7 @@
 package controller;
 
 import com.SerialPort.SerialPort;
+import model.ConnectionThread;
 import model.Flags;
 import view.FunctionDisplayPanel;
 import view.MainView;
@@ -20,12 +21,13 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     private SerialPort sp;
     private PortThread portThread;
+    private ConnectionThread connectionThread;
     private MainView view;
     private OptionsPanel op;
     private FunctionDisplayPanel display;
     private int last = -1;
-    private ProgressBar pb;
     private Thread reciever;
+    private Thread timer;
 
 
     public Listener(MainView view, SerialPort sp) {
@@ -38,7 +40,6 @@ public class Listener extends MouseAdapter implements ActionListener {
         refreshFunction();
 
         view.setPortsAndBDs(sp.getPortList(), sp.getAvailableBaudRates());
-        this.portThread = new PortThread(sp, this);
 
     }
 
@@ -56,56 +57,65 @@ public class Listener extends MouseAdapter implements ActionListener {
             refreshFunction();
         }
 
-        portThread.setEscolta(false);
-
-        if (e.getActionCommand().equals("JB_SEND")) {
-
-            enviar(true);
-
-        }
-
-        if (e.getActionCommand().equals("JB_RF")) {
-
-            if(view.getDataMax() > 0){
-
-                view.changeProgressBar(true);
-                enviarPeticioRF();
-
-            }else{
-
-                view.showMessage("Error!", "No has desat cap dada al microcontrolador!\n", JOptionPane.ERROR_MESSAGE);
-                enviarErrorPeticioRF();
-
-            }
-
-
-        }
-        if (e.getActionCommand().equals("JB_HEART")) {
-
-            enviarPeticioHeart();
-
-        }
-
-        if (e.getActionCommand().equals("JB_HALF")) {
-
-            enviarPeticioHalf();
-
-        }
-
         if (e.getActionCommand().equals("JB_CONNECT")) {
 
             start();
+            return;
 
         }
-        portThread.setEscolta(true);
+
+        if(portThread != null){
+
+            portThread.setEscolta(false);
+
+            System.out.println("Recieved coinfimr:asd33");
+            while (portThread.isRecieving()){
+                try {
+                    sp.writeByte(Flags.unblock);
+                    System.out.println("Recieved coinfimr:asd44");
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+            }
+
+            switch (e.getActionCommand()){
+                case "JB_HEART":
+                    enviarPeticioHeart();
+                    break;
+                case "JB_HALF":
+                    enviarPeticioHalf();
+                    break;
+                case "JB_SEND":
+                    view.changeProgressBar(true);
+                    enviar(true);
+                    break;
+                case "JB_RF":
+                    if (view.getDataMax() > 0) {
+
+                        view.changeProgressBar(true);
+                        enviarPeticioRF();
+
+                    } else {
+
+                        view.showMessage("Error!", "No has desat cap dada al microcontrolador!\n", JOptionPane.ERROR_MESSAGE);
+                        enviarErrorPeticioRF();
+
+                    }
+
+                    break;
+            }
+
+            portThread.setEscolta(true);
+
+        }
 
     }
 
-    private void enviarErrorPeticioRF(){
+    private void enviarErrorPeticioRF() {
         try {
 
             sp.writeByte(Flags.flag_enviar_error);
-            while (sp.readByte() == 0);
+            while (sp.readByte() == 0) ;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -113,11 +123,10 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     }
 
-    private void enviarPeticioRF(){
+    private void enviarPeticioRF() {
         try {
 
             sp.writeByte(Flags.flag_enviar);
-            while (sp.readByte() == 0);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,11 +134,11 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     }
 
-    private void enviarPeticioHeart(){
+    private void enviarPeticioHeart() {
         try {
 
             sp.writeByte(Flags.flag_heart);
-            while (sp.readByte() == 0);
+            portThread.setHalf(false);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -137,12 +146,12 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     }
 
-    private void enviarPeticioHalf(){
+    private void enviarPeticioHalf() {
 
         try {
 
             sp.writeByte(Flags.flag_half);
-            while (sp.readByte() == 0);
+            portThread.setHalf(true);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,7 +184,7 @@ public class Listener extends MouseAdapter implements ActionListener {
         }
     }
 
-    private boolean isComplexFunction(){
+    private boolean isComplexFunction() {
         return (op.getType().equals("Aleatori") || op.getType().equals("Custom"));
     }
 
@@ -210,75 +219,95 @@ public class Listener extends MouseAdapter implements ActionListener {
     }
 
     public void enviar(boolean confirmacio) {
-        portThread.setEscolta(false);
 
+        byte recieved = 0;
         try {
+
 
             byte[] utf8Bytes = view.getJpTop().getDisplay().getDisplayValue(view);
 
             view.setProgressBarStatus(utf8Bytes.length);
             view.setDataMax(utf8Bytes.length);
+            System.out.println("Recieved coinfim22r: " + recieved);
 
             if (confirmacio) {
-
+                System.out.println("Recieved coi");
                 sp.writeByte(Flags.flag_desar);
-                while (sp.readByte() == 0);
-
+                System.out.println("Recieved coinfim22r");
+                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar)
+                    if(recieved == Flags.flag_connection)sp.writeByte(Flags.flag_desar);
+                    System.out.println("Recieved coinfimr: " + recieved);
             }
 
-            if(isComplexFunction()){
+            System.out.println("Recieved coinfimr5: " + recieved);
+
+            if (isComplexFunction()) {
 
                 sp.writeByte(Flags.complex);
-                while (sp.readByte() == 0);
+                while ((recieved = sp.readByte()) == 0)
+                    System.out.println("Recieved coinfimr2: " + recieved);
 
-            }else{
+            } else {
 
                 sp.writeByte(Flags.ncomplex);
-                while (sp.readByte() == 0);
+                while ((recieved = sp.readByte()) == 0)
+                    System.out.println("Recieved coinfimr3: " + recieved);
 
             }
+            System.out.println("Recieved complex: " + String.valueOf(recieved));
 
             //Part de id RF
             sp.writeByte(Flags.GROUP_ID_H);
-            while (sp.readByte() == 0);
+            while ((recieved = sp.readByte()) == 0) ;
+            System.out.println("Recieved ID: " + recieved);
 
             sp.writeByte(Flags.GROUP_ID_L);
-            while (sp.readByte() == 0);
+            while ((recieved = sp.readByte()) == 0) ;
+            System.out.println("Recieved ID2: " + recieved);
 
             int i = 0;
             for (byte value : utf8Bytes) {
 
                 sp.writeByte(value);
-                while (sp.readByte() == 0);
+                while ((recieved = sp.readByte()) == 0) ;
+
                 view.changeProgressBar(false);
-                System.out.println(" Pos "+ i);
+                view.setGreenStatus();
+                System.out.println(" Pos " + i + " " + recieved);
                 i++;
 
             }
 
-            System.out.print(" Done!\n");
+            this.getConnectionThread().setStart_time(System.nanoTime());
+
+            System.out.println(" Done! Total: " + i);
 
         } catch (Exception e1) {
 
             JOptionPane.showMessageDialog(null, "Error en enviar les dades!\n " + e1.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         }
-
     }
 
     public void start() {
         try {
-            if(reciever == null){
+            if (reciever == null) {
 
                 sp.openPort(view.getSp().getSelectedPort(), view.getSp().getSelectedBaud());
+
+                portThread = new PortThread(sp, this);
                 portThread.setPort(sp);
 
                 reciever = new Thread(portThread);
                 reciever.start();
 
-            }else{
+                connectionThread = new ConnectionThread(this);
+                timer = new Thread(connectionThread);
+                timer.start();
 
-                if(!reciever.isAlive()){
+            } else {
+
+                if (!reciever.isAlive()) {
 
                     sp.openPort(view.getSp().getSelectedPort(), view.getSp().getSelectedBaud());
                     portThread.setPort(sp);
@@ -296,9 +325,10 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     public void restart() {
         try {
-            sp.closePort();
-            sp.openPort(view.getSp().getSelectedPort(), view.getSp().getSelectedBaud());
+            portThread = new PortThread(sp, this);
             portThread.setPort(sp);
+            reciever = new Thread(portThread);
+            reciever.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -313,19 +343,28 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     }
 
-    public void updateHeartView(boolean led, int color){
-        view.setLEDStatus(led,color);
+    public void updateHeartView(boolean led, int color) {
+        view.setLEDStatus(led, color);
     }
 
-    public void updateHalfView(){
-        view.setLEDStatus(false,-1);
+    public void updateHalfView() {
+        view.setLEDStatus(false, -1);
     }
 
-    public boolean isDataSet(){
+    public boolean isDataSet() {
         return (view.getDataMax() > 0);
     }
 
-    public void changeProgressBar(){
+    public void changeProgressBar() {
         view.changeProgressBar(false);
     }
+
+    public ConnectionThread getConnectionThread() {
+        return connectionThread;
+    }
+
+    public void setConnectionThread(ConnectionThread connectionThread) {
+        this.connectionThread = connectionThread;
+    }
+
 }
