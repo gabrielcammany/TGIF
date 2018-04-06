@@ -1,4 +1,5 @@
-*.idea
+.idea
+Java/*.iml
 Java/out/*
 /Assembler/nbproject/private/
 /Assembler/build/default/
