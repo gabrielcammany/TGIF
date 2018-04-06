@@ -26,29 +26,42 @@ CONNECTION EQU 0x08
  
 TEMPS_CONN EQU 0x09
  
+RESTANT EQU 0x0A
+COPS EQU 0x0B
+AUXILIAR EQU 0x0C
+BYTE EQU 0x0D
+DIV_DEU EQU 0x0E
+
+TEMPS_UN_RF EQU 0x0F
+TEMPS_ZERO_RF EQU 0x10
+ 
+TEMPS_UN_POLS EQU 0x11
+ESTAT_P EQU 0x12
  
 ;*****************
 ;*   CONSTANTS   *
 ;*****************
  
-TAULA7S EQU 0x0000B0
+TAULA7S EQU 0x0000C0
 POSICIO_A_DESAR_RAM EQU 0x80
   
 ;************
 ;*   FLAGS   *
 ;************
 
- FLAG_DESAR EQU 0x80
- FLAG_DESAR_NCON EQU 0x81
- FLAG_ENVIAR EQU 0x82
- FLAG_CONTINUAR EQU 0x01
- FLAG_ENVIAR_ERROR EQU 0x83
- FLAG_HEART EQU 0x84
- FLAG_HALF EQU 0x85
- FLAG_PROGRESS EQU 0x86
- FLAG_HEART_DATA EQU 0x87
- FLAG_CONNECTION EQU 0x88
- UNBLOCK EQU 0x89
+FLAG_DESAR EQU 0x80
+FLAG_DESAR_NCON EQU 0x81
+FLAG_ENVIAR EQU 0x82
+FLAG_CONTINUAR EQU 0x01
+FLAG_ENVIAR_ERROR EQU 0x83
+FLAG_HEART EQU 0x84
+FLAG_HALF EQU 0x85
+FLAG_PROGRESS EQU 0x86
+FLAG_HEART_DATA EQU 0x87
+FLAG_CONNECTION EQU 0x88
+UNBLOCK EQU 0x89
+FLAG_DELETE_INFO EQU 0x8A
+FLAG_DATA EQU 0x8B
 
 ;*********************************
 ; VECTORS DE RESET I INTERRUPCI� *
@@ -93,30 +106,27 @@ INIT_ADCON
     return
 
 INIT_VARS
-    
-    movlw 0x5c
-    movwf LATD,0  
-    
-    clrf LATC,0
     clrf ESTAT,0
-    
     clrf SIGNAL_TYPE,0
     clrf TEMPS_UN,0
     clrf TEMPS_LED,0
-    
     clrf QUIN_LED,0
-    
     clrf HEART_BEAT,0
-    
     clrf TEMPS_MAX,0
-    
     clrf TEMPS_CONN,0
-    
     clrf CONNECTION,0
+    clrf COPS,0
+    clrf RESTANT,0
+    clrf ESTAT_P,0
+    
+    movlw 0x05
+    movwf TEMPS_UN_RF,0
+    
+    movlw 0x0A
+    movwf TEMPS_ZERO_RF,0
     
     movlw 0x14
     movwf TEMPS_MAX,0
-    
     return;2
 
 INIT_SIO
@@ -158,6 +168,11 @@ INIT_PORTS
     bcf SSPCON1,SSPEN,0
     
     bcf INTCON2,RBPU,0
+    
+    movlw 0x5c
+    movwf LATD,0  
+    
+    clrf LATC,0
     
     return
 
@@ -234,11 +249,10 @@ LOOP
     btfsc PIR1,RCIF,0
     call REBUT
     
-    btfss PORTB,2,0 ;Desar Info
-    call POLS_DESAR_INFO
+    call POLSADOR
     
-    btfss PORTB,1,0 ;Enviar Info
-    call POLS_ENVIAR_INFO
+    ;btfss PORTB,1,0 ;Enviar Info
+    ;call POLS_ENVIAR_INFO
     
     btfsc ESTAT, 0,0
     call MIG_INTENSITAT
@@ -290,6 +304,10 @@ REBUT
     cpfsgt RCREG,0
     goto UNBLOCK_THREAD 
     
+    movlw FLAG_DATA 
+    cpfsgt RCREG,0
+    goto USART_DATA 
+    
     return
 
 
@@ -305,8 +323,92 @@ UNBLOCK_THREAD
     
 ENVIAR_RF
         
+    movlw 0x00
+    cpfsgt COMPTA_BYTES,0
+    goto ENVIAR_RF_ERROR
+    
+    clrf FSR0H, 0
+    movlw POSICIO_A_DESAR_RAM
+    movwf FSR0L, 0
+    clrf COPS,0
+    clrf BYTE,0
+    clrf RESTANT,0
+    
+    movff POSTINC0, AUXILIAR
+    
+    call COMPUTE_DIV_10
+    
+ENVIAR_FOR    
+    movf TEMPS_UN_RF,0
+    cpfsgt TEMPS_UN,0
+    call ENVIAR_BIT_PRIMERA_MEITAT
+    
+    movf TEMPS_ZERO_RF
+    cpfsgt TEMPS_UN,0
+    call ENVIAR_BIT_SEGONA_MEITAT
+    
+    call USART_BIT_ENVIAT
+    incf RESTANT,1,0
+    incf BYTE,1,0
+    
+    movlw 0x08
+    cpfsgt BYTE,0
+    goto CONTINUA_FOR
+    
+    clrf BYTE,0
+    movff POSTINC0, AUXILIAR
+    
+    movf DIV_DEU,0,0
+    cpfslt RESTANT,0
+    goto INCREMENTA_FOR
+    
+    goto ENVIAR_FOR
+
+ENVIA_PARAMETRES
+    movff DIV_DEU,TXREG
+    call USART_ESPERA
+    
+    movff RESTANT,TXREG
+    call USART_ESPERA
+    
+    movff COPS,TXREG
+    call USART_ESPERA
+    return
+        
+CONTINUA_FOR
+    clrf TEMPS_UN,0
+    rrncf AUXILIAR,1,0
+    goto ENVIAR_FOR 
+    
+INCREMENTA_FOR
+    incf COPS,1,0
+    clrf RESTANT,0
+    
+    movlw 0x0A
+    cpfslt COPS,0
+    goto FINAL_ENVIAR_RF
+    
+    ;call INCREMENTA_7_SEG
+    
+    goto ENVIAR_FOR 
+    
+FINAL_ENVIAR_RF
     clrf ESTAT,0
     bsf ESTAT,1,0
+    return
+    
+ENVIAR_BIT_PRIMERA_MEITAT
+    btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la primera part a 0
+    bcf LATC, 5, 0
+    btfss AUXILIAR,0,0 ;Si el primer es 0 fiquem la primera part a 1
+    bsf LATC, 5, 0
+    return
+    
+ENVIAR_BIT_SEGONA_MEITAT
+    btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la segona part a 1
+    bsf LATC, 5, 0
+    btfss AUXILIAR,0,0 ;Si el primer es 1 fiquem la segona part a 0
+    bcf LATC, 5, 0
     return
     
 ENVIAR_RF_ERROR
@@ -319,13 +421,31 @@ ENVIAR_RF_ERROR
     
     return
     
+COMPUTE_DIV_10
+    btfsc SIGNAL_TYPE,4,0
+    movlw 0xF0 ;240 -> (300*8/10)
+    
+    btfss SIGNAL_TYPE,4,0
+    movlw 0x78 ;120 -> (150*8/10)
+    
+    movwf DIV_DEU,0
+    return
     
 ;***********************************************************
 ;********************* - BLOC USART - **********************
 ;***********************************************************
 
+USART_DATA
+    movff SIGNAL_TYPE,TXREG
+    goto USART_ESPERA
+    
 USART_ENVIAR
     movlw FLAG_ENVIAR
+    movwf TXREG,0
+    goto USART_ESPERA
+    
+USART_DESAR_NCON
+    movlw FLAG_DESAR_NCON
     movwf TXREG,0
     goto USART_ESPERA
     
@@ -353,7 +473,7 @@ USART_CONNECTAT
    btfsc PORTB,0,0
    return
    
-   movlw 0x84
+   movlw 0x34
    cpfsgt TEMPS_CONN,0
    return
    
@@ -373,9 +493,20 @@ USART_DESCONNECTAT
    bsf CONNECTION,1,0
    
    bcf LATB,3,0
-   bsf LATC,3,0
+   ;bsf LATC,3,0
    
    return
+   
+USART_BIT_ENVIAT
+   movlw FLAG_PROGRESS
+   movwf TXREG,0
+   goto USART_ESPERA
+   
+USART_BORRAR_INFO
+   movlw FLAG_DELETE_INFO
+   movwf TXREG,0
+   goto USART_ESPERA
+   
 
 ;***********************************************************
 ;********************* - BLOC DESAR - **********************
@@ -434,12 +565,11 @@ COMPROVA_FINAL
     
 FINAL_DESAR   
     bcf SIGNAL_TYPE,7,0
-    clrf COMPTA_BYTES,0
     goto CANVIA_ESTAT_UP
     
 DESA_CPLX_FINAL
     btfsc SIGNAL_TYPE,7,0
-	goto FINAL_DESAR
+    goto FINAL_DESAR
     
 DESA_CPLX_LAST_BYTES
     bsf SIGNAL_TYPE,7,0
@@ -452,13 +582,121 @@ DESA_CPLX_LAST_BYTES
 ;****************** - BLOC POLSADORS - *********************
 ;***********************************************************
  
+POLSADOR
+    
+    movlw 0x00
+    cpfsgt ESTAT_P,0
+    goto ESPERA_POLSADOR
+    
+    btfsc ESTAT_P,0,0
+    goto ESPERA_POLSADOR_DOWN	
+    
+    btfsc ESTAT_P,1,0
+    goto ESPERA_POLSADOR_DESAR
+    
+    btfsc ESTAT_P,2,0
+    goto ESPERA_POLSADOR_DEL
+    
+    return
+    
+ESPERA_POLSADOR
+    btfss PORTB,2,0 
+    goto POLS_DESAR_INFO
+    return
+    
+ESPERA_POLSADOR_DOWN   
+    movlw 0x64
+    cpfslt TEMPS_UN,0
+    call INCREMENTA_ESPERA
+    
+    btfss PORTB,2,0 
+    return
+    
+    movlw 0x14
+    cpfslt TEMPS_UN_POLS,0
+    goto RESET_POLSADOR
+    
+    clrf ESTAT_P,0
+    bsf ESTAT_P,1,0 
+        
+    return
+
+ESPERA_POLSADOR_DESAR
+    movlw 0x64
+    cpfslt TEMPS_UN,0
+    call INCREMENTA_ESPERA
+    
+    movlw 0x14
+    cpfslt TEMPS_UN_POLS,0
+    goto PETICIO_DESAR_INFO
+        
+    btfsc PORTB,2,0 
+    return
+    
+    clrf TEMPS_UN,0
+    call ESPERA_16MS
+    
+    clrf ESTAT_P,0
+    bsf ESTAT_P,2,0 
+    return
+    
+ESPERA_POLSADOR_DEL
+    movlw 0x64
+    cpfslt TEMPS_UN,0
+    call INCREMENTA_ESPERA
+    
+    btfss PORTB,2,0 
+    return
+    
+    movlw 0x14
+    cpfsgt TEMPS_UN_POLS,0
+    goto PETICIO_DEL_INFO
+        
+    clrf ESTAT_P,0
+    return
+    
+    
+PETICIO_DEL_INFO
+    clrf ESTAT_P,0
+    bsf LATC,3,0
+    bsf LATC,2,0
+    
+    clrf SIGNAL_TYPE,0
+    clrf COMPTA_BYTES,0
+    call USART_BORRAR_INFO
+    
+    return
+    
+PETICIO_DESAR_INFO
+    clrf ESTAT_P,0
+    bsf LATC,3,0
+    bcf LATC,2,0
+    
+    btfsc PORTB,0,0
+    return
+    
+    call USART_DESAR_NCON
+    return
+    
+    
+INCREMENTA_ESPERA
+    incf TEMPS_UN_POLS,1,0
+    clrf TEMPS_UN,0
+    return
+
+RESET_POLSADOR
+    clrf ESTAT_P,0
+    return
+    
     
 POLS_DESAR_INFO     
     clrf TEMPS_UN,0
     call ESPERA_16MS
-    call ESPERA_BAIXAR_DESAR
+   
+    bsf ESTAT_P,0,0 
+    clrf TEMPS_UN_POLS,0
     
-    call USART_DESAT
+    
     
     return
     
@@ -471,7 +709,7 @@ POLS_ENVIAR_INFO
     cpfsgt COMPTA_BYTES,0
     goto ENVIAR_RF_ERROR
     
-    call ENVIAR_RF
+    ;call ENVIAR_RF
     
     return
     
@@ -487,7 +725,7 @@ ESPERA_BAIXAR_ENVIAR
     return
     
 ESPERA_16MS
-    movlw 0x0F
+    movlw 0x20
     cpfseq TEMPS_UN,0
     goto ESPERA_16MS
     return
@@ -557,6 +795,9 @@ CANVIA_ESTAT_DOWN
     return
        
 CANVIA_ESTAT_ESPERA
+    
+    ;call USART_HEART_STATUS
+    
     clrf ESTAT,0
     bsf ESTAT,2,0
     incf HEART_BEAT,1,0
@@ -576,6 +817,8 @@ CANVIA_ESTAT_UP
     return
    
 BAIXADA_LED    
+    ;call USART_HEART_STATUS
+    
     movf HEART_BEAT, 0,0
     cpfsgt TEMPS_LED,0
     goto LEDS_ON
@@ -601,6 +844,7 @@ ESPERA_CENT
     return
     
 PUJADA_LED
+    ;call USART_HEART_STATUS
     
     movf HEART_BEAT, 0,0
     cpfsgt TEMPS_LED,0
@@ -650,17 +894,13 @@ USART_HALF_STATUS
    return
 
 USART_HEART_STATUS
-   
-   movf QUIN_LED,0,0
+   movlw FLAG_HEART_DATA
    movwf TXREG,0
    call USART_ESPERA
-   
-   incf HEART_BEAT,0,0
+      
+   movf HEART_BEAT,0,0
    movwf TXREG,0
    call USART_ESPERA
-   
-   call USART_ESPERA_INFO
-   call USART_DESAT
    
    return
    

@@ -14,6 +14,8 @@ public class Flags {
     public static final byte flag_progress = (byte) (Integer.parseInt("86", 16));
     public static final byte flag_heart_data = (byte) (Integer.parseInt("87", 16));
     public static final byte flag_connection = (byte) (Integer.parseInt("88", 16));
+    public static final byte flag_delete_info = (byte) (Integer.parseInt("8A", 16));
+    public static final byte flag_data = (byte) (Integer.parseInt("8B", 16));
 
     public static final byte confirm = (byte) (Integer.parseInt("01", 16));
     public static final byte unblock = (byte) (Integer.parseInt("89", 16));

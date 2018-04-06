@@ -15,6 +15,7 @@ public class MainView extends JFrame {
     private OptionsPanel op = new OptionsPanel();
     private SendPanel sp = new SendPanel();
     private JProgressBar jProgressBar;
+    private boolean connected;
 
 
     private int dataMax;
@@ -31,6 +32,7 @@ public class MainView extends JFrame {
         this.pack();
         this.setLocationRelativeTo(null);
         dataMax = 0;
+        connected = false;
 
     }
 
@@ -95,12 +97,14 @@ public class MainView extends JFrame {
         this.jStatus.setBackground(new Color(0,150,0));
         this.jStatus.setOpaque(true);
         repaint();
+        this.connected = true;
     }
 
     public void  setRedStatus(){
         this.jStatus.setBackground(new Color(150,0,0));
         this.jStatus.setOpaque(true);
         repaint();
+        this.connected = false;
     }
 
     public void setProgressBarStatus(int max){
@@ -196,6 +200,15 @@ public class MainView extends JFrame {
 
     public void setDataMax(int dataMax) {
         this.dataMax = dataMax;
+    }
+
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
     }
 
 }

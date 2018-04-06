@@ -9,13 +9,14 @@ public class ConnectionThread  implements Runnable  {
 
 
     public ConnectionThread(Listener controller){
+
         this.controller = controller;
     }
 
     @Override
     public void run() {
 
-        while (true){
+        while (!Thread.currentThread().isInterrupted()) {
             try {
 
                 Thread.sleep(300);
@@ -26,8 +27,8 @@ public class ConnectionThread  implements Runnable  {
                     controller.updateStatusView(true);
                 }
 
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Thread.currentThread().interrupt(); // propagate interrupt
             }
         }
     }

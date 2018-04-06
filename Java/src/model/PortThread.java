@@ -9,8 +9,6 @@ public class PortThread implements Runnable {
     private SerialPort sp;
 
     private boolean listen = true;
-    private boolean recieving = false;
-    private boolean connected = false;
     private boolean half = false;
     private Listener controller = null;
 
@@ -21,82 +19,67 @@ public class PortThread implements Runnable {
 
     public void run() {
         byte recieved;
-        boolean led;
 
-        try {
+        while (!Thread.currentThread().isInterrupted()) {
 
-            while (true) {
+            try {
 
-                Thread.sleep(100);
-                //System.out.println("Recieving!5");
+                recieved = sp.readByte();
 
+                if (recieved != 0) {
 
-                while (listen) {
+                    if (recieved == Flags.flag_desar_ncon && listen) {
 
-                    System.out.println("Recieving!1");
-                    this.recieving = true;
-                    System.out.println("Recieving!2");
+                        controller.enviar(false);
 
-                    recieved = sp.readByte();
-                    System.out.println("Recieving!4"+ listen);
+                        controller.restart();
 
-                    if(listen && recieved != 0){
+                        controller.updateStatusView(true);
+                        controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                        System.out.println("Recieving!3");
+                    } else if (recieved == Flags.flag_half) {
 
-                        if(recieved == Flags.flag_desar_ncon && listen){
+                        sp.writeByte(Flags.confirm);
+                        while (sp.readByte() == 0) ;
 
-                            controller.enviar(false);
+                        controller.updateHalfView();
+                        this.setHalf(true);
+                        controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                            controller.restart();
+                    } else if (recieved == Flags.flag_progress) {
 
-                            controller.updateStatusView(true);
-                            controller.getConnectionThread().setStart_time(System.nanoTime());
+                        if (controller.isDataSet()) controller.changeProgressBar();
+                        controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                        }else if(recieved == Flags.flag_half){
+                    } else if (recieved == Flags.flag_connection) {
 
-                            sp.writeByte(Flags.confirm);
-                            while (sp.readByte() == 0);
+                        //System.out.println("Recieving!");
+                        controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                            controller.updateHalfView();
-                            this.setHalf(true);
-                            controller.getConnectionThread().setStart_time(System.nanoTime());
+                    } else if (recieved == Flags.flag_heart_data) {
 
-                        }else if(recieved == Flags.flag_progress){
+                        while ((recieved = sp.readByte()) == 0) ;
 
-                            if(controller.isDataSet())controller.changeProgressBar();
-                            controller.getConnectionThread().setStart_time(System.nanoTime());
+                        controller.updateStatusView(true);
 
-                        }else if(recieved == Flags.flag_connection){
+                        controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                            System.out.println("Recieving!");
-                            controller.getConnectionThread().setStart_time(System.nanoTime());
+                    } else if (recieved == Flags.flag_delete_info) {
 
-                        }
+                        controller.clean_Data();
 
                     }
 
-                    this.recieving = false;
-
                 }
 
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt(); // propagate interrupt
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
         }
 
-        System.out.println("Done");
-
-    }
-
-
-    public boolean isRecieving() {
-        return recieving;
-    }
-
-    public void setRecieving(boolean recieving) {
-        this.recieving = recieving;
     }
 
     public void setEscolta(boolean escolta) {
@@ -110,15 +93,8 @@ public class PortThread implements Runnable {
     public void setHalf(boolean half) {
         this.half = half;
     }
+
     public void setPort(SerialPort port) {
         this.sp = port;
-    }
-
-    public boolean isConnected() {
-        return connected;
-    }
-
-    public void setConnected(boolean connected) {
-        this.connected = connected;
     }
 }

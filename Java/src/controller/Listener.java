@@ -66,17 +66,22 @@ public class Listener extends MouseAdapter implements ActionListener {
 
         if(portThread != null){
 
-            portThread.setEscolta(false);
+            if(!view.isConnected()){
 
-            System.out.println("Recieved coinfimr:asd33");
-            while (portThread.isRecieving()){
-                try {
-                    sp.writeByte(Flags.unblock);
-                    System.out.println("Recieved coinfimr:asd44");
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
+                view.showMessage("Error!", "No estas connectat!\n", JOptionPane.ERROR_MESSAGE);
+
+                return;
             }
+
+            portThread.setEscolta(false);
+            reciever.interrupt();
+            timer.interrupt();
+
+            //System.out.println("Recieved coinfimr:asd33");
+            while (reciever.isAlive());
+            while (timer.isAlive());
+
+            view.setGreenStatus();
 
             switch (e.getActionCommand()){
                 case "JB_HEART":
@@ -90,9 +95,18 @@ public class Listener extends MouseAdapter implements ActionListener {
                     enviar(true);
                     break;
                 case "JB_RF":
-                    if (view.getDataMax() > 0) {
+
+                    byte recieved;
+
+                    if ((recieved = dadesDesades()) > 0) {
 
                         view.changeProgressBar(true);
+                        System.out.println(recieved);
+                        if(recieved > 15){
+                            view.setProgressBarStatus(2400);
+                        }else{
+                            view.setProgressBarStatus(1200);
+                        }
                         enviarPeticioRF();
 
                     } else {
@@ -106,9 +120,28 @@ public class Listener extends MouseAdapter implements ActionListener {
             }
 
             portThread.setEscolta(true);
+            restart();
 
+        }else{
+            view.showMessage("Error!", "No estas connectat!\n", JOptionPane.ERROR_MESSAGE);
         }
 
+    }
+
+    private byte dadesDesades(){
+        byte received;
+
+        try {
+
+            sp.writeByte(Flags.flag_data);
+            while ((received = sp.readByte()) == 0) ;
+
+            return received;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     private void enviarErrorPeticioRF() {
@@ -223,47 +256,41 @@ public class Listener extends MouseAdapter implements ActionListener {
         byte recieved = 0;
         try {
 
-
             byte[] utf8Bytes = view.getJpTop().getDisplay().getDisplayValue(view);
 
             view.setProgressBarStatus(utf8Bytes.length);
             view.setDataMax(utf8Bytes.length);
-            System.out.println("Recieved coinfim22r: " + recieved);
 
             if (confirmacio) {
-                System.out.println("Recieved coi");
+
                 sp.writeByte(Flags.flag_desar);
-                System.out.println("Recieved coinfim22r");
-                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar)
-                    if(recieved == Flags.flag_connection)sp.writeByte(Flags.flag_desar);
-                    System.out.println("Recieved coinfimr: " + recieved);
+                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar);
+
             }
 
-            System.out.println("Recieved coinfimr5: " + recieved);
+            //System.out.println("Recieved coinfim: " + recieved);
 
             if (isComplexFunction()) {
 
                 sp.writeByte(Flags.complex);
-                while ((recieved = sp.readByte()) == 0)
-                    System.out.println("Recieved coinfimr2: " + recieved);
+                while ((recieved = sp.readByte()) == 0);
 
             } else {
 
                 sp.writeByte(Flags.ncomplex);
-                while ((recieved = sp.readByte()) == 0)
-                    System.out.println("Recieved coinfimr3: " + recieved);
+                while ((recieved = sp.readByte()) == 0);
 
             }
-            System.out.println("Recieved complex: " + String.valueOf(recieved));
+            //System.out.println("Recieved complex: " + String.valueOf(recieved));
 
             //Part de id RF
             sp.writeByte(Flags.GROUP_ID_H);
             while ((recieved = sp.readByte()) == 0) ;
-            System.out.println("Recieved ID: " + recieved);
+            //System.out.println("Recieved ID: " + recieved);
 
             sp.writeByte(Flags.GROUP_ID_L);
             while ((recieved = sp.readByte()) == 0) ;
-            System.out.println("Recieved ID2: " + recieved);
+            //System.out.println("Recieved ID2: " + recieved);
 
             int i = 0;
             for (byte value : utf8Bytes) {
@@ -273,7 +300,7 @@ public class Listener extends MouseAdapter implements ActionListener {
 
                 view.changeProgressBar(false);
                 view.setGreenStatus();
-                System.out.println(" Pos " + i + " " + recieved);
+                //System.out.println(" Pos " + i + " " + recieved);
                 i++;
 
             }
@@ -325,10 +352,12 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     public void restart() {
         try {
-            portThread = new PortThread(sp, this);
-            portThread.setPort(sp);
+            reciever.join();
             reciever = new Thread(portThread);
             reciever.start();
+            timer.join();
+            timer = new Thread(connectionThread);
+            timer.start();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -366,5 +395,11 @@ public class Listener extends MouseAdapter implements ActionListener {
     public void setConnectionThread(ConnectionThread connectionThread) {
         this.connectionThread = connectionThread;
     }
+
+    public void clean_Data(){
+        view.setDataMax(0);
+    }
+
+
 
 }
