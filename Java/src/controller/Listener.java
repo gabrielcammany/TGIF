@@ -64,9 +64,9 @@ public class Listener extends MouseAdapter implements ActionListener {
 
         }
 
-        if(portThread != null){
+        if (portThread != null) {
 
-            if(!view.isConnected()){
+            if (!view.isConnected()) {
 
                 view.showMessage("Error!", "No estas connectat!\n", JOptionPane.ERROR_MESSAGE);
 
@@ -78,20 +78,28 @@ public class Listener extends MouseAdapter implements ActionListener {
             timer.interrupt();
 
             //System.out.println("Recieved coinfimr:asd33");
-            while (reciever.isAlive());
-            while (timer.isAlive());
+            while (reciever.isAlive()) ;
+            while (timer.isAlive()) ;
 
             view.setGreenStatus();
 
-            switch (e.getActionCommand()){
+            switch (e.getActionCommand()) {
+                case "SPEED_UN":
+                case "SPEED_UN_VINT":
+                case "SPEED_DOS_CINC":
+                case "SPEED_CINC":
+                    enviarVelocitatRF();
+                    break;
                 case "JB_HEART":
                     enviarPeticioHeart();
+                    break;
+                case "JB_RESET":
+                    enviarPeticiorReset();
                     break;
                 case "JB_HALF":
                     enviarPeticioHalf();
                     break;
                 case "JB_SEND":
-                    view.changeProgressBar(true);
                     enviar(true);
                     break;
                 case "JB_RF":
@@ -102,9 +110,10 @@ public class Listener extends MouseAdapter implements ActionListener {
 
                         view.changeProgressBar(true);
                         System.out.println(recieved);
-                        if(recieved > 15){
+
+                        if (recieved > 15) {
                             view.setProgressBarStatus(2400);
-                        }else{
+                        } else {
                             view.setProgressBarStatus(1200);
                         }
                         enviarPeticioRF();
@@ -122,13 +131,39 @@ public class Listener extends MouseAdapter implements ActionListener {
             portThread.setEscolta(true);
             restart();
 
-        }else{
+        } else {
             view.showMessage("Error!", "No estas connectat!\n", JOptionPane.ERROR_MESSAGE);
         }
 
     }
 
-    private byte dadesDesades(){
+    private byte convertSpeedValue(boolean one, ButtonGroup value) {
+        if (value.getSelection() == view.getOp().getUn().getModel()) {
+            return (byte)(one ? 4 : 9);
+        } else if (value.getSelection() == view.getOp().getUnvintcinc().getModel()) {
+            return (byte)(one ? 3 : 7);
+        }
+        return (byte)(one ? 4 : 9);
+
+    }
+
+    private void enviarVelocitatRF() {
+        byte received;
+        try {
+
+            sp.writeByte(Flags.flag_speed);
+
+            sp.writeByte(convertSpeedValue(true,view.getOp().getButtonGroup()));
+
+            sp.writeByte(convertSpeedValue(false,view.getOp().getButtonGroup()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private byte dadesDesades() {
         byte received;
 
         try {
@@ -142,6 +177,19 @@ public class Listener extends MouseAdapter implements ActionListener {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    private void enviarPeticiorReset(){
+        try {
+
+            sp.writeByte(Flags.flag_delete_info);
+            while (sp.readByte() == 0) ;
+
+            view.setDataMax(0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void enviarErrorPeticioRF() {
@@ -258,39 +306,43 @@ public class Listener extends MouseAdapter implements ActionListener {
 
             byte[] utf8Bytes = view.getJpTop().getDisplay().getDisplayValue(view);
 
+            view.changeProgressBar(true);
             view.setProgressBarStatus(utf8Bytes.length);
             view.setDataMax(utf8Bytes.length);
 
             if (confirmacio) {
 
                 sp.writeByte(Flags.flag_desar);
-                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar);
+                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar) ;
 
+            }else{
+                sp.writeByte(Flags.flag_desar_ncon);
+                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar) ;
             }
 
-            //System.out.println("Recieved coinfim: " + recieved);
+            System.out.println("Recieved coinfim: " + recieved);
 
             if (isComplexFunction()) {
 
                 sp.writeByte(Flags.complex);
-                while ((recieved = sp.readByte()) == 0);
+                while ((recieved = sp.readByte()) == 0) ;
 
             } else {
 
                 sp.writeByte(Flags.ncomplex);
-                while ((recieved = sp.readByte()) == 0);
+                while ((recieved = sp.readByte()) == 0) ;
 
             }
-            //System.out.println("Recieved complex: " + String.valueOf(recieved));
+            System.out.println("Recieved complex: " + String.valueOf(recieved));
 
             //Part de id RF
             sp.writeByte(Flags.GROUP_ID_H);
             while ((recieved = sp.readByte()) == 0) ;
-            //System.out.println("Recieved ID: " + recieved);
+            System.out.println("Recieved ID: " + recieved);
 
             sp.writeByte(Flags.GROUP_ID_L);
             while ((recieved = sp.readByte()) == 0) ;
-            //System.out.println("Recieved ID2: " + recieved);
+            System.out.println("Recieved ID2: " + recieved);
 
             int i = 0;
             for (byte value : utf8Bytes) {
@@ -300,7 +352,7 @@ public class Listener extends MouseAdapter implements ActionListener {
 
                 view.changeProgressBar(false);
                 view.setGreenStatus();
-                //System.out.println(" Pos " + i + " " + recieved);
+                System.out.println(" Pos " + i + " " + recieved);
                 i++;
 
             }
@@ -388,6 +440,14 @@ public class Listener extends MouseAdapter implements ActionListener {
         view.changeProgressBar(false);
     }
 
+    public void resetProgressBar(){
+        view.changeProgressBar(true);
+    }
+
+    public void maxProgressBar(int value){
+        view.setProgressBarStatus(value);
+    }
+
     public ConnectionThread getConnectionThread() {
         return connectionThread;
     }
@@ -396,10 +456,33 @@ public class Listener extends MouseAdapter implements ActionListener {
         this.connectionThread = connectionThread;
     }
 
-    public void clean_Data(){
+    public void clean_Data() {
         view.setDataMax(0);
     }
 
+    public void showErrData(){
+        stopTimer();
+        view.setGreenStatus();
+        view.showMessage("Error!", "No hi han dades desades!\n", JOptionPane.ERROR_MESSAGE);
+        resetTimer();
+    }
+
+    public void stopTimer(){
+        timer.interrupt();
+
+        while (timer.isAlive()) ;
+    }
+
+    public void resetTimer(){
+
+        try {
+            timer.join();
+            timer = new Thread(connectionThread);
+            timer.start();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

@@ -2,6 +2,7 @@ package view;
 
 import controller.Listener;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public class MainView extends JFrame {
@@ -63,21 +64,12 @@ public class MainView extends JFrame {
         jpBottom.add(jProgressBar,BorderLayout.NORTH);
 
         JPanel sliderPanel = new JPanel((new GridLayout(0, 1)));
-        JPanel status = new JPanel((new GridLayout(0, 2)));
         configLEDS();
 
-        JLabel title = new JLabel("LEDs Status", SwingConstants.CENTER);
-
-        sliderPanel.add(title);
-        title.setFont(new Font("Arial", Font.BOLD, 14));
-        sliderPanel.add(new JSeparator());
-        status.add(jStatusZero);
-        status.add(jStatusOne);
-        sliderPanel.add(status);
-        sliderPanel.add(Box.createVerticalStrut(2));
         sliderPanel.add(jStatus);
 
         sliderPanel.revalidate();
+        sliderPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 
         jpBottom.add(sliderPanel, BorderLayout.PAGE_END);
         //Definim el color per defecte del label per indicar el status del usb
@@ -88,9 +80,9 @@ public class MainView extends JFrame {
     private void configLEDS(){
 
         jStatus = new JLabel("Not connected", SwingConstants.CENTER);
+        jStatus.setBorder(new EmptyBorder(10,0,10,0));
+        jStatus.setForeground(Color.white);
         setRedStatus();
-        jStatusOne = new JLabel("Not connected", SwingConstants.CENTER);
-        jStatusZero = new JLabel("Not connected", SwingConstants.CENTER);
     }
 
     public void  setGreenStatus(){
@@ -98,6 +90,7 @@ public class MainView extends JFrame {
         this.jStatus.setOpaque(true);
         repaint();
         this.connected = true;
+        this.jStatus.setText("Connected");
     }
 
     public void  setRedStatus(){
@@ -105,6 +98,7 @@ public class MainView extends JFrame {
         this.jStatus.setOpaque(true);
         repaint();
         this.connected = false;
+        this.jStatus.setText("Not connected");
     }
 
     public void setProgressBarStatus(int max){

@@ -38,6 +38,8 @@ TEMPS_ZERO_RF EQU 0x10
 TEMPS_UN_POLS EQU 0x11
 ESTAT_P EQU 0x12
  
+SET_SEG_OLD EQU 0x13
+ 
 ;*****************
 ;*   CONSTANTS   *
 ;*****************
@@ -57,11 +59,12 @@ FLAG_ENVIAR_ERROR EQU 0x83
 FLAG_HEART EQU 0x84
 FLAG_HALF EQU 0x85
 FLAG_PROGRESS EQU 0x86
-FLAG_HEART_DATA EQU 0x87
+FLAG_PROGRESS_RESET EQU 0x87
 FLAG_CONNECTION EQU 0x88
 UNBLOCK EQU 0x89
 FLAG_DELETE_INFO EQU 0x8A
 FLAG_DATA EQU 0x8B
+FLAG_SPEED EQU 0x8C
 
 ;*********************************
 ; VECTORS DE RESET I INTERRUPCI� *
@@ -118,6 +121,7 @@ INIT_VARS
     clrf COPS,0
     clrf RESTANT,0
     clrf ESTAT_P,0
+    setf SET_SEG_OLD,0
     
     movlw 0x05
     movwf TEMPS_UN_RF,0
@@ -147,8 +151,7 @@ INIT_SIO
 
 INIT_PORTS
     ;clrf TRISA, 0
-    bcf TRISC, 0, 0	;RF Out
-    bcf TRISC, 1, 0	;RF Out
+    bcf TRISC, 5, 0	;RF Out
     bcf TRISC, 3, 0	;LED0
     bcf TRISC, 2, 0	;LED1
     
@@ -169,8 +172,7 @@ INIT_PORTS
     
     bcf INTCON2,RBPU,0
     
-    movlw 0x5c
-    movwf LATD,0  
+    setf LATD,0  
     
     clrf LATC,0
     
@@ -218,7 +220,7 @@ RESET_TIMER
 ;************
 ORG TAULA7S
     ;Segments del 0, segments del 1
-    DB 0x7F, 0XF5
+    DB 0x80, 0XF5
 
     ;Segments del 2, segments del 3
     DB 0x4C, 0x64
@@ -251,8 +253,8 @@ LOOP
     
     call POLSADOR
     
-    ;btfss PORTB,1,0 ;Enviar Info
-    ;call POLS_ENVIAR_INFO
+    btfss PORTB,1,0 ;Enviar Info
+    call POLS_ENVIAR_INFO
     
     btfsc ESTAT, 0,0
     call MIG_INTENSITAT
@@ -278,7 +280,7 @@ REBUT
         
     movlw FLAG_DESAR_NCON 
     cpfsgt RCREG,0
-    goto DESA_NCON 
+    goto DESA
     
     movlw FLAG_ENVIAR 
     cpfsgt RCREG,0
@@ -296,17 +298,21 @@ REBUT
     cpfsgt RCREG,0
     goto ENCENDRE_HALF 
     
-    movlw FLAG_HEART_DATA 
-    cpfsgt RCREG,0
-    goto USART_HEART_STATUS 
-    
     movlw UNBLOCK 
     cpfsgt RCREG,0
     goto UNBLOCK_THREAD 
     
+    movlw FLAG_DELETE_INFO 
+    cpfsgt RCREG,0
+    goto PETICIO_DEL_INFO
+    
     movlw FLAG_DATA 
     cpfsgt RCREG,0
     goto USART_DATA 
+    
+    movlw FLAG_SPEED 
+    cpfsgt RCREG,0
+    goto USART_SPEED
     
     return
 
@@ -316,6 +322,28 @@ UNBLOCK_THREAD
     bsf LATC,2,0
     return
     
+;***********************************************************
+;******************** - 7 SEGMENTS - ***********************
+;***********************************************************
+
+INIT_7_SEG
+    movlw     0x00        ; Load TBLPTR with the base
+    movwf     TBLPTRU                 ; address of the word
+    movlw     0x00
+    movwf     TBLPTRH
+    movlw     TAULA7S
+    movwf     TBLPTRL 
+    return
+    
+INCREMENTA_7_SEG
+    TBLRD*+                          ; read into TABLAT and increment
+    movff      TABLAT, LATD              ; get data
+    return
+    
+UNDERSCORE_7_SEG
+    movlw 0xEF
+    movwf LATD,0
+    return
     
 ;***********************************************************
 ;*********************** - BLOC RF - ***********************
@@ -337,16 +365,25 @@ ENVIAR_RF
     movff POSTINC0, AUXILIAR
     
     call COMPUTE_DIV_10
+    clrf TEMPS_UN,0
     
-ENVIAR_FOR    
-    movf TEMPS_UN_RF,0
-    cpfsgt TEMPS_UN,0
-    call ENVIAR_BIT_PRIMERA_MEITAT
+    movff PORTD, SET_SEG_OLD
+        
+    call INIT_7_SEG
     
-    movf TEMPS_ZERO_RF
-    cpfsgt TEMPS_UN,0
-    call ENVIAR_BIT_SEGONA_MEITAT
+    call INCREMENTA_7_SEG
     
+ENVIAR_FOR 
+    movf TEMPS_UN_RF,0,0
+    cpfseq TEMPS_UN,0
+    goto ENVIAR_BIT_PRIMERA_MEITAT
+
+ENVIAR_FOR_SEGON
+    movf TEMPS_ZERO_RF,0,0
+    cpfseq TEMPS_UN,0
+    goto ENVIAR_BIT_SEGONA_MEITAT
+    
+    clrf TEMPS_UN,0
     call USART_BIT_ENVIAT
     incf RESTANT,1,0
     incf BYTE,1,0
@@ -376,7 +413,6 @@ ENVIA_PARAMETRES
     return
         
 CONTINUA_FOR
-    clrf TEMPS_UN,0
     rrncf AUXILIAR,1,0
     goto ENVIAR_FOR 
     
@@ -384,17 +420,18 @@ INCREMENTA_FOR
     incf COPS,1,0
     clrf RESTANT,0
     
+    call INCREMENTA_7_SEG
+    
     movlw 0x0A
     cpfslt COPS,0
     goto FINAL_ENVIAR_RF
-    
-    ;call INCREMENTA_7_SEG
     
     goto ENVIAR_FOR 
     
 FINAL_ENVIAR_RF
     clrf ESTAT,0
     bsf ESTAT,1,0
+    movff SET_SEG_OLD, LATD
     return
     
 ENVIAR_BIT_PRIMERA_MEITAT
@@ -402,14 +439,14 @@ ENVIAR_BIT_PRIMERA_MEITAT
     bcf LATC, 5, 0
     btfss AUXILIAR,0,0 ;Si el primer es 0 fiquem la primera part a 1
     bsf LATC, 5, 0
-    return
+    goto ENVIAR_FOR 
     
 ENVIAR_BIT_SEGONA_MEITAT
     btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la segona part a 1
     bsf LATC, 5, 0
     btfss AUXILIAR,0,0 ;Si el primer es 1 fiquem la segona part a 0
     bcf LATC, 5, 0
-    return
+    goto ENVIAR_FOR_SEGON 
     
 ENVIAR_RF_ERROR
     
@@ -417,7 +454,7 @@ ENVIAR_RF_ERROR
     movwf LATD,0  
     clrf ESTAT,0
     bsf ESTAT,0,0
-    call USART_DESAT
+    call USART_ERROR_RF
     
     return
     
@@ -435,6 +472,27 @@ COMPUTE_DIV_10
 ;********************* - BLOC USART - **********************
 ;***********************************************************
 
+USART_PROGRESS_RESET
+    movlw FLAG_PROGRESS_RESET
+    movwf TXREG,0
+    call USART_ESPERA
+    
+    movff SIGNAL_TYPE,TXREG
+    goto USART_ESPERA
+
+USART_SPEED   
+    btfss PIR1,RCIF,0
+    goto USART_SPEED
+    
+    movff RCREG, TEMPS_UN_RF ;Movem el caracter a la posicio de la ram corresponent
+    
+    call USART_ESPERA_INFO
+    
+    movff RCREG, TEMPS_ZERO_RF ;Movem el caracter a la posicio de la ram corresponent
+    
+    return
+    
+    
 USART_DATA
     movff SIGNAL_TYPE,TXREG
     goto USART_ESPERA
@@ -478,6 +536,7 @@ USART_CONNECTAT
    return
    
    clrf TEMPS_CONN,0
+   
    movlw FLAG_CONNECTION
    movwf TXREG,0
    goto USART_ESPERA
@@ -492,9 +551,6 @@ USART_DESCONNECTAT
    clrf CONNECTION,0
    bsf CONNECTION,1,0
    
-   bcf LATB,3,0
-   ;bsf LATC,3,0
-   
    return
    
 USART_BIT_ENVIAT
@@ -506,6 +562,30 @@ USART_BORRAR_INFO
    movlw FLAG_DELETE_INFO
    movwf TXREG,0
    goto USART_ESPERA
+   
+USART_ERROR_RF
+   movlw FLAG_ENVIAR_ERROR
+   movwf TXREG,0
+   goto USART_ESPERA
+   
+USART_ADCON   
+   movlw 0x34
+   cpfsgt TEMPS_CONN,0
+   return
+   
+   bsf ADCON0,1,0
+   
+ADCON_DONE
+   btfsc ADCON0,1,0
+   goto ADCON_DONE
+   
+   clrf TEMPS_CONN,0
+   
+   movlw FLAG_CONNECTION
+   movwf TXREG,0
+   goto USART_ESPERA
+   
+   return
    
 
 ;***********************************************************
@@ -525,10 +605,9 @@ REBRE_CONFIG
     return
     
 DESA
-    clrf TEMPS_UN,0
     call USART_DESAR
-
-DESA_NCON ;Quan ens apreten el boto no necessitem enviar al pc la confirmacio
+     ;Quan ens apreten el boto no necessitem enviar al pc la confirmacio
+    clrf TEMPS_UN,0
     clrf RCREG,0
     clrf SIGNAL_TYPE,0
     
@@ -565,6 +644,7 @@ COMPROVA_FINAL
     
 FINAL_DESAR   
     bcf SIGNAL_TYPE,7,0
+    call UNDERSCORE_7_SEG
     goto CANVIA_ESTAT_UP
     
 DESA_CPLX_FINAL
@@ -588,11 +668,23 @@ POLSADOR
     cpfsgt ESTAT_P,0
     goto ESPERA_POLSADOR
     
+    movlw 0xFF
+    movwf TXREG,0
+    call USART_ESPERA
+    
     btfsc ESTAT_P,0,0
     goto ESPERA_POLSADOR_DOWN	
     
+    movlw 0xFE
+    movwf TXREG,0
+    call USART_ESPERA
+    
     btfsc ESTAT_P,1,0
     goto ESPERA_POLSADOR_DESAR
+    
+    movlw 0xFD
+    movwf TXREG,0
+    call USART_ESPERA
     
     btfsc ESTAT_P,2,0
     goto ESPERA_POLSADOR_DEL
@@ -605,6 +697,7 @@ ESPERA_POLSADOR
     return
     
 ESPERA_POLSADOR_DOWN   
+    
     movlw 0x64
     cpfslt TEMPS_UN,0
     call INCREMENTA_ESPERA
@@ -648,18 +741,20 @@ ESPERA_POLSADOR_DEL
     btfss PORTB,2,0 
     return
     
+    call ESPERA_16MS
+    
     movlw 0x14
-    cpfsgt TEMPS_UN_POLS,0
-    goto PETICIO_DEL_INFO
+    cpfslt TEMPS_UN_POLS,0
+    goto RESET_POLSADOR
         
-    clrf ESTAT_P,0
-    return
+    goto PETICIO_DEL_INFO
     
     
 PETICIO_DEL_INFO
     clrf ESTAT_P,0
-    bsf LATC,3,0
-    bsf LATC,2,0
+    clrf ESTAT,0
+    setf LATD,0
+    call DESACTIVA_LEDS
     
     clrf SIGNAL_TYPE,0
     clrf COMPTA_BYTES,0
@@ -669,12 +764,6 @@ PETICIO_DEL_INFO
     
 PETICIO_DESAR_INFO
     clrf ESTAT_P,0
-    bsf LATC,3,0
-    bcf LATC,2,0
-    
-    btfsc PORTB,0,0
-    return
-    
     call USART_DESAR_NCON
     return
     
@@ -690,13 +779,12 @@ RESET_POLSADOR
     
     
 POLS_DESAR_INFO     
-    clrf TEMPS_UN,0
+    call ESPERA_16MS
     call ESPERA_16MS
    
     bsf ESTAT_P,0,0 
-    clrf TEMPS_UN_POLS,0
-    
-    
+    clrf TEMPS_UN_POLS,0    
+    clrf TEMPS_UN,0
     
     return
     
@@ -706,10 +794,11 @@ POLS_ENVIAR_INFO
     call ESPERA_BAIXAR_ENVIAR
     
     movlw 0x00
-    cpfsgt COMPTA_BYTES,0
+    cpfsgt SIGNAL_TYPE,0
     goto ENVIAR_RF_ERROR
     
-    ;call ENVIAR_RF
+    call USART_PROGRESS_RESET
+    call ENVIAR_RF
     
     return
     
@@ -725,8 +814,8 @@ ESPERA_BAIXAR_ENVIAR
     return
     
 ESPERA_16MS
-    movlw 0x20
-    cpfseq TEMPS_UN,0
+    movlw 0x0A
+    cpfsgt TEMPS_UN,0
     goto ESPERA_16MS
     return
     
@@ -771,7 +860,7 @@ MIG_INTENSITAT
     clrf TEMPS_LED,0
     
     return
-
+    
 BLINKING
     
     btfsc ESTAT, 1,0
@@ -781,9 +870,12 @@ BLINKING
     goto ESPERA_CENT
     
     btfsc ESTAT, 3,0
+    goto ESPERA_VINT
+    
+    btfsc ESTAT, 4,0
     goto BAIXADA_LED
     
-    return    
+    return
     
     
     
@@ -791,21 +883,29 @@ CANVIA_ESTAT_DOWN
     clrf TEMPS_LED
     clrf ESTAT,0
     
-    bsf ESTAT,3,0
+    bsf ESTAT,4,0
     return
        
 CANVIA_ESTAT_ESPERA
     
-    ;call USART_HEART_STATUS
-    
     clrf ESTAT,0
+    movlw 0x00
+    cpfsgt COMPTA_BYTES,0
+    goto CANVI_10_ESPERA
+    
     bsf ESTAT,2,0
     incf HEART_BEAT,1,0
-    
+        
+FINAL_CANVI_ESPERA
     clrf TEMPS_LED
     goto LEDS_ON
-    
     return
+    
+CANVI_10_ESPERA
+    bsf ESTAT,3,0
+    movlw 0x14
+    movwf HEART_BEAT,0
+    goto FINAL_CANVI_ESPERA
     
 CANVIA_ESTAT_UP
     clrf ESTAT,0
@@ -817,24 +917,42 @@ CANVIA_ESTAT_UP
     return
    
 BAIXADA_LED    
-    ;call USART_HEART_STATUS
     
     movf HEART_BEAT, 0,0
     cpfsgt TEMPS_LED,0
     goto LEDS_ON
+    
+    movlw 0x00
+    cpfsgt COMPTA_BYTES,0
+    goto BAIXADA_LED_10
         
     movf TEMPS_MAX,0,0
+
+CONTINUE_BAIXADA_LED
     cpfsgt TEMPS_LED,0
     goto LEDS_OFF
     
     clrf TEMPS_LED,0
+    
+    movlw 0x00
+    cpfsgt COMPTA_BYTES,0
+    goto BAIXADA_10
+    
     decf HEART_BEAT,1,0
     
+BAIXADA_LED_FINAL
     btfsc STATUS,N,0
     goto CANVIA_ESTAT_UP
-    
     return
     
+BAIXADA_10
+    movlw 0x04
+    subwf HEART_BEAT,1,0
+    goto BAIXADA_LED_FINAL
+
+BAIXADA_LED_10
+    decf TEMPS_MAX,0,0
+    goto CONTINUE_BAIXADA_LED
     
 ESPERA_CENT
     movlw 0x74
@@ -843,25 +961,43 @@ ESPERA_CENT
     
     return
     
+ESPERA_VINT
+    movlw 0x14
+    cpfslt TEMPS_LED,0
+    goto CANVIA_ESTAT_DOWN
+    
+    return
+    
 PUJADA_LED
-    ;call USART_HEART_STATUS
     
     movf HEART_BEAT, 0,0
     cpfsgt TEMPS_LED,0
     goto LEDS_ON
         
     movf TEMPS_MAX,0,0
-    cpfsgt TEMPS_LED,0
+    cpfseq TEMPS_LED,0
     goto LEDS_OFF
     
     clrf TEMPS_LED,0
+    
+    movlw 0x00
+    cpfsgt COMPTA_BYTES,0
+    goto PUJADA_10
+    
     incf HEART_BEAT,1,0
     
+PUJADA_LED_FINAL
     movf TEMPS_MAX,0,0
-    cpfslt HEART_BEAT,0
+    cpfseq HEART_BEAT,0
+    return
+    
     goto CANVIA_ESTAT_ESPERA
     
-    return
+PUJADA_10
+    movlw 0x05
+    addwf HEART_BEAT,1,0
+    goto PUJADA_LED_FINAL
+    
     
 LEDS_ON
     btfsc QUIN_LED,0,0
@@ -884,24 +1020,5 @@ LEDS_OFF
     
     bcf LATC,2,0
     return
-    
-USART_HALF_STATUS
-   movlw FLAG_HALF
-   movwf TXREG,0
-   call USART_ESPERA
-   call USART_ESPERA_INFO
-   
-   return
-
-USART_HEART_STATUS
-   movlw FLAG_HEART_DATA
-   movwf TXREG,0
-   call USART_ESPERA
-      
-   movf HEART_BEAT,0,0
-   movwf TXREG,0
-   call USART_ESPERA
-   
-   return
    
     END

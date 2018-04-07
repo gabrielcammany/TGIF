@@ -3,6 +3,8 @@ package model;
 import com.SerialPort.SerialPort;
 import controller.Listener;
 
+import javax.swing.*;
+
 public class PortThread implements Runnable {
 
 
@@ -28,13 +30,17 @@ public class PortThread implements Runnable {
 
                 if (recieved != 0) {
 
-                    if (recieved == Flags.flag_desar_ncon && listen) {
+                    //System.out.println("Recieved coinfim: " + recieved);
 
+                    if (recieved == Flags.flag_desar_ncon) {
+
+
+                        controller.stopTimer();
+                        controller.updateStatusView(true);
                         controller.enviar(false);
 
-                        controller.restart();
+                        controller.resetTimer();
 
-                        controller.updateStatusView(true);
                         controller.getConnectionThread().setStart_time(System.nanoTime());
 
                     } else if (recieved == Flags.flag_half) {
@@ -44,31 +50,39 @@ public class PortThread implements Runnable {
 
                         controller.updateHalfView();
                         this.setHalf(true);
-                        controller.getConnectionThread().setStart_time(System.nanoTime());
 
                     } else if (recieved == Flags.flag_progress) {
 
-                        if (controller.isDataSet()) controller.changeProgressBar();
-                        controller.getConnectionThread().setStart_time(System.nanoTime());
+                        controller.changeProgressBar();
 
                     } else if (recieved == Flags.flag_connection) {
 
                         //System.out.println("Recieving!");
-                        controller.getConnectionThread().setStart_time(System.nanoTime());
 
-                    } else if (recieved == Flags.flag_heart_data) {
+                    } else if (recieved == Flags.flag_progress_reset) {
 
-                        while ((recieved = sp.readByte()) == 0) ;
+                        while ((recieved = sp.readByte()) == 0);
 
-                        controller.updateStatusView(true);
-
-                        controller.getConnectionThread().setStart_time(System.nanoTime());
+                        if(recieved > 15){
+                            controller.maxProgressBar(2400);
+                        }else{
+                            controller.maxProgressBar(1200);
+                        }
+                        controller.resetProgressBar();
 
                     } else if (recieved == Flags.flag_delete_info) {
 
                         controller.clean_Data();
 
+                    } else if (recieved == Flags.flag_enviar_error) {
+
+                        controller.showErrData();
+
+                    }else{
+                        System.out.println("Extra Received: " + recieved);
                     }
+
+                    controller.getConnectionThread().setStart_time(System.nanoTime());
 
                 }
 

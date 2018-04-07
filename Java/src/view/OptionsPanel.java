@@ -10,13 +10,17 @@ public class OptionsPanel extends JPanel {
     private JTextField JTpic;
     private JTextField JToffset;
     private JComboBox JCBtipus;
+    private JRadioButton un;
+    private JRadioButton unvintcinc;
+    private ButtonGroup buttonGroup;
+    private JButton reset;
 
     public OptionsPanel() {
-        this.setLayout(new BorderLayout(10, 20));
-        JPanel optionList = new JPanel(new GridLayout(4, 2, 10, 20));
+        this.setLayout(new BorderLayout(20, 20));
+        JPanel optionList = new JPanel(new GridLayout(7, 2, 0, 0));
         this.add(optionList, BorderLayout.NORTH);
 
-        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
+        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
 
         optionList.add(new JLabel("Tipus: "));
 
@@ -33,6 +37,25 @@ public class OptionsPanel extends JPanel {
         optionList.add(new JLabel("Offset: "));
         JToffset = new JTextField("0");
         optionList.add(JToffset);
+
+        optionList.add(new JLabel("Velocitat (bps): "));
+        optionList.add(new JLabel(" "));
+        un = new JRadioButton("100");
+        unvintcinc = new JRadioButton("125");
+
+        buttonGroup = new ButtonGroup();
+        buttonGroup.add(un);
+        buttonGroup.add(unvintcinc);
+        buttonGroup.setSelected(un.getModel(),true);
+
+        reset = new JButton("Reset");
+        reset.setPreferredSize(new Dimension(70, 32));
+
+        optionList.add(un);
+        optionList.add(unvintcinc);
+        optionList.add(new JLabel(" "));
+        optionList.add(new JLabel(" "));
+        optionList.add(reset);
 
 
     }
@@ -56,6 +79,12 @@ public class OptionsPanel extends JPanel {
         JTpic.addActionListener(l);
         JToffset.setActionCommand("OFF");
         JToffset.addActionListener(l);
+        un.setActionCommand("SPEED_UN");
+        un.addActionListener(l);
+        unvintcinc.setActionCommand("SPEED_UN_VINT");
+        unvintcinc.addActionListener(l);
+        reset.setActionCommand("JB_RESET");
+        reset.addActionListener(l);
     }
 
     public String getType(){
@@ -85,5 +114,32 @@ public class OptionsPanel extends JPanel {
             return 0.0;
         }
     }
+
+    public ButtonGroup getButtonGroup() {
+        return buttonGroup;
+    }
+
+    public void setButtonGroup(ButtonGroup buttonGroup) {
+        this.buttonGroup = buttonGroup;
+    }
+
+
+    public JRadioButton getUn() {
+        return un;
+    }
+
+    public void setUn(JRadioButton un) {
+        this.un = un;
+    }
+
+    public JRadioButton getUnvintcinc() {
+        return unvintcinc;
+    }
+
+    public void setUnvintcinc(JRadioButton unvintcinc) {
+        this.unvintcinc = unvintcinc;
+    }
+
+
 
 }

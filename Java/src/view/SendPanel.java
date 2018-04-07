@@ -25,8 +25,8 @@ public class SendPanel extends JPanel {
 
     public SendPanel() {
 
-        this.setLayout(new GridLayout(2, 1, 10, 0));
-        this.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
+        this.setLayout(new GridLayout(2, 2, 0, 0));
+        this.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
 
         //JPanel Configuració
         this.createConfigPanel();
@@ -58,8 +58,10 @@ public class SendPanel extends JPanel {
 
         GridBagConstraints gbc = new GridBagConstraints();
 
-        jcbComboBaud.setPreferredSize(new Dimension(175, 30));
-        jcbComboPort.setPreferredSize(new Dimension(175, 30));
+        jcbComboBaud.setPreferredSize(new Dimension(125, 30));
+        jcbComboPort.setPreferredSize(new Dimension(125, 30));
+
+        jpConfigure.setBorder(BorderFactory.createEmptyBorder(0, -22, 0, 0));
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -76,34 +78,22 @@ public class SendPanel extends JPanel {
         gbc.gridx = 1;
         gbc.gridy = 2;
         jpConfigure.add(new JLabel(" "), gbc);
-        gbc.gridx = 1;
+        gbc.gridx = 0;
         gbc.gridy = 3;
+        jbConnect.setPreferredSize(new Dimension(120, 42));
         jpConfigure.add(jbConnect, gbc);
     }
 
     private void createButtonsPanel() {
-        jpButtons = new JPanel(new GridBagLayout());
+        jpButtons = new JPanel(new GridLayout(2, 2, 20, 20));
         this.add(jpButtons, BorderLayout.CENTER);
+        jpButtons.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        jpButtons.add(new JLabel(" "), gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        jpButtons.add(jbSend, gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        jpButtons.add(jbRF, gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        jpButtons.add(new JLabel(" "), gbc);
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        jpButtons.add(jbHeart, gbc);
-        gbc.gridx = 1;
-        gbc.gridy = 3;
-        jpButtons.add(jbHalf, gbc);
+        jpButtons.add(jbSend);
+        jpButtons.add(jbRF);
+        jpButtons.add(jbHeart);
+        jpButtons.add(jbHalf);
+
     }
 
     public void setPortsAndBDs(String[] ports, int[] bds){
