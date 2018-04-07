@@ -65,6 +65,7 @@ UNBLOCK EQU 0x89
 FLAG_DELETE_INFO EQU 0x8A
 FLAG_DATA EQU 0x8B
 FLAG_SPEED EQU 0x8C
+FLAG_AD EQU 0x8D
 
 ;*********************************
 ; VECTORS DE RESET I INTERRUPCI� *
@@ -97,7 +98,8 @@ HIGH_INT
 ;* MAIN I RESTA DE FUNCIONS *
 ;****************************
 INIT_ADCON
-    movlw 0x03
+    
+    movlw 0x01
     movwf ADCON0,0
     
     movlw 0x0E
@@ -267,6 +269,8 @@ LOOP
     
     btfsc PORTB,0,0
     call USART_DESCONNECTAT
+        
+    call USART_ADCON
     
     goto LOOP
     
@@ -453,10 +457,10 @@ ENVIAR_RF_ERROR
     movlw 0x7F
     movwf LATD,0  
     clrf ESTAT,0
-    bsf ESTAT,0,0
-    call USART_ERROR_RF
+    bsf ESTAT,1,0
     
-    return
+    goto USART_ERROR_RF
+    
     
 COMPUTE_DIV_10
     btfsc SIGNAL_TYPE,4,0
@@ -531,6 +535,8 @@ USART_CONNECTAT
    btfsc PORTB,0,0
    return
    
+   bsf LATB,3,0
+   
    movlw 0x34
    cpfsgt TEMPS_CONN,0
    return
@@ -544,6 +550,8 @@ USART_CONNECTAT
    return
    
 USART_DESCONNECTAT
+   bcf LATB,3,0
+   
    btfsc CONNECTION,1,0
    return
    
@@ -569,9 +577,9 @@ USART_ERROR_RF
    goto USART_ESPERA
    
 USART_ADCON   
-   movlw 0x34
-   cpfsgt TEMPS_CONN,0
-   return
+   movlw 0x64
+   cpfsgt TEMPS_UN,0
+   return   
    
    bsf ADCON0,1,0
    
@@ -579,11 +587,14 @@ ADCON_DONE
    btfsc ADCON0,1,0
    goto ADCON_DONE
    
-   clrf TEMPS_CONN,0
-   
-   movlw FLAG_CONNECTION
+   movlw FLAG_AD
    movwf TXREG,0
-   goto USART_ESPERA
+   call USART_ESPERA
+   
+   movff ADRESL,TXREG
+   call USART_ESPERA
+   
+   clrf TEMPS_UN,0
    
    return
    
@@ -619,6 +630,8 @@ DESA
     
     movlw POSICIO_A_DESAR_RAM
     movwf FSR0L, 0
+    
+    movff AUXILIAR, POSTINC0
 
 DESA_BUCLE
     btfss PIR1,RCIF,0
@@ -668,23 +681,11 @@ POLSADOR
     cpfsgt ESTAT_P,0
     goto ESPERA_POLSADOR
     
-    movlw 0xFF
-    movwf TXREG,0
-    call USART_ESPERA
-    
     btfsc ESTAT_P,0,0
     goto ESPERA_POLSADOR_DOWN	
     
-    movlw 0xFE
-    movwf TXREG,0
-    call USART_ESPERA
-    
     btfsc ESTAT_P,1,0
     goto ESPERA_POLSADOR_DESAR
-    
-    movlw 0xFD
-    movwf TXREG,0
-    call USART_ESPERA
     
     btfsc ESTAT_P,2,0
     goto ESPERA_POLSADOR_DEL
@@ -789,6 +790,8 @@ POLS_DESAR_INFO
     return
     
 POLS_ENVIAR_INFO
+    bcf LATC,2,0
+    bcf LATC,3,0
     clrf TEMPS_UN,0
     call ESPERA_16MS
     call ESPERA_BAIXAR_ENVIAR

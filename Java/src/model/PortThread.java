@@ -21,6 +21,7 @@ public class PortThread implements Runnable {
 
     public void run() {
         byte recieved;
+        int i = 0;
 
         while (!Thread.currentThread().isInterrupted()) {
 
@@ -78,8 +79,11 @@ public class PortThread implements Runnable {
 
                         controller.showErrData();
 
-                    }else{
-                        System.out.println("Extra Received: " + recieved);
+                    } else if (recieved == Flags.flag_ad) {
+
+                        while ((recieved = sp.readByte()) == 0) ;
+                        controller.setPeriod(recieved);
+
                     }
 
                     controller.getConnectionThread().setStart_time(System.nanoTime());
@@ -111,4 +115,5 @@ public class PortThread implements Runnable {
     public void setPort(SerialPort port) {
         this.sp = port;
     }
+
 }

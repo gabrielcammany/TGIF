@@ -8,7 +8,7 @@ import java.awt.*;
 public class OptionsPanel extends JPanel {
 
     private JTextField JTpic;
-    private JTextField JToffset;
+    private JTextField JToffset;private JTextField JTperiod;
     private JComboBox JCBtipus;
     private JRadioButton un;
     private JRadioButton unvintcinc;
@@ -17,7 +17,7 @@ public class OptionsPanel extends JPanel {
 
     public OptionsPanel() {
         this.setLayout(new BorderLayout(20, 20));
-        JPanel optionList = new JPanel(new GridLayout(7, 2, 0, 0));
+        JPanel optionList = new JPanel(new GridLayout(8, 2, 0, 0));
         this.add(optionList, BorderLayout.NORTH);
 
         this.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
@@ -38,10 +38,16 @@ public class OptionsPanel extends JPanel {
         JToffset = new JTextField("0");
         optionList.add(JToffset);
 
+        optionList.add(new JLabel("Period: "));
+        JTperiod = new JTextField("0");
+        optionList.add(JTperiod);
+        JTperiod.invalidate();
+
         optionList.add(new JLabel("Velocitat (bps): "));
         optionList.add(new JLabel(" "));
         un = new JRadioButton("100");
         unvintcinc = new JRadioButton("125");
+
 
         buttonGroup = new ButtonGroup();
         buttonGroup.add(un);
@@ -71,6 +77,10 @@ public class OptionsPanel extends JPanel {
     public void setNormalType(){
         JTpic.setEnabled(true);
         JToffset.setEnabled(true);
+    }
+
+    public void setPeriod(int period){
+        JTperiod.setText(String.valueOf(period));
     }
 
     public void addActionlistener(Listener l){
@@ -139,6 +149,16 @@ public class OptionsPanel extends JPanel {
     public void setUnvintcinc(JRadioButton unvintcinc) {
         this.unvintcinc = unvintcinc;
     }
+
+    public JTextField getJTperiod() {
+        return JTperiod;
+    }
+
+    public void setJTperiod(JTextField JTperiod) {
+        this.JTperiod = JTperiod;
+    }
+
+
 
 
 

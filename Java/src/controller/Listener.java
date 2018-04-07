@@ -28,6 +28,7 @@ public class Listener extends MouseAdapter implements ActionListener {
     private int last = -1;
     private Thread reciever;
     private Thread timer;
+    private int period;
 
 
     public Listener(MainView view, SerialPort sp) {
@@ -36,6 +37,7 @@ public class Listener extends MouseAdapter implements ActionListener {
         this.display = view.getJpTop().getDisplay();
 
         this.sp = sp;
+        this.period = 1;
 
         refreshFunction();
 
@@ -120,7 +122,6 @@ public class Listener extends MouseAdapter implements ActionListener {
 
                     } else {
 
-                        view.showMessage("Error!", "No has desat cap dada al microcontrolador!\n", JOptionPane.ERROR_MESSAGE);
                         enviarErrorPeticioRF();
 
                     }
@@ -344,6 +345,10 @@ public class Listener extends MouseAdapter implements ActionListener {
             while ((recieved = sp.readByte()) == 0) ;
             System.out.println("Recieved ID2: " + recieved);
 
+            sp.writeByte((byte)this.period);
+            while ((recieved = sp.readByte()) == 0) ;
+            System.out.println("Recieved period: " + recieved);
+
             int i = 0;
             for (byte value : utf8Bytes) {
 
@@ -374,15 +379,15 @@ public class Listener extends MouseAdapter implements ActionListener {
 
                 sp.openPort(view.getSp().getSelectedPort(), view.getSp().getSelectedBaud());
 
+                connectionThread = new ConnectionThread(this);
+                timer = new Thread(connectionThread);
+                timer.start();
+
                 portThread = new PortThread(sp, this);
                 portThread.setPort(sp);
 
                 reciever = new Thread(portThread);
                 reciever.start();
-
-                connectionThread = new ConnectionThread(this);
-                timer = new Thread(connectionThread);
-                timer.start();
 
             } else {
 
@@ -458,6 +463,7 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     public void clean_Data() {
         view.setDataMax(0);
+        view.changeProgressBar(true);
     }
 
     public void showErrData(){
@@ -484,5 +490,10 @@ public class Listener extends MouseAdapter implements ActionListener {
         }
     }
 
+    public void setPeriod(int period) {
+        this.period = period;
+        view.getOp().setPeriod(period & 0xFF);
+
+    }
 
 }
