@@ -98,7 +98,7 @@ public class MainView extends JFrame {
         this.jStatus.setOpaque(true);
         repaint();
         this.connected = false;
-        this.jStatus.setText("Not connected");
+        this.jStatus.setText("Disconnected");
     }
 
     public void setProgressBarStatus(int max){

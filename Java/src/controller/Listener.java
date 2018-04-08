@@ -492,7 +492,7 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     public void setPeriod(int period) {
         this.period = period;
-        view.getOp().setPeriod(period & 0xFF);
+        view.getOp().setPeriod((period & 0xFF) * 10);
 
     }
 

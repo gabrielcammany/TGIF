@@ -38,7 +38,7 @@ public class OptionsPanel extends JPanel {
         JToffset = new JTextField("0");
         optionList.add(JToffset);
 
-        optionList.add(new JLabel("Period: "));
+        optionList.add(new JLabel("Frequencia: "));
         JTperiod = new JTextField("0");
         optionList.add(JTperiod);
         JTperiod.invalidate();
@@ -80,7 +80,7 @@ public class OptionsPanel extends JPanel {
     }
 
     public void setPeriod(int period){
-        JTperiod.setText(String.valueOf(period));
+        JTperiod.setText(String.valueOf(period) + " Hz");
     }
 
     public void addActionlistener(Listener l){

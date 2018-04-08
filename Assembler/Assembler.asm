@@ -581,6 +581,7 @@ USART_ADCON
    cpfsgt TEMPS_UN,0
    return   
    
+   clrf AUXILIAR,0
    bsf ADCON0,1,0
    
 ADCON_DONE
@@ -591,14 +592,42 @@ ADCON_DONE
    movwf TXREG,0
    call USART_ESPERA
    
-   movff ADRESL,TXREG
+   movff ADRESL,AUXILIAR
+   movff ADRESH,RESTANT
+   
+   rlncf RESTANT,1,0   
+   rlncf RESTANT,1,0
+   rlncf RESTANT,1,0
+   rlncf RESTANT,1,0
+   rlncf RESTANT,1,0
+   rlncf RESTANT,1,0
+   
+   rrncf AUXILIAR,1,0
+   rrncf AUXILIAR,1,0
+   
+   movlw 0x3F
+   andwf AUXILIAR,1,0
+   
+   movf RESTANT,0,0
+   addwf AUXILIAR,1,0
+   
+   movlw 0x00
+   cpfsgt AUXILIAR,0 
+   incf AUXILIAR,1,0
+   
+   movff AUXILIAR,TXREG
    call USART_ESPERA
    
    clrf TEMPS_UN,0
    
+   clrf AUXILIAR,0
+   clrf RESTANT,0
+   
    return
    
-
+ROTATE
+   return
+   
 ;***********************************************************
 ;********************* - BLOC DESAR - **********************
 ;***********************************************************
