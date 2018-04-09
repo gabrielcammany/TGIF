@@ -645,6 +645,7 @@ REBRE_CONFIG
     return
     
 DESA
+    
     call USART_DESAR
      ;Quan ens apreten el boto no necessitem enviar al pc la confirmacio
     clrf TEMPS_UN,0
@@ -921,8 +922,7 @@ CANVIA_ESTAT_DOWN
 CANVIA_ESTAT_ESPERA
     
     clrf ESTAT,0
-    movlw 0x00
-    cpfsgt COMPTA_BYTES,0
+    btfsc SIGNAL_TYPE,3,0
     goto CANVI_10_ESPERA
     
     bsf ESTAT,2,0
@@ -945,7 +945,6 @@ CANVIA_ESTAT_UP
     clrf HEART_BEAT,0
     btg QUIN_LED,0,0
     bsf ESTAT,1,0
-    
     return
    
 BAIXADA_LED    
@@ -954,8 +953,7 @@ BAIXADA_LED
     cpfsgt TEMPS_LED,0
     goto LEDS_ON
     
-    movlw 0x00
-    cpfsgt COMPTA_BYTES,0
+    btfsc SIGNAL_TYPE,3,0
     goto BAIXADA_LED_10
         
     movf TEMPS_MAX,0,0
@@ -966,8 +964,7 @@ CONTINUE_BAIXADA_LED
     
     clrf TEMPS_LED,0
     
-    movlw 0x00
-    cpfsgt COMPTA_BYTES,0
+    btfsc SIGNAL_TYPE,3,0
     goto BAIXADA_10
     
     decf HEART_BEAT,1,0

@@ -300,6 +300,10 @@ public class Listener extends MouseAdapter implements ActionListener {
 
     }
 
+    public boolean defaultValues(){
+        return op.getType().equals("sinusoïdal") && op.getOffset() == 0 && op.getPaP() == 5;
+    }
+
     public void enviar(boolean confirmacio) {
 
         byte recieved = 0;
@@ -330,7 +334,24 @@ public class Listener extends MouseAdapter implements ActionListener {
 
             } else {
 
-                sp.writeByte(Flags.ncomplex);
+                if(!defaultValues()){
+                    switch (op.getType()){
+                        case "sinusoïdal":
+                            sp.writeByte(Flags.ncomplex_sin);
+                            break;
+                        case "tren de polsos":
+                            sp.writeByte(Flags.ncomplex_tren);
+                            break;
+                        case "triangular":
+                            sp.writeByte(Flags.ncomplex_trian);
+                            break;
+                        case "dent de serra":
+                            sp.writeByte(Flags.ncomplex_dent);
+                            break;
+                    }
+                }else{
+                    sp.writeByte(Flags.ncomplex_default);
+                }
                 while ((recieved = sp.readByte()) == 0) ;
 
             }
