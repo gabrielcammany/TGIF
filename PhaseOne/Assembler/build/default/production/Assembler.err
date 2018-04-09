@@ -1,0 +1,6 @@
+Warning[205] /home/gabriel/Projects/TGIF/Assembler/Assembler.asm 1 : Found directive in column 1. (LIST)
+Warning[205] /home/gabriel/Projects/TGIF/Assembler/Assembler.asm 7 : Found directive in column 1. (CONFIG)
+Warning[205] /home/gabriel/Projects/TGIF/Assembler/Assembler.asm 8 : Found directive in column 1. (CONFIG)
+Warning[205] /home/gabriel/Projects/TGIF/Assembler/Assembler.asm 9 : Found directive in column 1. (CONFIG)
+Warning[205] /home/gabriel/Projects/TGIF/Assembler/Assembler.asm 10 : Found directive in column 1. (CONFIG)
+Warning[205] /home/gabriel/Projects/TGIF/Assembler/Assembler.asm 223 : Found directive in column 1. (ORG)

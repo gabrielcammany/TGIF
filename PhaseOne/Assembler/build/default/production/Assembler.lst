@@ -1,0 +1,2182 @@
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (LIST)
+                      00001 LIST P=18F4321, F=INHX32
+                      00002 #include <p18f4321.inc>
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Nov 22 2017
+                      00005 ;  MPASM PIC18F4321 processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2017 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      01455         LIST
+                      00003 
+                      00004 ;******************
+                      00005 ;* CONFIGURACIONS *
+                      00006 ;******************
+Warning[205]: Found directive in column 1. (CONFIG)
+                      00007 CONFIG OSC = HSPLL
+Warning[205]: Found directive in column 1. (CONFIG)
+                      00008 CONFIG PBADEN = DIG
+Warning[205]: Found directive in column 1. (CONFIG)
+                      00009 CONFIG WDT = OFF
+Warning[205]: Found directive in column 1. (CONFIG)
+                      00010 CONFIG LVP = OFF
+                      00011 
+                      00012 ;*************
+                      00013 ;* VARIABLES *
+                      00014 ;*************
+                      00015     
+  00000000            00016 TEMPS_UN EQU 0x00
+  00000001            00017 TEMPS_LED EQU 0x01
+  00000002            00018 QUIN_LED EQU 0x02
+  00000003            00019 HEART_BEAT EQU 0x03
+  00000004            00020 ESTAT EQU 0x04
+  00000005            00021 TEMPS_MAX EQU 0x05
+                      00022  
+  00000006            00023 SIGNAL_TYPE EQU 0x06
+  00000007            00024 COMPTA_BYTES EQU 0x07
+  00000008            00025 CONNECTION EQU 0x08
+                      00026  
+  00000009            00027 TEMPS_CONN EQU 0x09
+                      00028  
+  0000000A            00029 RESTANT EQU 0x0A
+  0000000B            00030 COPS EQU 0x0B
+  0000000C            00031 AUXILIAR EQU 0x0C
+  0000000D            00032 BYTE EQU 0x0D
+  0000000E            00033 DIV_DEU EQU 0x0E
+                      00034 
+  0000000F            00035 TEMPS_UN_RF EQU 0x0F
+  00000010            00036 TEMPS_ZERO_RF EQU 0x10
+                      00037  
+  00000011            00038 TEMPS_UN_POLS EQU 0x11
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+  00000012            00039 ESTAT_P EQU 0x12
+                      00040  
+  00000013            00041 SET_SEG_OLD EQU 0x13
+                      00042  
+                      00043 ;*****************
+                      00044 ;*   CONSTANTS   *
+                      00045 ;*****************
+                      00046  
+  000000C0            00047 TAULA7S EQU 0x0000C0
+  00000080            00048 POSICIO_A_DESAR_RAM EQU 0x80
+                      00049   
+                      00050 ;************
+                      00051 ;*   FLAGS   *
+                      00052 ;************
+                      00053 
+  00000080            00054 FLAG_DESAR EQU 0x80
+  00000081            00055 FLAG_DESAR_NCON EQU 0x81
+  00000082            00056 FLAG_ENVIAR EQU 0x82
+  00000001            00057 FLAG_CONTINUAR EQU 0x01
+  00000083            00058 FLAG_ENVIAR_ERROR EQU 0x83
+  00000084            00059 FLAG_HEART EQU 0x84
+  00000085            00060 FLAG_HALF EQU 0x85
+  00000086            00061 FLAG_PROGRESS EQU 0x86
+  00000087            00062 FLAG_PROGRESS_RESET EQU 0x87
+  00000088            00063 FLAG_CONNECTION EQU 0x88
+  00000089            00064 UNBLOCK EQU 0x89
+  0000008A            00065 FLAG_DELETE_INFO EQU 0x8A
+  0000008B            00066 FLAG_DATA EQU 0x8B
+  0000008C            00067 FLAG_SPEED EQU 0x8C
+  0000008D            00068 FLAG_AD EQU 0x8D
+                      00069 
+                      00070 ;*********************************
+                      00071 ; VECTORS DE RESET I INTERRUPCI� *
+                      00072 ;*********************************
+                      00073     
+                      00074     ORG 0x000000
+000000                00075 RESET_VECTOR
+000000 EF?? F???      00076     goto MAIN
+                      00077 
+                      00078     ORG 0x000008
+000008                00079 HI_INT_VECTOR
+000008 EF?? F???      00080     goto HIGH_INT
+                      00081 
+                      00082     ORG 0x000018
+000018                00083 LOW_INT_VECTOR
+000018 0011           00084     retfie FAST
+                      00085 
+                      00086 ;***********************************
+                      00087 ;* RUTINES DE SERVEI D'INTERRUPCI� *
+                      00088 ;***********************************
+                      00089 
+00001A                00090 HIGH_INT
+00001A EC?? F???      00091     call RESET_TIMER
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00001E 2A00           00092     incf TEMPS_UN,1,0
+000020 2A01           00093     incf TEMPS_LED,1,0
+000022 2A09           00094     incf TEMPS_CONN,1,0
+000024 0011           00095     retfie FAST;2
+                      00096 
+                      00097 ;****************************
+                      00098 ;* MAIN I RESTA DE FUNCIONS *
+                      00099 ;****************************
+000026                00100 INIT_ADCON
+                      00101     
+000026 0E01           00102     movlw 0x01
+000028 6EC2           00103     movwf ADCON0,0
+                      00104     
+00002A 0E0E           00105     movlw 0x0E
+00002C 6EC1           00106     movwf ADCON1,0
+                      00107     
+00002E 0E84           00108     movlw 0x84
+000030 6EC0           00109     movwf ADCON2,0
+                      00110     
+000032 0012           00111     return
+                      00112 
+000034                00113 INIT_VARS
+000034 6A04           00114     clrf ESTAT,0
+000036 6A06           00115     clrf SIGNAL_TYPE,0
+000038 6A00           00116     clrf TEMPS_UN,0
+00003A 6A01           00117     clrf TEMPS_LED,0
+00003C 6A02           00118     clrf QUIN_LED,0
+00003E 6A03           00119     clrf HEART_BEAT,0
+000040 6A05           00120     clrf TEMPS_MAX,0
+000042 6A09           00121     clrf TEMPS_CONN,0
+000044 6A08           00122     clrf CONNECTION,0
+000046 6A0B           00123     clrf COPS,0
+000048 6A0A           00124     clrf RESTANT,0
+00004A 6A12           00125     clrf ESTAT_P,0
+00004C 6813           00126     setf SET_SEG_OLD,0
+                      00127     
+00004E 0E05           00128     movlw 0x05
+000050 6E0F           00129     movwf TEMPS_UN_RF,0
+                      00130     
+000052 0E0A           00131     movlw 0x0A
+000054 6E10           00132     movwf TEMPS_ZERO_RF,0
+                      00133     
+000056 0E14           00134     movlw 0x14
+000058 6E05           00135     movwf TEMPS_MAX,0
+00005A 0012           00136     return;2
+                      00137 
+00005C                00138 INIT_SIO
+                      00139     ;1001 0000 - 0x90
+                      00140     
+00005C 0E90           00141     movlw 0x90
+00005E 6EAB           00142     movwf RCSTA,0
+                      00143     ;0010 0110 - 0x26
+                      00144     
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000060 0E26           00145     movlw 0x26
+000062 6EAC           00146     movwf TXSTA,0
+000064 0E81           00147     movlw 0x81
+000066 6EAF           00148     movwf SPBRG,0
+000068 6AB0           00149     clrf SPBRGH,0
+00006A 6AB8           00150     clrf BAUDCON, 0
+                      00151     
+00006C 0012           00152     return
+                      00153 
+00006E                00154 INIT_PORTS
+                      00155     ;clrf TRISA, 0
+00006E 9A94           00156     bcf TRISC, 5, 0     ;RF Out
+000070 9694           00157     bcf TRISC, 3, 0     ;LED0
+000072 9494           00158     bcf TRISC, 2, 0     ;LED1
+                      00159     
+000074 8093           00160     bsf TRISB, 0, 0     ;SIO IN
+000076 8293           00161     bsf TRISB, 1, 0     ;Envia Info
+000078 8493           00162     bsf TRISB, 2, 0     ;Desa Info
+00007A 9693           00163     bcf TRISB, 3, 0     ;LED SIO
+                      00164 
+00007C 9095           00165     bcf  TRISD, 0, 0 ; 7SEG1
+00007E 9295           00166     bcf  TRISD, 1, 0 ; 7SEG2
+000080 9495           00167     bcf  TRISD, 2, 0 ; 7SEG6
+000082 9695           00168     bcf  TRISD, 3, 0 ; 7SEG3
+000084 9895           00169     bcf  TRISD, 4, 0 ; 7SEG4
+000086 9A95           00170     bcf  TRISD, 5, 0 ; 7SEG5
+000088 9E95           00171     bcf  TRISD, 7, 0 ; 7SEG7
+                      00172 
+00008A 9AC6           00173     bcf SSPCON1,SSPEN,0
+                      00174     
+00008C 9EF1           00175     bcf INTCON2,RBPU,0
+                      00176     
+00008E 688C           00177     setf LATD,0  
+                      00178     
+000090 6A8B           00179     clrf LATC,0
+                      00180     
+000092 0012           00181     return
+                      00182 
+000094                00183 INIT_TIMER
+                      00184     ;10001000
+                      00185     ;88
+000094 0E88           00186     movlw 0x88
+000096 6ED5           00187     movwf T0CON,0
+000098 9ED0           00188     bcf RCON, IPEN, 0
+                      00189 
+                      00190     ;10100000
+                      00191     ;E0
+00009A 0EE0           00192     movlw 0xE0
+00009C 6EF2           00193     movwf INTCON, 0
+                      00194 
+00009E EC?? F???      00195     call RESET_TIMER
+                      00196     
+0000A2 0012           00197     return
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00198 
+0000A4                00199 RESET_TIMER
+0000A4 0ED8           00200     movlw 0xD8
+0000A6 6ED7           00201     movwf TMR0H, 0
+                      00202     
+0000A8 0EF0           00203     movlw 0xF0
+0000AA 6ED6           00204     movwf TMR0L, 0
+0000AC 94F2           00205     bcf INTCON, TMR0IF, 0
+                      00206     
+0000AE 0012           00207     return
+                      00208     
+                      00209 ;7SEGMENTS
+                      00210 ; 0x00000001 - PART SUPERIOR
+                      00211 ; 0x00000010 - PART LATERAL DP
+                      00212 ; 0x00000100 - PART LATERAL !DP
+                      00213 ; 0x00001000 - PART INFERIOR DP
+                      00214 ; 0x00010000 - PART INFERIOR
+                      00215 ; 0x00100000 - PART INFERIOR !DP
+                      00216 ; 0x10000000 - PART CENTRAL
+                      00217     
+                      00218 ;0x00001011
+                      00219     
+                      00220 ;************
+                      00221 ;*  TAULES   *
+                      00222 ;************
+Warning[205]: Found directive in column 1. (ORG)
+                      00223 ORG TAULA7S
+                      00224     ;Segments del 0, segments del 1
+0000C0 F580           00225     DB 0x80, 0XF5
+                      00226 
+                      00227     ;Segments del 2, segments del 3
+0000C2 644C           00228     DB 0x4C, 0x64
+                      00229 
+                      00230     ;Segments del 4, segments del 5
+0000C4 6271           00231     DB 0x71, 0x62
+                      00232 
+                      00233     ;Segments del 6, segments del 7
+0000C6 F402           00234     DB 0x02, 0xF4
+                      00235 
+                      00236     ;Segments del 8, segments del 9
+0000C8 2000           00237     DB 0x00, 0x20 
+                      00238 
+                      00239 ;********
+                      00240 ;* MAIN *
+                      00241 ;********
+                      00242 
+                      00243 
+0000CA                00244 MAIN
+0000CA EC?? F???      00245     call INIT_ADCON
+0000CE EC?? F???      00246     call INIT_VARS
+0000D2 EC?? F???      00247     call INIT_PORTS
+0000D6 EC?? F???      00248     call INIT_SIO
+0000DA EC?? F???      00249     call INIT_TIMER
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00250 
+0000DE                00251 LOOP
+                      00252     
+0000DE BA9E           00253     btfsc PIR1,RCIF,0
+0000E0 EC?? F???      00254     call REBUT
+                      00255     
+0000E4 EC?? F???      00256     call POLSADOR
+                      00257     
+0000E8 A281           00258     btfss PORTB,1,0 ;Enviar Info
+0000EA EC?? F???      00259     call POLS_ENVIAR_INFO
+                      00260     
+0000EE B004           00261     btfsc ESTAT, 0,0
+0000F0 EC?? F???      00262     call MIG_INTENSITAT
+                      00263     
+0000F4 A004           00264     btfss ESTAT, 0,0
+0000F6 EC?? F???      00265     call BLINKING
+                      00266     
+0000FA A008           00267     btfss CONNECTION,0,0
+0000FC EC?? F???      00268     call USART_CONNECTAT
+                      00269     
+000100 B081           00270     btfsc PORTB,0,0
+000102 EC?? F???      00271     call USART_DESCONNECTAT
+                      00272         
+000106 EC?? F???      00273     call USART_ADCON
+                      00274     
+00010A EF?? F???      00275     goto LOOP
+                      00276     
+00010E                00277 REBUT
+00010E AEAE           00278     btfss RCREG, 7,0 ;Qualsevol byte rebut que tingui aquest bit a 1 es refereix a una resposta del pc
+000110 0012           00279     return ;Si rebem un byte i no esta activat no hauriem dentrar aqui
+                      00280     
+000112 0E80           00281     movlw FLAG_DESAR 
+000114 64AE           00282     cpfsgt RCREG,0 
+000116 EF?? F???      00283     goto DESA 
+                      00284         
+00011A 0E81           00285     movlw FLAG_DESAR_NCON 
+00011C 64AE           00286     cpfsgt RCREG,0
+00011E EF?? F???      00287     goto DESA
+                      00288     
+000122 0E82           00289     movlw FLAG_ENVIAR 
+000124 64AE           00290     cpfsgt RCREG,0
+000126 EF?? F???      00291     goto ENVIAR_RF 
+                      00292     
+00012A 0E83           00293     movlw FLAG_ENVIAR_ERROR
+00012C 64AE           00294     cpfsgt RCREG,0
+00012E EF?? F???      00295     goto ENVIAR_RF_ERROR
+                      00296     
+000132 0E84           00297     movlw FLAG_HEART 
+000134 64AE           00298     cpfsgt RCREG,0
+000136 EF?? F???      00299     goto ENCENDRE_HEART
+                      00300     
+00013A 0E85           00301     movlw FLAG_HALF 
+00013C 64AE           00302     cpfsgt RCREG,0
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  7
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00013E EF?? F???      00303     goto ENCENDRE_HALF 
+                      00304     
+000142 0E89           00305     movlw UNBLOCK 
+000144 64AE           00306     cpfsgt RCREG,0
+000146 EF?? F???      00307     goto UNBLOCK_THREAD 
+                      00308     
+00014A 0E8A           00309     movlw FLAG_DELETE_INFO 
+00014C 64AE           00310     cpfsgt RCREG,0
+00014E EF?? F???      00311     goto PETICIO_DEL_INFO
+                      00312     
+000152 0E8B           00313     movlw FLAG_DATA 
+000154 64AE           00314     cpfsgt RCREG,0
+000156 EF?? F???      00315     goto USART_DATA 
+                      00316     
+00015A 0E8C           00317     movlw FLAG_SPEED 
+00015C 64AE           00318     cpfsgt RCREG,0
+00015E EF?? F???      00319     goto USART_SPEED
+                      00320     
+000162 0012           00321     return
+                      00322 
+                      00323 
+000164                00324 UNBLOCK_THREAD
+000164 EC?? F???      00325     call USART_DESAT
+000168 848B           00326     bsf LATC,2,0
+00016A 0012           00327     return
+                      00328     
+                      00329 ;***********************************************************
+                      00330 ;******************** - 7 SEGMENTS - ***********************
+                      00331 ;***********************************************************
+                      00332 
+00016C                00333 INIT_7_SEG
+00016C 0E00           00334     movlw     0x00        ; Load TBLPTR with the base
+00016E 6EF8           00335     movwf     TBLPTRU                 ; address of the word
+000170 0E00           00336     movlw     0x00
+000172 6EF7           00337     movwf     TBLPTRH
+000174 0EC0           00338     movlw     TAULA7S
+000176 6EF6           00339     movwf     TBLPTRL 
+000178 0012           00340     return
+                      00341     
+00017A                00342 INCREMENTA_7_SEG
+00017A 0009           00343     TBLRD*+                          ; read into TABLAT and increment
+00017C CFF5 FF8C      00344     movff      TABLAT, LATD              ; get data
+000180 0012           00345     return
+                      00346     
+000182                00347 UNDERSCORE_7_SEG
+000182 0EEF           00348     movlw 0xEF
+000184 6E8C           00349     movwf LATD,0
+000186 0012           00350     return
+                      00351     
+                      00352 ;***********************************************************
+                      00353 ;*********************** - BLOC RF - ***********************
+                      00354 ;***********************************************************
+                      00355     
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  8
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000188                00356 ENVIAR_RF
+                      00357         
+000188 0E00           00358     movlw 0x00
+00018A 6407           00359     cpfsgt COMPTA_BYTES,0
+00018C EF?? F???      00360     goto ENVIAR_RF_ERROR
+                      00361     
+000190 6AEA           00362     clrf FSR0H, 0
+000192 0E80           00363     movlw POSICIO_A_DESAR_RAM
+000194 6EE9           00364     movwf FSR0L, 0
+000196 6A0B           00365     clrf COPS,0
+000198 6A0D           00366     clrf BYTE,0
+00019A 6A0A           00367     clrf RESTANT,0
+                      00368     
+00019C CFEE F00C      00369     movff POSTINC0, AUXILIAR
+                      00370     
+0001A0 EC?? F???      00371     call COMPUTE_DIV_10
+0001A4 6A00           00372     clrf TEMPS_UN,0
+                      00373     
+0001A6 CF83 F013      00374     movff PORTD, SET_SEG_OLD
+                      00375         
+0001AA EC?? F???      00376     call INIT_7_SEG
+                      00377     
+0001AE EC?? F???      00378     call INCREMENTA_7_SEG
+                      00379     
+0001B2                00380 ENVIAR_FOR 
+0001B2 500F           00381     movf TEMPS_UN_RF,0,0
+0001B4 6200           00382     cpfseq TEMPS_UN,0
+0001B6 EF?? F???      00383     goto ENVIAR_BIT_PRIMERA_MEITAT
+                      00384 
+0001BA                00385 ENVIAR_FOR_SEGON
+0001BA 5010           00386     movf TEMPS_ZERO_RF,0,0
+0001BC 6200           00387     cpfseq TEMPS_UN,0
+0001BE EF?? F???      00388     goto ENVIAR_BIT_SEGONA_MEITAT
+                      00389     
+0001C2 6A00           00390     clrf TEMPS_UN,0
+0001C4 EC?? F???      00391     call USART_BIT_ENVIAT
+0001C8 2A0A           00392     incf RESTANT,1,0
+0001CA 2A0D           00393     incf BYTE,1,0
+                      00394     
+0001CC 0E08           00395     movlw 0x08
+0001CE 640D           00396     cpfsgt BYTE,0
+0001D0 EF?? F???      00397     goto CONTINUA_FOR
+                      00398     
+0001D4 6A0D           00399     clrf BYTE,0
+0001D6 CFEE F00C      00400     movff POSTINC0, AUXILIAR
+                      00401     
+0001DA 500E           00402     movf DIV_DEU,0,0
+0001DC 600A           00403     cpfslt RESTANT,0
+0001DE EF?? F???      00404     goto INCREMENTA_FOR
+                      00405     
+0001E2 EF?? F???      00406     goto ENVIAR_FOR
+                      00407 
+0001E6                00408 ENVIA_PARAMETRES
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE  9
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0001E6 C00E FFAD      00409     movff DIV_DEU,TXREG
+0001EA EC?? F???      00410     call USART_ESPERA
+                      00411     
+0001EE C00A FFAD      00412     movff RESTANT,TXREG
+0001F2 EC?? F???      00413     call USART_ESPERA
+                      00414     
+0001F6 C00B FFAD      00415     movff COPS,TXREG
+0001FA EC?? F???      00416     call USART_ESPERA
+0001FE 0012           00417     return
+                      00418         
+000200                00419 CONTINUA_FOR
+000200 420C           00420     rrncf AUXILIAR,1,0
+000202 EF?? F???      00421     goto ENVIAR_FOR 
+                      00422     
+000206                00423 INCREMENTA_FOR
+000206 2A0B           00424     incf COPS,1,0
+000208 6A0A           00425     clrf RESTANT,0
+                      00426     
+00020A EC?? F???      00427     call INCREMENTA_7_SEG
+                      00428     
+00020E 0E0A           00429     movlw 0x0A
+000210 600B           00430     cpfslt COPS,0
+000212 EF?? F???      00431     goto FINAL_ENVIAR_RF
+                      00432     
+000216 EF?? F???      00433     goto ENVIAR_FOR 
+                      00434     
+00021A                00435 FINAL_ENVIAR_RF
+00021A 6A04           00436     clrf ESTAT,0
+00021C 8204           00437     bsf ESTAT,1,0
+00021E C013 FF8C      00438     movff SET_SEG_OLD, LATD
+000222 0012           00439     return
+                      00440     
+000224                00441 ENVIAR_BIT_PRIMERA_MEITAT
+000224 B00C           00442     btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la primera part a 0
+000226 9A8B           00443     bcf LATC, 5, 0
+000228 A00C           00444     btfss AUXILIAR,0,0 ;Si el primer es 0 fiquem la primera part a 1
+00022A 8A8B           00445     bsf LATC, 5, 0
+00022C EF?? F???      00446     goto ENVIAR_FOR 
+                      00447     
+000230                00448 ENVIAR_BIT_SEGONA_MEITAT
+000230 B00C           00449     btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la segona part a 1
+000232 8A8B           00450     bsf LATC, 5, 0
+000234 A00C           00451     btfss AUXILIAR,0,0 ;Si el primer es 1 fiquem la segona part a 0
+000236 9A8B           00452     bcf LATC, 5, 0
+000238 EF?? F???      00453     goto ENVIAR_FOR_SEGON 
+                      00454     
+00023C                00455 ENVIAR_RF_ERROR
+                      00456     
+00023C 0E7F           00457     movlw 0x7F
+00023E 6E8C           00458     movwf LATD,0  
+000240 6A04           00459     clrf ESTAT,0
+000242 8204           00460     bsf ESTAT,1,0
+                      00461     
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 10
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000244 EF?? F???      00462     goto USART_ERROR_RF
+                      00463     
+                      00464     
+000248                00465 COMPUTE_DIV_10
+000248 B806           00466     btfsc SIGNAL_TYPE,4,0
+00024A 0EF0           00467     movlw 0xF0 ;240 -> (300*8/10)
+                      00468     
+00024C A806           00469     btfss SIGNAL_TYPE,4,0
+00024E 0E78           00470     movlw 0x78 ;120 -> (150*8/10)
+                      00471     
+000250 6E0E           00472     movwf DIV_DEU,0
+000252 0012           00473     return
+                      00474     
+                      00475 ;***********************************************************
+                      00476 ;********************* - BLOC USART - **********************
+                      00477 ;***********************************************************
+                      00478 
+000254                00479 USART_PROGRESS_RESET
+000254 0E87           00480     movlw FLAG_PROGRESS_RESET
+000256 6EAD           00481     movwf TXREG,0
+000258 EC?? F???      00482     call USART_ESPERA
+                      00483     
+00025C C006 FFAD      00484     movff SIGNAL_TYPE,TXREG
+000260 EF?? F???      00485     goto USART_ESPERA
+                      00486 
+000264                00487 USART_SPEED   
+000264 AA9E           00488     btfss PIR1,RCIF,0
+000266 EF?? F???      00489     goto USART_SPEED
+                      00490     
+00026A CFAE F00F      00491     movff RCREG, TEMPS_UN_RF ;Movem el caracter a la posicio de la ram corresponent
+                      00492     
+00026E EC?? F???      00493     call USART_ESPERA_INFO
+                      00494     
+000272 CFAE F010      00495     movff RCREG, TEMPS_ZERO_RF ;Movem el caracter a la posicio de la ram corresponent
+                      00496     
+000276 0012           00497     return
+                      00498     
+                      00499     
+000278                00500 USART_DATA
+000278 C006 FFAD      00501     movff SIGNAL_TYPE,TXREG
+00027C EF?? F???      00502     goto USART_ESPERA
+                      00503     
+000280                00504 USART_ENVIAR
+000280 0E82           00505     movlw FLAG_ENVIAR
+000282 6EAD           00506     movwf TXREG,0
+000284 EF?? F???      00507     goto USART_ESPERA
+                      00508     
+000288                00509 USART_DESAR_NCON
+000288 0E81           00510     movlw FLAG_DESAR_NCON
+00028A 6EAD           00511     movwf TXREG,0
+00028C EF?? F???      00512     goto USART_ESPERA
+                      00513     
+000290                00514 USART_DESAR
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 11
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000290 0E80           00515     movlw FLAG_DESAR
+000292 6EAD           00516     movwf TXREG,0
+000294 EF?? F???      00517     goto USART_ESPERA
+                      00518     
+000298                00519 USART_DESAT
+000298 0E01           00520     movlw FLAG_CONTINUAR
+00029A 6EAD           00521     movwf TXREG,0
+00029C EF?? F???      00522     goto USART_ESPERA
+                      00523 
+0002A0                00524 USART_ESPERA
+0002A0 A2AC           00525     btfss TXSTA,TRMT,0
+0002A2 EF?? F???      00526     goto USART_ESPERA
+0002A6 0012           00527     return
+                      00528 
+0002A8                00529 USART_ESPERA_INFO
+0002A8 AA9E           00530    btfss PIR1,RCIF,0
+0002AA EF?? F???      00531     goto USART_ESPERA_INFO
+0002AE 0012           00532    return  
+                      00533    
+0002B0                00534 USART_CONNECTAT
+0002B0 B081           00535    btfsc PORTB,0,0
+0002B2 0012           00536    return
+                      00537    
+0002B4 868A           00538    bsf LATB,3,0
+                      00539    
+0002B6 0E34           00540    movlw 0x34
+0002B8 6409           00541    cpfsgt TEMPS_CONN,0
+0002BA 0012           00542    return
+                      00543    
+0002BC 6A09           00544    clrf TEMPS_CONN,0
+                      00545    
+0002BE 0E88           00546    movlw FLAG_CONNECTION
+0002C0 6EAD           00547    movwf TXREG,0
+0002C2 EF?? F???      00548    goto USART_ESPERA
+                      00549    
+0002C6 0012           00550    return
+                      00551    
+0002C8                00552 USART_DESCONNECTAT
+0002C8 968A           00553    bcf LATB,3,0
+                      00554    
+0002CA B208           00555    btfsc CONNECTION,1,0
+0002CC 0012           00556    return
+                      00557    
+0002CE 6A09           00558    clrf TEMPS_CONN,0
+0002D0 6A08           00559    clrf CONNECTION,0
+0002D2 8208           00560    bsf CONNECTION,1,0
+                      00561    
+0002D4 0012           00562    return
+                      00563    
+0002D6                00564 USART_BIT_ENVIAT
+0002D6 0E86           00565    movlw FLAG_PROGRESS
+0002D8 6EAD           00566    movwf TXREG,0
+0002DA EF?? F???      00567    goto USART_ESPERA
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 12
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00568    
+0002DE                00569 USART_BORRAR_INFO
+0002DE 0E8A           00570    movlw FLAG_DELETE_INFO
+0002E0 6EAD           00571    movwf TXREG,0
+0002E2 EF?? F???      00572    goto USART_ESPERA
+                      00573    
+0002E6                00574 USART_ERROR_RF
+0002E6 0E83           00575    movlw FLAG_ENVIAR_ERROR
+0002E8 6EAD           00576    movwf TXREG,0
+0002EA EF?? F???      00577    goto USART_ESPERA
+                      00578    
+0002EE                00579 USART_ADCON   
+0002EE 0E64           00580    movlw 0x64
+0002F0 6400           00581    cpfsgt TEMPS_UN,0
+0002F2 0012           00582    return   
+                      00583    
+0002F4 6A0C           00584    clrf AUXILIAR,0
+0002F6 82C2           00585    bsf ADCON0,1,0
+                      00586    
+0002F8                00587 ADCON_DONE
+0002F8 B2C2           00588    btfsc ADCON0,1,0
+0002FA EF?? F???      00589    goto ADCON_DONE
+                      00590    
+0002FE 0E8D           00591    movlw FLAG_AD
+000300 6EAD           00592    movwf TXREG,0
+000302 EC?? F???      00593    call USART_ESPERA
+                      00594    
+000306 CFC3 F00C      00595    movff ADRESL,AUXILIAR
+00030A CFC4 F00A      00596    movff ADRESH,RESTANT
+                      00597    
+00030E 460A           00598    rlncf RESTANT,1,0   
+000310 460A           00599    rlncf RESTANT,1,0
+000312 460A           00600    rlncf RESTANT,1,0
+000314 460A           00601    rlncf RESTANT,1,0
+000316 460A           00602    rlncf RESTANT,1,0
+000318 460A           00603    rlncf RESTANT,1,0
+                      00604    
+00031A 420C           00605    rrncf AUXILIAR,1,0
+00031C 420C           00606    rrncf AUXILIAR,1,0
+                      00607    
+00031E 0E3F           00608    movlw 0x3F
+000320 160C           00609    andwf AUXILIAR,1,0
+                      00610    
+000322 500A           00611    movf RESTANT,0,0
+000324 260C           00612    addwf AUXILIAR,1,0
+                      00613    
+000326 0E00           00614    movlw 0x00
+000328 640C           00615    cpfsgt AUXILIAR,0 
+00032A 2A0C           00616    incf AUXILIAR,1,0
+                      00617    
+00032C C00C FFAD      00618    movff AUXILIAR,TXREG
+000330 EC?? F???      00619    call USART_ESPERA
+                      00620    
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 13
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000334 6A00           00621    clrf TEMPS_UN,0
+                      00622    
+000336 6A0C           00623    clrf AUXILIAR,0
+000338 6A0A           00624    clrf RESTANT,0
+                      00625    
+00033A 0012           00626    return
+                      00627    
+00033C                00628 ROTATE
+00033C 0012           00629    return
+                      00630    
+                      00631 ;***********************************************************
+                      00632 ;********************* - BLOC DESAR - **********************
+                      00633 ;***********************************************************
+                      00634     
+00033E                00635 REBRE_CONFIG   
+00033E AA9E           00636     btfss PIR1,RCIF,0
+000340 EF?? F???      00637     goto REBRE_CONFIG
+                      00638     
+000344 CFAE F006      00639     movff RCREG, SIGNAL_TYPE ;Movem el caracter a la posicio de la ram corresponent
+                      00640     
+000348 C006 FFAD      00641     movff SIGNAL_TYPE,TXREG
+                      00642     
+00034C EC?? F???      00643     call USART_ESPERA
+                      00644     
+000350 0012           00645     return
+                      00646     
+000352                00647 DESA
+                      00648     
+000352 EC?? F???      00649     call USART_DESAR
+                      00650      ;Quan ens apreten el boto no necessitem enviar al pc la confirmacio
+000356 6A00           00651     clrf TEMPS_UN,0
+000358 6AAE           00652     clrf RCREG,0
+00035A 6A06           00653     clrf SIGNAL_TYPE,0
+                      00654     
+00035C EC?? F???      00655     call REBRE_CONFIG
+                      00656     
+000360 6A07           00657     clrf COMPTA_BYTES,0
+000362 6A04           00658     clrf ESTAT,0
+000364 6AEA           00659     clrf FSR0H,0
+                      00660     
+000366 0E80           00661     movlw POSICIO_A_DESAR_RAM
+000368 6EE9           00662     movwf FSR0L, 0
+                      00663     
+00036A C00C FFEE      00664     movff AUXILIAR, POSTINC0
+                      00665 
+00036E                00666 DESA_BUCLE
+00036E AA9E           00667     btfss PIR1,RCIF,0
+000370 EF?? F???      00668         goto DESA_BUCLE ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esperem
+                      00669         
+000374 0E97           00670     movlw 0x97 ; 150
+000376 6007           00671     cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
+000378 EF?? F???      00672         goto COMPROVA_FINAL
+                      00673 
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 14
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00037C                00674 DESA_CONTINUA_BUCLE
+00037C CFAE FFEE      00675     movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent
+                      00676     
+000380 2A07           00677     incf COMPTA_BYTES,1,0 ;Incrementem en numero de bytes rebut
+                      00678     
+000382 C007 FFAD      00679     movff COMPTA_BYTES, TXREG ;Movem el caracter a la posicio de la ram corresponent
+000386 EC?? F???      00680         call USART_ESPERA
+                      00681     
+00038A EF?? F???      00682     goto DESA_BUCLE ;Esperem una nova dada
+                      00683     
+00038E                00684 COMPROVA_FINAL
+00038E B806           00685     btfsc SIGNAL_TYPE,4,0
+000390 EF?? F???      00686         goto DESA_CPLX_FINAL
+                      00687     
+000394                00688 FINAL_DESAR   
+000394 9E06           00689     bcf SIGNAL_TYPE,7,0
+000396 EC?? F???      00690     call UNDERSCORE_7_SEG
+00039A EF?? F???      00691     goto CANVIA_ESTAT_UP
+                      00692     
+00039E                00693 DESA_CPLX_FINAL
+00039E BE06           00694     btfsc SIGNAL_TYPE,7,0
+0003A0 EF?? F???      00695     goto FINAL_DESAR
+                      00696     
+0003A4                00697 DESA_CPLX_LAST_BYTES
+0003A4 8E06           00698     bsf SIGNAL_TYPE,7,0
+0003A6 6A07           00699     clrf COMPTA_BYTES,0
+0003A8 2A07           00700     incf COMPTA_BYTES,1,0
+                      00701     
+0003AA EF?? F???      00702     goto DESA_CONTINUA_BUCLE
+                      00703     
+                      00704 ;***********************************************************
+                      00705 ;****************** - BLOC POLSADORS - *********************
+                      00706 ;***********************************************************
+                      00707  
+0003AE                00708 POLSADOR
+                      00709     
+0003AE 0E00           00710     movlw 0x00
+0003B0 6412           00711     cpfsgt ESTAT_P,0
+0003B2 EF?? F???      00712     goto ESPERA_POLSADOR
+                      00713     
+0003B6 B012           00714     btfsc ESTAT_P,0,0
+0003B8 EF?? F???      00715     goto ESPERA_POLSADOR_DOWN   
+                      00716     
+0003BC B212           00717     btfsc ESTAT_P,1,0
+0003BE EF?? F???      00718     goto ESPERA_POLSADOR_DESAR
+                      00719     
+0003C2 B412           00720     btfsc ESTAT_P,2,0
+0003C4 EF?? F???      00721     goto ESPERA_POLSADOR_DEL
+                      00722     
+0003C8 0012           00723     return
+                      00724     
+0003CA                00725 ESPERA_POLSADOR
+0003CA A481           00726     btfss PORTB,2,0 
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 15
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0003CC EF?? F???      00727     goto POLS_DESAR_INFO
+0003D0 0012           00728     return
+                      00729     
+0003D2                00730 ESPERA_POLSADOR_DOWN   
+                      00731     
+0003D2 0E64           00732     movlw 0x64
+0003D4 6000           00733     cpfslt TEMPS_UN,0
+0003D6 EC?? F???      00734     call INCREMENTA_ESPERA
+                      00735     
+0003DA A481           00736     btfss PORTB,2,0 
+0003DC 0012           00737     return
+                      00738     
+0003DE 0E14           00739     movlw 0x14
+0003E0 6011           00740     cpfslt TEMPS_UN_POLS,0
+0003E2 EF?? F???      00741     goto RESET_POLSADOR
+                      00742     
+0003E6 6A12           00743     clrf ESTAT_P,0
+0003E8 8212           00744     bsf ESTAT_P,1,0 
+                      00745         
+0003EA 0012           00746     return
+                      00747 
+0003EC                00748 ESPERA_POLSADOR_DESAR
+0003EC 0E64           00749     movlw 0x64
+0003EE 6000           00750     cpfslt TEMPS_UN,0
+0003F0 EC?? F???      00751     call INCREMENTA_ESPERA
+                      00752     
+0003F4 0E14           00753     movlw 0x14
+0003F6 6011           00754     cpfslt TEMPS_UN_POLS,0
+0003F8 EF?? F???      00755     goto PETICIO_DESAR_INFO
+                      00756         
+0003FC B481           00757     btfsc PORTB,2,0 
+0003FE 0012           00758     return
+                      00759     
+000400 6A00           00760     clrf TEMPS_UN,0
+000402 EC?? F???      00761     call ESPERA_16MS
+                      00762     
+000406 6A12           00763     clrf ESTAT_P,0
+000408 8412           00764     bsf ESTAT_P,2,0 
+00040A 0012           00765     return
+                      00766     
+00040C                00767 ESPERA_POLSADOR_DEL
+00040C 0E64           00768     movlw 0x64
+00040E 6000           00769     cpfslt TEMPS_UN,0
+000410 EC?? F???      00770     call INCREMENTA_ESPERA
+                      00771     
+000414 A481           00772     btfss PORTB,2,0 
+000416 0012           00773     return
+                      00774     
+000418 EC?? F???      00775     call ESPERA_16MS
+                      00776     
+00041C 0E14           00777     movlw 0x14
+00041E 6011           00778     cpfslt TEMPS_UN_POLS,0
+000420 EF?? F???      00779     goto RESET_POLSADOR
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 16
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00780         
+000424 EF?? F???      00781     goto PETICIO_DEL_INFO
+                      00782     
+                      00783     
+000428                00784 PETICIO_DEL_INFO
+000428 6A12           00785     clrf ESTAT_P,0
+00042A 6A04           00786     clrf ESTAT,0
+00042C 688C           00787     setf LATD,0
+00042E EC?? F???      00788     call DESACTIVA_LEDS
+                      00789     
+000432 6A06           00790     clrf SIGNAL_TYPE,0
+000434 6A07           00791     clrf COMPTA_BYTES,0
+000436 EC?? F???      00792     call USART_BORRAR_INFO
+                      00793     
+00043A 0012           00794     return
+                      00795     
+00043C                00796 PETICIO_DESAR_INFO
+00043C 6A12           00797     clrf ESTAT_P,0
+00043E EC?? F???      00798     call USART_DESAR_NCON
+000442 0012           00799     return
+                      00800     
+                      00801     
+000444                00802 INCREMENTA_ESPERA
+000444 2A11           00803     incf TEMPS_UN_POLS,1,0
+000446 6A00           00804     clrf TEMPS_UN,0
+000448 0012           00805     return
+                      00806 
+00044A                00807 RESET_POLSADOR
+00044A 6A12           00808     clrf ESTAT_P,0
+00044C 0012           00809     return
+                      00810     
+                      00811     
+00044E                00812 POLS_DESAR_INFO     
+00044E EC?? F???      00813     call ESPERA_16MS
+000452 EC?? F???      00814     call ESPERA_16MS
+                      00815    
+000456 8012           00816     bsf ESTAT_P,0,0 
+000458 6A11           00817     clrf TEMPS_UN_POLS,0    
+00045A 6A00           00818     clrf TEMPS_UN,0
+                      00819     
+00045C 0012           00820     return
+                      00821     
+00045E                00822 POLS_ENVIAR_INFO
+00045E 948B           00823     bcf LATC,2,0
+000460 968B           00824     bcf LATC,3,0
+000462 6A00           00825     clrf TEMPS_UN,0
+000464 EC?? F???      00826     call ESPERA_16MS
+000468 EC?? F???      00827     call ESPERA_BAIXAR_ENVIAR
+                      00828     
+00046C 0E00           00829     movlw 0x00
+00046E 6406           00830     cpfsgt SIGNAL_TYPE,0
+000470 EF?? F???      00831     goto ENVIAR_RF_ERROR
+                      00832     
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 17
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000474 EC?? F???      00833     call USART_PROGRESS_RESET
+000478 EC?? F???      00834     call ENVIAR_RF
+                      00835     
+00047C 0012           00836     return
+                      00837     
+                      00838 
+00047E                00839 ESPERA_BAIXAR_DESAR
+00047E A481           00840     btfss PORTB,2,0
+000480 EF?? F???      00841     goto ESPERA_BAIXAR_DESAR
+000484 0012           00842     return
+                      00843     
+000486                00844 ESPERA_BAIXAR_ENVIAR
+000486 A281           00845     btfss PORTB,1,0
+000488 EF?? F???      00846     goto ESPERA_BAIXAR_ENVIAR
+00048C 0012           00847     return
+                      00848     
+00048E                00849 ESPERA_16MS
+00048E 0E0A           00850     movlw 0x0A
+000490 6400           00851     cpfsgt TEMPS_UN,0
+000492 EF?? F???      00852     goto ESPERA_16MS
+000496 0012           00853     return
+                      00854     
+                      00855 ;***********************************************************
+                      00856 ;********************* - BLOC LEDS - ***********************
+                      00857 ;***********************************************************
+                      00858     
+000498                00859 ENCENDRE_HEART
+                      00860     ;call USART_DESAT
+000498 EC?? F???      00861     call CANVIA_ESTAT_UP
+                      00862     ;bsf LATC,3,0
+00049C 0012           00863     return
+                      00864     
+00049E                00865 ENCENDRE_HALF
+00049E 6AAE           00866     clrf RCREG,0
+0004A0 EC?? F???      00867     call USART_DESAT
+0004A4 6A04           00868     clrf ESTAT,0
+0004A6 8004           00869     bsf ESTAT, 0,0
+0004A8 6A01           00870     clrf TEMPS_LED,0
+0004AA 0012           00871     return
+                      00872     
+                      00873     
+0004AC                00874 ACTIVA_LEDS
+0004AC 848B           00875     bsf LATC,2,0
+0004AE 868B           00876     bsf LATC,3,0
+0004B0 0012           00877     return
+                      00878     
+0004B2                00879 DESACTIVA_LEDS
+0004B2 948B           00880     bcf LATC,2,0
+0004B4 968B           00881     bcf LATC,3,0
+0004B6 0012           00882     return
+                      00883     
+0004B8                00884 MIG_INTENSITAT
+0004B8 0E0A           00885     movlw 0x0A
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 18
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0004BA 6401           00886     cpfsgt TEMPS_LED,0    
+0004BC EF?? F???      00887     goto ACTIVA_LEDS
+                      00888     
+0004C0 EC?? F???      00889     call DESACTIVA_LEDS
+                      00890     
+0004C4 0E14           00891     movlw 0x14
+0004C6 6001           00892     cpfslt TEMPS_LED,0
+0004C8 6A01           00893     clrf TEMPS_LED,0
+                      00894     
+0004CA 0012           00895     return
+                      00896     
+0004CC                00897 BLINKING
+                      00898     
+0004CC B204           00899     btfsc ESTAT, 1,0
+0004CE EF?? F???      00900     goto PUJADA_LED
+                      00901     
+0004D2 B404           00902     btfsc ESTAT, 2,0
+0004D4 EF?? F???      00903     goto ESPERA_CENT
+                      00904     
+0004D8 B604           00905     btfsc ESTAT, 3,0
+0004DA EF?? F???      00906     goto ESPERA_VINT
+                      00907     
+0004DE B804           00908     btfsc ESTAT, 4,0
+0004E0 EF?? F???      00909     goto BAIXADA_LED
+                      00910     
+0004E4 0012           00911     return
+                      00912     
+                      00913     
+                      00914     
+0004E6                00915 CANVIA_ESTAT_DOWN
+0004E6 6A01           00916     clrf TEMPS_LED
+0004E8 6A04           00917     clrf ESTAT,0
+                      00918     
+0004EA 8804           00919     bsf ESTAT,4,0
+0004EC 0012           00920     return
+                      00921        
+0004EE                00922 CANVIA_ESTAT_ESPERA
+                      00923     
+0004EE 6A04           00924     clrf ESTAT,0
+0004F0 B606           00925     btfsc SIGNAL_TYPE,3,0
+0004F2 EF?? F???      00926     goto CANVI_10_ESPERA
+                      00927     
+0004F6 8404           00928     bsf ESTAT,2,0
+0004F8 2A03           00929     incf HEART_BEAT,1,0
+                      00930         
+0004FA                00931 FINAL_CANVI_ESPERA
+0004FA 6A01           00932     clrf TEMPS_LED
+0004FC EF?? F???      00933     goto LEDS_ON
+000500 0012           00934     return
+                      00935     
+000502                00936 CANVI_10_ESPERA
+000502 8604           00937     bsf ESTAT,3,0
+000504 0E14           00938     movlw 0x14
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 19
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+000506 6E03           00939     movwf HEART_BEAT,0
+000508 EF?? F???      00940     goto FINAL_CANVI_ESPERA
+                      00941     
+00050C                00942 CANVIA_ESTAT_UP
+00050C 6A04           00943     clrf ESTAT,0
+00050E 6A01           00944     clrf TEMPS_LED,0
+000510 6A03           00945     clrf HEART_BEAT,0
+000512 7002           00946     btg QUIN_LED,0,0
+000514 8204           00947     bsf ESTAT,1,0
+000516 0012           00948     return
+                      00949    
+000518                00950 BAIXADA_LED    
+                      00951     
+000518 5003           00952     movf HEART_BEAT, 0,0
+00051A 6401           00953     cpfsgt TEMPS_LED,0
+00051C EF?? F???      00954     goto LEDS_ON
+                      00955     
+000520 B606           00956     btfsc SIGNAL_TYPE,3,0
+000522 EF?? F???      00957     goto BAIXADA_LED_10
+                      00958         
+000526 5005           00959     movf TEMPS_MAX,0,0
+                      00960 
+000528                00961 CONTINUE_BAIXADA_LED
+000528 6401           00962     cpfsgt TEMPS_LED,0
+00052A EF?? F???      00963     goto LEDS_OFF
+                      00964     
+00052E 6A01           00965     clrf TEMPS_LED,0
+                      00966     
+000530 B606           00967     btfsc SIGNAL_TYPE,3,0
+000532 EF?? F???      00968     goto BAIXADA_10
+                      00969     
+000536 0603           00970     decf HEART_BEAT,1,0
+                      00971     
+000538                00972 BAIXADA_LED_FINAL
+000538 B8D8           00973     btfsc STATUS,N,0
+00053A EF?? F???      00974     goto CANVIA_ESTAT_UP
+00053E 0012           00975     return
+                      00976     
+000540                00977 BAIXADA_10
+000540 0E04           00978     movlw 0x04
+000542 5E03           00979     subwf HEART_BEAT,1,0
+000544 EF?? F???      00980     goto BAIXADA_LED_FINAL
+                      00981 
+000548                00982 BAIXADA_LED_10
+000548 0405           00983     decf TEMPS_MAX,0,0
+00054A EF?? F???      00984     goto CONTINUE_BAIXADA_LED
+                      00985     
+00054E                00986 ESPERA_CENT
+00054E 0E74           00987     movlw 0x74
+000550 6001           00988     cpfslt TEMPS_LED,0
+000552 EF?? F???      00989     goto CANVIA_ESTAT_DOWN
+                      00990     
+000556 0012           00991     return
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 20
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00992     
+000558                00993 ESPERA_VINT
+000558 0E14           00994     movlw 0x14
+00055A 6001           00995     cpfslt TEMPS_LED,0
+00055C EF?? F???      00996     goto CANVIA_ESTAT_DOWN
+                      00997     
+000560 0012           00998     return
+                      00999     
+000562                01000 PUJADA_LED
+                      01001     
+000562 5003           01002     movf HEART_BEAT, 0,0
+000564 6401           01003     cpfsgt TEMPS_LED,0
+000566 EF?? F???      01004     goto LEDS_ON
+                      01005         
+00056A 5005           01006     movf TEMPS_MAX,0,0
+00056C 6201           01007     cpfseq TEMPS_LED,0
+00056E EF?? F???      01008     goto LEDS_OFF
+                      01009     
+000572 6A01           01010     clrf TEMPS_LED,0
+                      01011     
+000574 0E00           01012     movlw 0x00
+000576 6407           01013     cpfsgt COMPTA_BYTES,0
+000578 EF?? F???      01014     goto PUJADA_10
+                      01015     
+00057C 2A03           01016     incf HEART_BEAT,1,0
+                      01017     
+00057E                01018 PUJADA_LED_FINAL
+00057E 5005           01019     movf TEMPS_MAX,0,0
+000580 6203           01020     cpfseq HEART_BEAT,0
+000582 0012           01021     return
+                      01022     
+000584 EF?? F???      01023     goto CANVIA_ESTAT_ESPERA
+                      01024     
+000588                01025 PUJADA_10
+000588 0E05           01026     movlw 0x05
+00058A 2603           01027     addwf HEART_BEAT,1,0
+00058C EF?? F???      01028     goto PUJADA_LED_FINAL
+                      01029     
+                      01030     
+000590                01031 LEDS_ON
+000590 B002           01032     btfsc QUIN_LED,0,0
+000592 EF?? F???      01033     goto ACTIVA_LED0
+                      01034     
+000596 848B           01035     bsf LATC,2,0
+000598 0012           01036     return
+                      01037 
+00059A                01038 ACTIVA_LED0    
+00059A 868B           01039     bsf LATC,3,0
+00059C 0012           01040     return
+                      01041     
+00059E                01042 DESACTIVA_LED0
+00059E 968B           01043     bcf LATC,3,0
+0005A0 0012           01044     return
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 21
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      01045     
+0005A2                01046 LEDS_OFF
+0005A2 B002           01047     btfsc QUIN_LED,0,0
+0005A4 EF?? F???      01048     goto DESACTIVA_LED0
+                      01049     
+0005A8 948B           01050     bcf LATC,2,0
+0005AA 0012           01051     return
+                      01052    
+                      01053     END
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 22
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+A                                 00000000
+ABDEN                             00000000
+ABDOVF                            00000007
+ACCESS                            00000000
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ACQT0                             00000003
+ACQT1                             00000004
+ACQT2                             00000005
+ACTIVA_LED0                       0000059A
+ACTIVA_LEDS                       000004AC
+ADCON0                            00000FC2
+ADCON1                            00000FC1
+ADCON2                            00000FC0
+ADCON_DONE                        000002F8
+ADCS0                             00000000
+ADCS1                             00000001
+ADCS2                             00000002
+ADDEN                             00000003
+ADEN                              00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADIP                              00000006
+ADMSK1                            00000001
+ADMSK2                            00000002
+ADMSK3                            00000003
+ADMSK4                            00000004
+ADMSK5                            00000005
+ADON                              00000000
+ADRES                             00000FC3
+ADRESH                            00000FC4
+ADRESL                            00000FC3
+AN0                               00000000
+AN1                               00000001
+AN10                              00000001
+AN11                              00000004
+AN12                              00000000
+AN2                               00000002
+AN3                               00000003
+AN4                               00000005
+AN5                               00000000
+AN6                               00000001
+AN7                               00000002
+AN8                               00000002
+AN9                               00000003
+AUXILIAR                          0000000C
+BAIXADA_10                        00000540
+BAIXADA_LED                       00000518
+BAIXADA_LED_10                    00000548
+BAIXADA_LED_FINAL                 00000538
+BANKED                            00000001
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 23
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BAUDCON                           00000FB8
+BAUDCTL                           00000FB8
+BCLIE                             00000003
+BCLIF                             00000003
+BCLIP                             00000003
+BF                                00000000
+BGST                              00000005
+BLINKING                          000004CC
+BOR                               00000000
+BRG16                             00000003
+BRGH                              00000002
+BSR                               00000FE0
+BYTE                              0000000D
+C                                 00000000
+C1INV                             00000004
+C1N                               00000000
+C1OUT_CMCON                       00000006
+C1OUT_PORTA                       00000004
+C1P                               00000003
+C2INV                             00000005
+C2N                               00000001
+C2OUT_CMCON                       00000007
+C2OUT_PORTA                       00000005
+C2P                               00000002
+CANVIA_ESTAT_DOWN                 000004E6
+CANVIA_ESTAT_ESPERA               000004EE
+CANVIA_ESTAT_UP                   0000050C
+CANVI_10_ESPERA                   00000502
+CCP1                              00000002
+CCP1CON                           00000FBD
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1IP                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           00000FBA
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2IP                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCP2_PORTB                        00000003
+CCP2_PORTC                        00000001
+CCPR1                             00000FBE
+CCPR1H                            00000FBF
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 24
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CCPR1L                            00000FBE
+CCPR2                             00000FBB
+CCPR2H                            00000FBC
+CCPR2L                            00000FBB
+CFGS                              00000006
+CHS0                              00000002
+CHS1                              00000003
+CHS2                              00000004
+CHS3                              00000005
+CIS                               00000003
+CK                                00000006
+CKE                               00000006
+CKP                               00000004
+CLKI                              00000007
+CLKO                              00000006
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             00000FB4
+CMIE                              00000006
+CMIF                              00000006
+CMIP                              00000006
+COMPROVA_FINAL                    0000038E
+COMPTA_BYTES                      00000007
+COMPUTE_DIV_10                    00000248
+CONNECTION                        00000008
+CONTINUA_FOR                      00000200
+CONTINUE_BAIXADA_LED              00000528
+COPS                              0000000B
+CREN                              00000004
+CS                                00000002
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            00000FB5
+CVREF                             00000002
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+CVRSS                             00000004
+D                                 00000005
+DC                                00000001
+DC1B0                             00000004
+DC1B1                             00000005
+DC2B0                             00000004
+DC2B1                             00000005
+DDRA                              TRISA
+DDRB                              TRISB
+DDRC                              TRISC
+DDRD                              TRISD
+DDRE                              TRISE
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 25
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+DESA                              00000352
+DESACTIVA_LED0                    0000059E
+DESACTIVA_LEDS                    000004B2
+DESA_BUCLE                        0000036E
+DESA_CONTINUA_BUCLE               0000037C
+DESA_CPLX_FINAL                   0000039E
+DESA_CPLX_LAST_BYTES              000003A4
+DIV_DEU                           0000000E
+DONE                              00000001
+D_A                               00000005
+D_NOT_A                           00000005
+ECCP1AS                           00000FB6
+ECCP1CON                          00000FBD
+ECCP1DEL                          00000FB7
+ECCPAS0                           00000004
+ECCPAS1                           00000005
+ECCPAS2                           00000006
+ECCPASE                           00000007
+EEADR                             00000FA9
+EECON1                            00000FA6
+EECON2                            00000FA7
+EEDATA                            00000FA8
+EEIE                              00000004
+EEIF                              00000004
+EEIP                              00000004
+EEPGD                             00000007
+ENCENDRE_HALF                     0000049E
+ENCENDRE_HEART                    00000498
+ENVIAR_BIT_PRIMERA_MEITAT         00000224
+ENVIAR_BIT_SEGONA_MEITAT          00000230
+ENVIAR_FOR                        000001B2
+ENVIAR_FOR_SEGON                  000001BA
+ENVIAR_RF                         00000188
+ENVIAR_RF_ERROR                   0000023C
+ENVIA_PARAMETRES                  000001E6
+ESPERA_16MS                       0000048E
+ESPERA_BAIXAR_DESAR               0000047E
+ESPERA_BAIXAR_ENVIAR              00000486
+ESPERA_CENT                       0000054E
+ESPERA_POLSADOR                   000003CA
+ESPERA_POLSADOR_DEL               0000040C
+ESPERA_POLSADOR_DESAR             000003EC
+ESPERA_POLSADOR_DOWN              000003D2
+ESPERA_VINT                       00000558
+ESTAT                             00000004
+ESTAT_P                           00000012
+FAST                              00000001
+FERR                              00000002
+FINAL_CANVI_ESPERA                000004FA
+FINAL_DESAR                       00000394
+FINAL_ENVIAR_RF                   0000021A
+FLAG_AD                           0000008D
+FLAG_CONNECTION                   00000088
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 26
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+FLAG_CONTINUAR                    00000001
+FLAG_DATA                         0000008B
+FLAG_DELETE_INFO                  0000008A
+FLAG_DESAR                        00000080
+FLAG_DESAR_NCON                   00000081
+FLAG_ENVIAR                       00000082
+FLAG_ENVIAR_ERROR                 00000083
+FLAG_HALF                         00000085
+FLAG_HEART                        00000084
+FLAG_PROGRESS                     00000086
+FLAG_PROGRESS_RESET               00000087
+FLAG_SPEED                        0000008C
+FLT0                              00000000
+FLTS                              00000002
+FREE                              00000004
+FSR0                              00000000
+FSR0H                             00000FEA
+FSR0L                             00000FE9
+FSR1                              00000001
+FSR1H                             00000FE2
+FSR1L                             00000FE1
+FSR2                              00000002
+FSR2H                             00000FDA
+FSR2L                             00000FD9
+GCEN                              00000007
+GIE                               00000007
+GIEH                              00000007
+GIEL                              00000006
+GIE_GIEH                          00000007
+GO                                00000001
+GO_DONE                           00000001
+GO_NOT_DONE                       00000001
+HEART_BEAT                        00000003
+HIGH_INT                          0000001A
+HI_INT_VECTOR                     00000008
+HLVDCON                           00000FD2
+HLVDEN                            00000004
+HLVDIE                            00000002
+HLVDIF                            00000002
+HLVDIN                            00000005
+HLVDIP                            00000002
+HLVDL0                            00000000
+HLVDL1                            00000001
+HLVDL2                            00000002
+HLVDL3                            00000003
+IBF                               00000007
+IBOV                              00000005
+IDLEN                             00000007
+INCREMENTA_7_SEG                  0000017A
+INCREMENTA_ESPERA                 00000444
+INCREMENTA_FOR                    00000206
+INDF0                             00000FEF
+INDF1                             00000FE7
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 27
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+INDF2                             00000FDF
+INIT_7_SEG                        0000016C
+INIT_ADCON                        00000026
+INIT_PORTS                        0000006E
+INIT_SIO                          0000005C
+INIT_TIMER                        00000094
+INIT_VARS                         00000034
+INT0                              00000000
+INT0E                             00000004
+INT0F                             00000001
+INT0IE                            00000004
+INT0IF                            00000001
+INT1                              00000001
+INT1E                             00000003
+INT1F                             00000000
+INT1IE                            00000003
+INT1IF                            00000000
+INT1IP                            00000006
+INT1P                             00000006
+INT2                              00000002
+INT2E                             00000004
+INT2F                             00000001
+INT2IE                            00000004
+INT2IF                            00000001
+INT2IP                            00000007
+INT2P                             00000007
+INTCON                            00000FF2
+INTCON2                           00000FF1
+INTCON3                           00000FF0
+INTEDG0                           00000006
+INTEDG1                           00000005
+INTEDG2                           00000004
+INTSRC                            00000007
+IOFS                              00000002
+IPEN                              00000007
+IPR1                              00000F9F
+IPR2                              00000FA2
+IRCF0                             00000004
+IRCF1                             00000005
+IRCF2                             00000006
+IRVST                             00000005
+KBI0                              00000004
+KBI1                              00000005
+KBI2                              00000006
+KBI3                              00000007
+LATA                              00000F89
+LATA0                             00000000
+LATA1                             00000001
+LATA2                             00000002
+LATA3                             00000003
+LATA4                             00000004
+LATA5                             00000005
+LATA6                             00000006
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 28
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+LATA7                             00000007
+LATB                              00000F8A
+LATB0                             00000000
+LATB1                             00000001
+LATB2                             00000002
+LATB3                             00000003
+LATB4                             00000004
+LATB5                             00000005
+LATB6                             00000006
+LATB7                             00000007
+LATC                              00000F8B
+LATC0                             00000000
+LATC1                             00000001
+LATC2                             00000002
+LATC3                             00000003
+LATC4                             00000004
+LATC5                             00000005
+LATC6                             00000006
+LATC7                             00000007
+LATD                              00000F8C
+LATD0                             00000000
+LATD1                             00000001
+LATD2                             00000002
+LATD3                             00000003
+LATD4                             00000004
+LATD5                             00000005
+LATD6                             00000006
+LATD7                             00000007
+LATE                              00000F8D
+LATE0                             00000000
+LATE1                             00000001
+LATE2                             00000002
+LEDS_OFF                          000005A2
+LEDS_ON                           00000590
+LOOP                              000000DE
+LOW_INT_VECTOR                    00000018
+LVDCON                            00000FD2
+LVDEN                             00000004
+LVDIE                             00000002
+LVDIF                             00000002
+LVDIP                             00000002
+LVDL0                             00000000
+LVDL1                             00000001
+LVDL2                             00000002
+LVDL3                             00000003
+LVV0                              00000000
+LVV1                              00000001
+LVV2                              00000002
+LVV3                              00000003
+MAIN                              000000CA
+MCLR                              00000003
+MIG_INTENSITAT                    000004B8
+N                                 00000004
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 29
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BOR                           00000000
+NOT_CS                            00000002
+NOT_DONE                          00000001
+NOT_MCLR                          00000003
+NOT_PD                            00000002
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RD                            00000000
+NOT_RI                            00000004
+NOT_SS                            00000005
+NOT_T1SYNC                        00000002
+NOT_T3SYNC                        00000002
+NOT_TO                            00000003
+NOT_W                             00000002
+NOT_WR                            00000001
+NOT_WRITE                         00000002
+OBF                               00000006
+OERR                              00000001
+OSC1                              00000007
+OSC2                              00000006
+OSCCON                            00000FD3
+OSCFIE                            00000007
+OSCFIF                            00000007
+OSCFIP                            00000007
+OSCTUNE                           00000F9B
+OSTS                              00000003
+OV                                00000003
+P                                 00000004
+P1A                               00000002
+P1B                               00000005
+P1C                               00000006
+P1D                               00000007
+P1M0                              00000006
+P1M1                              00000007
+PC                                00000FF9
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000FF9
+PCLATH                            00000FFA
+PCLATU                            00000FFB
+PD                                00000002
+PDC0                              00000000
+PDC1                              00000001
+PDC2                              00000002
+PDC3                              00000003
+PDC4                              00000004
+PDC5                              00000005
+PDC6                              00000006
+PEIE                              00000006
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 30
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PEIE_GIEL                         00000006
+PEN                               00000002
+PETICIO_DEL_INFO                  00000428
+PETICIO_DESAR_INFO                0000043C
+PGC                               00000006
+PGD                               00000007
+PGM                               00000005
+PIE1                              00000F9D
+PIE2                              00000FA0
+PIR1                              00000F9E
+PIR2                              00000FA1
+PLLEN                             00000006
+PLUSW0                            00000FEB
+PLUSW1                            00000FE3
+PLUSW2                            00000FDB
+POLSADOR                          000003AE
+POLS_DESAR_INFO                   0000044E
+POLS_ENVIAR_INFO                  0000045E
+POR                               00000001
+PORTA                             00000F80
+PORTB                             00000F81
+PORTC                             00000F82
+PORTD                             00000F83
+PORTE                             00000F84
+POSICIO_A_DESAR_RAM               00000080
+POSTDEC0                          00000FED
+POSTDEC1                          00000FE5
+POSTDEC2                          00000FDD
+POSTINC0                          00000FEE
+POSTINC1                          00000FE6
+POSTINC2                          00000FDE
+PR2                               00000FCB
+PREINC0                           00000FEC
+PREINC1                           00000FE4
+PREINC2                           00000FDC
+PROD                              00000FF3
+PRODH                             00000FF4
+PRODL                             00000FF3
+PRSEN                             00000007
+PSA                               00000003
+PSP0                              00000000
+PSP1                              00000001
+PSP2                              00000002
+PSP3                              00000003
+PSP4                              00000004
+PSP5                              00000005
+PSP6                              00000006
+PSP7                              00000007
+PSPIE                             00000007
+PSPIF                             00000007
+PSPIP                             00000007
+PSPMODE                           00000004
+PSSAC0                            00000002
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 31
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+PSSAC1                            00000003
+PSSBD0                            00000000
+PSSBD1                            00000001
+PUJADA_10                         00000588
+PUJADA_LED                        00000562
+PUJADA_LED_FINAL                  0000057E
+PWM1CON                           00000FB7
+QUIN_LED                          00000002
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RA6                               00000006
+RA7                               00000007
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RBIP                              00000000
+RBPU                              00000007
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RCEN                              00000003
+RCIDL                             00000006
+RCIE                              00000005
+RCIF                              00000005
+RCIP                              00000005
+RCMT                              00000006
+RCON                              00000FD0
+RCREG                             00000FAE
+RCSTA                             00000FAB
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD16                              00000007
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 32
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+RE3                               00000003
+REBRE_CONFIG                      0000033E
+REBUT                             0000010E
+RESET_POLSADOR                    0000044A
+RESET_TIMER                       000000A4
+RESET_VECTOR                      00000000
+RESTANT                           0000000A
+RI                                00000004
+ROTATE                            0000033C
+RSEN                              00000001
+RX                                00000007
+RX9                               00000006
+RX9D                              00000000
+RXDTP                             00000005
+R_NOT_W                           00000002
+R_W                               00000002
+S                                 00000003
+SBOREN                            00000006
+SCK                               00000003
+SCKP                              00000004
+SCL                               00000003
+SCS0                              00000000
+SCS1                              00000001
+SDA                               00000004
+SDI                               00000004
+SDO                               00000005
+SEN                               00000000
+SENDB                             00000003
+SET_SEG_OLD                       00000013
+SIGNAL_TYPE                       00000006
+SMP                               00000007
+SP0                               00000000
+SP1                               00000001
+SP2                               00000002
+SP3                               00000003
+SP4                               00000004
+SPBRG                             00000FAF
+SPBRGH                            00000FB0
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000FC8
+SSPBUF                            00000FC9
+SSPCON1                           00000FC6
+SSPCON2                           00000FC5
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 33
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+SSPIP                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000FC7
+STATUS                            00000FD8
+STKFUL                            00000007
+STKOVF                            00000007
+STKPTR                            00000FFC
+STKUNF                            00000006
+SWDTE                             00000000
+SWDTEN                            00000000
+SYNC                              00000004
+T016BIT                           00000006
+T08BIT                            00000006
+T0CKI                             00000004
+T0CON                             00000FD5
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0PS0                             00000000
+T0PS1                             00000001
+T0PS2                             00000002
+T0SE                              00000004
+T13CKI                            00000000
+T1CKI                             00000000
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000FCD
+T1OSCEN                           00000003
+T1OSI                             00000001
+T1OSO                             00000000
+T1RUN                             00000006
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000FCA
+T2OUTPS0                          00000003
+T2OUTPS1                          00000004
+T2OUTPS2                          00000005
+T2OUTPS3                          00000006
+T3CCP1                            00000003
+T3CCP2                            00000006
+T3CKPS0                           00000004
+T3CKPS1                           00000005
+T3CON                             00000FB1
+T3SYNC                            00000002
+TABLAT                            00000FF5
+TAULA7S                           000000C0
+TBLPTR                            00000FF6
+TBLPTRH                           00000FF7
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 34
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TBLPTRL                           00000FF6
+TBLPTRU                           00000FF8
+TEMPS_CONN                        00000009
+TEMPS_LED                         00000001
+TEMPS_MAX                         00000005
+TEMPS_UN                          00000000
+TEMPS_UN_POLS                     00000011
+TEMPS_UN_RF                       0000000F
+TEMPS_ZERO_RF                     00000010
+TMR0                              00000FD6
+TMR0H                             00000FD7
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR0IP                            00000002
+TMR0L                             00000FD6
+TMR0ON                            00000007
+TMR1                              00000FCE
+TMR1CS                            00000001
+TMR1H                             00000FCF
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1IP                            00000000
+TMR1L                             00000FCE
+TMR1ON                            00000000
+TMR2                              00000FCC
+TMR2IE                            00000001
+TMR2IF                            00000001
+TMR2IP                            00000001
+TMR2ON                            00000002
+TMR3                              00000FB2
+TMR3CS                            00000001
+TMR3H                             00000FB3
+TMR3IE                            00000001
+TMR3IF                            00000001
+TMR3IP                            00000001
+TMR3L                             00000FB2
+TMR3ON                            00000000
+TO                                00000003
+TOS                               00000FFD
+TOSH                              00000FFE
+TOSL                              00000FFD
+TOSU                              00000FFF
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000F92
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 35
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TRISA6                            00000006
+TRISA7                            00000007
+TRISB                             00000F93
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000F94
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000F95
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000F96
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TUN0                              00000000
+TUN1                              00000001
+TUN2                              00000002
+TUN3                              00000003
+TUN4                              00000004
+TX                                00000006
+TX9                               00000006
+TX9D                              00000000
+TXCKP                             00000004
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXIP                              00000004
+TXREG                             00000FAD
+TXSTA                             00000FAC
+UA                                00000001
+UNBLOCK                           00000089
+UNBLOCK_THREAD                    00000164
+UNDERSCORE_7_SEG                  00000182
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 36
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+USART_ADCON                       000002EE
+USART_BIT_ENVIAT                  000002D6
+USART_BORRAR_INFO                 000002DE
+USART_CONNECTAT                   000002B0
+USART_DATA                        00000278
+USART_DESAR                       00000290
+USART_DESAR_NCON                  00000288
+USART_DESAT                       00000298
+USART_DESCONNECTAT                000002C8
+USART_ENVIAR                      00000280
+USART_ERROR_RF                    000002E6
+USART_ESPERA                      000002A0
+USART_ESPERA_INFO                 000002A8
+USART_PROGRESS_RESET              00000254
+USART_SPEED                       00000264
+VCFG0                             00000004
+VCFG1                             00000005
+VDIRMAG                           00000007
+VPP                               00000003
+VREFM                             00000002
+VREFP                             00000003
+W                                 00000000
+WCOL                              00000007
+WDTCON                            00000FD1
+WR                                00000001
+WREG                              00000FE8
+WREN                              00000002
+WRERR                             00000003
+WUE                               00000001
+Z                                 00000002
+_BBSIZ_BB1K_4L                    000000FF
+_BBSIZ_BB256_4L                   000000CF
+_BBSIZ_BB512_4L                   000000DF
+_BORV_0_2L                        000000E7
+_BORV_1_2L                        000000EF
+_BORV_2_2L                        000000F7
+_BORV_3_2L                        000000FF
+_BOR_NOSLP_2L                     000000FD
+_BOR_OFF_2L                       000000F9
+_BOR_ON_2L                        000000FF
+_BOR_SOFT_2L                      000000FB
+_CCP2MX_RB3_3H                    000000FE
+_CCP2MX_RC1_3H                    000000FF
+_CONFIG1H                         00300001
+_CONFIG2H                         00300003
+_CONFIG2L                         00300002
+_CONFIG3H                         00300005
+_CONFIG4L                         00300006
+_CONFIG5H                         00300009
+_CONFIG5L                         00300008
+_CONFIG6H                         0030000B
+_CONFIG6L                         0030000A
+_CONFIG7H                         0030000D
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 37
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_CONFIG7L                         0030000C
+_CP0_OFF_5L                       000000FF
+_CP0_ON_5L                        000000FE
+_CP1_OFF_5L                       000000FF
+_CP1_ON_5L                        000000FD
+_CPB_OFF_5H                       000000FF
+_CPB_ON_5H                        000000BF
+_CPD_OFF_5H                       000000FF
+_CPD_ON_5H                        0000007F
+_DEBUG_OFF_4L                     000000FF
+_DEBUG_ON_4L                      0000007F
+_DEVID1                           003FFFFE
+_DEVID2                           003FFFFF
+_EBTR0_OFF_7L                     000000FF
+_EBTR0_ON_7L                      000000FE
+_EBTR1_OFF_7L                     000000FF
+_EBTR1_ON_7L                      000000FD
+_EBTRB_OFF_7H                     000000FF
+_EBTRB_ON_7H                      000000BF
+_FCMEN_OFF_1H                     000000BF
+_FCMEN_ON_1H                      000000FF
+_IDLOC0                           00200000
+_IDLOC1                           00200001
+_IDLOC2                           00200002
+_IDLOC3                           00200003
+_IDLOC4                           00200004
+_IDLOC5                           00200005
+_IDLOC6                           00200006
+_IDLOC7                           00200007
+_IESO_OFF_1H                      0000007F
+_IESO_ON_1H                       000000FF
+_LPT1OSC_OFF_3H                   000000FB
+_LPT1OSC_ON_3H                    000000FF
+_LVP_OFF_4L                       000000FB
+_LVP_ON_4L                        000000FF
+_MCLRE_OFF_3H                     0000007F
+_MCLRE_ON_3H                      000000FF
+_OSC_ECIO_1H                      000000F5
+_OSC_EC_1H                        000000F4
+_OSC_HSPLL_1H                     000000F6
+_OSC_HS_1H                        000000F2
+_OSC_INTIO1_1H                    000000F9
+_OSC_INTIO2_1H                    000000F8
+_OSC_LP_1H                        000000F0
+_OSC_RCIO_1H                      000000F7
+_OSC_RC_1H                        000000F3
+_OSC_XT_1H                        000000F1
+_PBADEN_ANA_3H                    000000FF
+_PBADEN_DIG_3H                    000000FD
+_PWRT_OFF_2L                      000000FF
+_PWRT_ON_2L                       000000FE
+_STVREN_OFF_4L                    000000FE
+_STVREN_ON_4L                     000000FF
+MPASM 5.77  /HOME/GABRIEL/PROJECTS/TGIF/ASSE   4-9-2018  23:23:19         PAGE 38
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WDTPS_1024_2H                    000000F5
+_WDTPS_128_2H                     000000EF
+_WDTPS_16384_2H                   000000FD
+_WDTPS_16_2H                      000000E9
+_WDTPS_1_2H                       000000E1
+_WDTPS_2048_2H                    000000F7
+_WDTPS_256_2H                     000000F1
+_WDTPS_2_2H                       000000E3
+_WDTPS_32768_2H                   000000FF
+_WDTPS_32_2H                      000000EB
+_WDTPS_4096_2H                    000000F9
+_WDTPS_4_2H                       000000E5
+_WDTPS_512_2H                     000000F3
+_WDTPS_64_2H                      000000ED
+_WDTPS_8192_2H                    000000FB
+_WDTPS_8_2H                       000000E7
+_WDT_OFF_2H                       000000FE
+_WDT_ON_2H                        000000FF
+_WRT0_OFF_6L                      000000FF
+_WRT0_ON_6L                       000000FE
+_WRT1_OFF_6L                      000000FF
+_WRT1_ON_6L                       000000FD
+_WRTB_OFF_6H                      000000FF
+_WRTB_ON_6H                       000000BF
+_WRTC_OFF_6H                      000000FF
+_WRTC_ON_6H                       000000DF
+_WRTD_OFF_6H                      000000FF
+_WRTD_ON_6H                       0000007F
+_XINST_OFF_4L                     000000BF
+_XINST_ON_4L                      000000FF
+__18F4321                         00000001
+
+Errors   :     0
+Warnings :     6 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
