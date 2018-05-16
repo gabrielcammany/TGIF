@@ -3,3 +3,9 @@ Java/*.iml
 Java/out/*
 /Assembler/nbproject/private/
 /Assembler/build/default/
+debug/
+build/
+dist/
+nbproject/
+.DS_Store
+MakeFile

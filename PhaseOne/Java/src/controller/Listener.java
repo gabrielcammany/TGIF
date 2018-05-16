@@ -304,6 +304,46 @@ public class Listener extends MouseAdapter implements ActionListener {
         return op.getType().equals("sinusoïdal") && op.getOffset() == 0 && op.getPaP() == 5;
     }
 
+    private void writeFunction() throws Exception{
+        byte recieved = 0;
+        if (isComplexFunction()) {
+
+            switch (op.getType()){
+
+                case "aleatori":
+                    sp.writeByte(Flags.complex_random);
+                    break;
+                case "custom":
+                    sp.writeByte(Flags.complex_custom);
+                    break;
+            }
+            while ((recieved = sp.readByte()) == 0) ;
+
+        } else {
+
+            if(!defaultValues()){
+                switch (op.getType()){
+                    case "sinusoïdal":
+                        sp.writeByte(Flags.ncomplex_sin);
+                        break;
+                    case "tren de polsos":
+                        sp.writeByte(Flags.ncomplex_tren);
+                        break;
+                    case "triangular":
+                        sp.writeByte(Flags.ncomplex_trian);
+                        break;
+                    case "dent de serra":
+                        sp.writeByte(Flags.ncomplex_dent);
+                        break;
+                }
+            }else{
+                sp.writeByte(Flags.ncomplex_default);
+            }
+            while ((recieved = sp.readByte()) == 0) ;
+
+        }
+    }
+
     public void enviar(boolean confirmacio) {
 
         byte recieved = 0;
@@ -325,50 +365,31 @@ public class Listener extends MouseAdapter implements ActionListener {
                 while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar) ;
             }
 
-            System.out.println("Recieved coinfim: " + recieved);
+            //System.out.println("Recieved coinfim: " + recieved);
 
-            if (isComplexFunction()) {
-
-                sp.writeByte(Flags.complex);
-                while ((recieved = sp.readByte()) == 0) ;
-
-            } else {
-
-                if(!defaultValues()){
-                    switch (op.getType()){
-                        case "sinusoïdal":
-                            sp.writeByte(Flags.ncomplex_sin);
-                            break;
-                        case "tren de polsos":
-                            sp.writeByte(Flags.ncomplex_tren);
-                            break;
-                        case "triangular":
-                            sp.writeByte(Flags.ncomplex_trian);
-                            break;
-                        case "dent de serra":
-                            sp.writeByte(Flags.ncomplex_dent);
-                            break;
-                    }
-                }else{
-                    sp.writeByte(Flags.ncomplex_default);
-                }
-                while ((recieved = sp.readByte()) == 0) ;
-
-            }
-            System.out.println("Recieved complex: " + String.valueOf(recieved));
+            writeFunction();
+            //System.out.println("Recieved complex: " + String.valueOf(recieved));
 
             //Part de id RF
             sp.writeByte(Flags.GROUP_ID_H);
             while ((recieved = sp.readByte()) == 0) ;
-            System.out.println("Recieved ID: " + recieved);
+            //System.out.println("Recieved ID: " + recieved);
 
             sp.writeByte(Flags.GROUP_ID_L);
             while ((recieved = sp.readByte()) == 0) ;
-            System.out.println("Recieved ID2: " + recieved);
+            //System.out.println("Recieved ID2: " + recieved);
+
+            writeFunction();
 
             sp.writeByte((byte)this.period);
             while ((recieved = sp.readByte()) == 0) ;
-            System.out.println("Recieved period: " + recieved);
+            //System.out.println("Recieved period: " + recieved);
+
+            sp.writeByte((byte)this.op.getPaP());
+            while ((recieved = sp.readByte()) == 0) ;
+
+            sp.writeByte((byte)this.op.getOffset());
+            while ((recieved = sp.readByte()) == 0) ;
 
             int i = 0;
             for (byte value : utf8Bytes) {
@@ -378,12 +399,15 @@ public class Listener extends MouseAdapter implements ActionListener {
 
                 view.changeProgressBar(false);
                 view.setGreenStatus();
+
                 System.out.println(" Pos " + i + " " + recieved);
+
                 i++;
 
             }
 
             this.getConnectionThread().setStart_time(System.nanoTime());
+
 
             System.out.println(" Done! Total: " + i);
 

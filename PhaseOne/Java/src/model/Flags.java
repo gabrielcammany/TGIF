@@ -23,10 +23,12 @@ public class Flags {
     public static final byte unblock = (byte) (Integer.parseInt("89", 16));
 
     public static final byte ncomplex_default = (byte) (Integer.parseInt("08", 16));
+
     public static final byte ncomplex_sin = (byte) (Integer.parseInt("01", 16));
     public static final byte ncomplex_tren = (byte) (Integer.parseInt("02", 16));
     public static final byte ncomplex_dent = (byte) (Integer.parseInt("03", 16));
     public static final byte ncomplex_trian = (byte) (Integer.parseInt("04", 16));
-    public static final byte complex = (byte) (Integer.parseInt("10", 16));
+    public static final byte complex_random = (byte) (Integer.parseInt("10", 16));
+    public static final byte complex_custom = (byte) (Integer.parseInt("11", 16));
 
 }
