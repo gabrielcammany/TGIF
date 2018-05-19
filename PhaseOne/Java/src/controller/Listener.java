@@ -13,6 +13,8 @@ import javax.print.DocFlavor;
 import javax.swing.*;
 import java.awt.event.*;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.Arrays;
 
 import static com.sun.xml.internal.messaging.saaj.packaging.mime.util.ASCIIUtility.getBytes;
@@ -65,6 +67,7 @@ public class Listener extends MouseAdapter implements ActionListener {
             return;
 
         }
+        System.out.print(this.period + " ");
 
         if (portThread != null) {
 
@@ -375,6 +378,10 @@ public class Listener extends MouseAdapter implements ActionListener {
             while ((recieved = sp.readByte()) == 0) ;
             //System.out.println("Recieved ID: " + recieved);
 
+            sp.writeByte(Flags.GROUP_ID_M);
+            while ((recieved = sp.readByte()) == 0) ;
+            //System.out.println("Recieved ID2: " + recieved);
+
             sp.writeByte(Flags.GROUP_ID_L);
             while ((recieved = sp.readByte()) == 0) ;
             //System.out.println("Recieved ID2: " + recieved);
@@ -389,6 +396,20 @@ public class Listener extends MouseAdapter implements ActionListener {
             while ((recieved = sp.readByte()) == 0) ;
 
             sp.writeByte((byte)this.op.getOffset());
+            while ((recieved = sp.readByte()) == 0) ;
+
+            int sum = 0;
+            int[] array = new int[utf8Bytes.length];
+            for (int i = 0; i < utf8Bytes.length; array[i] = (utf8Bytes[i++] & 0xFF))sum += (utf8Bytes[i] & 0xFF);
+            Arrays.sort(array);
+
+            sp.writeByte((byte)((array[0]*5)/254));
+            while ((recieved = sp.readByte()) == 0) ;
+
+            sp.writeByte((byte)((array[array.length-1] * 5) / 254));
+            while ((recieved = sp.readByte()) == 0) ;
+
+            sp.writeByte((byte)(((sum / array.length) * 5) / 254));
             while ((recieved = sp.readByte()) == 0) ;
 
             int i = 0;

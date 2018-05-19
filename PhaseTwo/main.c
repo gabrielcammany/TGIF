@@ -21,6 +21,7 @@
 #include "BlTBacklight.h"
 #include "SiTSio.h"
 #include "PrTPropaganda.h"
+#include "TRF.h"
 /*
  * 
  */
@@ -80,8 +81,10 @@ int main(void){
     LcGotoXY(0,0);
     LcPutString("Booting...");
     
+    RFInit();
     initMotorLCD();
     initPropaganda();
+    initTFunction();
     
     
     while(1){
@@ -93,6 +96,8 @@ int main(void){
         MotorAudio();
         MotorPropaganda();
         MotorSIO();
+        //MotorRF();
+        //MotorFunction();
   
     }
 }

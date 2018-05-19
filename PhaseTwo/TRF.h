@@ -11,37 +11,26 @@
 #define	TRF_H
 #include <xc.h>
 #include "time.h"
-#include "PrTPropaganda.h"
 #include "AuTAudio.h"
+#include "PrTPropaganda.h"
 
 #define MAX_DIGITS_RECIEVED_SIO 2
 #define MAX_DIGITS_RECIEVED 2 + MAX_DIGITS_RECIEVED_SIO
-#define EXTRA_SPACES            4
-#define MAX_SIGNAL             (300 + EXTRA_SPACES)
+#define MAX_SIGNALS             6
+
+#define MAX_TIMES               5
+#define MAX_PERIODS             7
+
 
 typedef struct{
-    char times;
-    int periods;
+    char times[MAX_TIMES];
+    char periods[MAX_PERIODS];
 }Senyal;
 
 void RFInit();
 //Pre: Requereix del TITITMER.c
 //Post: Demana un timer i posa la sortida del LED a 0
 void MotorRF();
-
-unsigned char* getSignal(unsigned char offset);
-//Pre: 0<= offset <= MAX_SIGNAL
-//Post: Retorna el missatge que hi ha actualment amb el offset especificat
-
-int getLength();
-//Pre: -
-//Post: Retorna la mida del missatge tenim desat
-
-char getFrequency(char index);
-
-char getVpp();
-
-char getOffset();
 
 Senyal* getSignals();
 

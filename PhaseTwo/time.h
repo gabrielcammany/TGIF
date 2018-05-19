@@ -21,6 +21,8 @@
 //#define         TI_MAXTICS                      8640000000L //Suficient per aprox. 100 dies
 #define         TI_MAXTICS                      30000 //Suficient per aprox. 30 o 40 segons
 
+#define         UN_SEGON                        10000
+
 void TiInit (void);
 	/*********************************************************************
 	//Postcondicions: Inicialitza el T.A.D. ês precondici¢ global haver cridat

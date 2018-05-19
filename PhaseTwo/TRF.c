@@ -9,11 +9,14 @@
 #define END_BYTE                0x00
 #define START_BYTE              0x40
 #define IN                      PORTBbits.RB13
+#define MAX_ID_RF               3
 
-static unsigned char estatRF,input, timerRF, sincronized, pos, temp[10],
-        missatge[MAX_SIGNAL], inValue,id_trama[MAX_ID], frequency[5], vpp, offset, signal;
+static unsigned char estatRF,input, timerRF, sincronized, pos, missatge[MAX_SIGNAL];
+static unsigned char inValue,id_trama[MAX_ID_RF];
+
 static int caracter;
-static Senyal senyals[6];
+
+static Senyal senyals[MAX_SIGNALS];
 
 void initCadenaRF(unsigned char *cadena, unsigned char size){
     int i;
@@ -23,21 +26,15 @@ void initCadenaRF(unsigned char *cadena, unsigned char size){
     
 }
 
-
-void myItoa(int num){
-    //Post: escriu el valor ascii de num a tmp;
-    frequency[4] = (char)(num/1000);
-    num = num - (frequency[4]*1000);
-    frequency[3] = (char)(num /100);
-    num = num - (frequency[3]*100);
-    frequency[2] = (char) (num /10);
-    num = num - (frequency[2]*10);
-    frequency[1] = num;
-    frequency[0] = 0;
-
+void initSignals(){
+    int i;
+    for(i = 0; i < MAX_SIGNALS; i++){
+        senyals[i].periods[0] = 0;
+        senyals[i].times[0] = 0;
+        
+    }
+    
 }
-
-
 
 void RFInit(){
     
@@ -46,10 +43,9 @@ void RFInit(){
     CNPU1bits.CN13PUE = 1;
     timerRF = TiGetTimer();
     
-    estatRF =  sincronized =  pos = signal = 0;
+    estatRF =  sincronized =  pos = caracter = 0;
     initCadenaRF(id_trama, MAX_ID);
-    initCadenaRF(frequency, 4);
-    vpp = offset = ' ';
+    initSignals();
     
 }
 
@@ -68,23 +64,11 @@ void addBit(char input){
     }
 }
 
-void setFrequency(unsigned char recieved){
-    
-    myItoa(recieved * 10);
-    frequency[4] += '0';
-    frequency[3] += '0';
-    frequency[2] += '0';
-    frequency[1] += '0';
-    
-}
-
 
 void fiTramaPropia(){
-    
-    signal = missatge[3];
-    setFrequency(missatge[4]);
-    vpp = missatge[5] + '0';
-    offset = missatge[6] + '0';
+        
+    set_function_values(missatge[4] + '0',missatge[5] + '0',missatge[6] + '0',
+            missatge[7] + '0',missatge[8] + '0', missatge[3],missatge[2]);
     
 }
 
@@ -199,7 +183,9 @@ void MotorRF () {
 
                     }else{
 
+                        sincronized = 2;
                         estatRF = 6;
+                        caracter = 0;
 
                     }
 
@@ -216,7 +202,7 @@ void MotorRF () {
 
             }else{
 
-                missatge[caracter] = inValue;
+                *((getSignal(0))+ caracter) = inValue;
                 caracter++;
                 estatRF = 3;
 
@@ -227,47 +213,38 @@ void MotorRF () {
             break;
         case 6:
 
-            if(inValue == START_BYTE){
+            if(sincronized == 2){
 
-                sincronized = 2;
-                estatRF = 3;
-                caracter = 0;
-                exitStateInstructions();
+                if (caracter < 3 ){
 
-            }else{
-
-                if(sincronized == 2){
-
-                    if (caracter < 3 ){
-
-                        id_trama[caracter] = inValue;
-                        caracter++;
-                        estatRF = 3;
-                        exitStateInstructions();
-
-                    }else{
-
-                        if(sincronized != 4){
-
-                            estatRF = 7;
-
-                        }else {
-
-                            estatRF = 0;
-                            sincronized = 0;
-
-                        }
-
-                    }
+                    id_trama[caracter] = inValue;
+                    caracter++;
+                    estatRF = 3;
+                    exitStateInstructions();
 
                 }else{
 
-                    estatRF = 0;
-                    sincronized = 0;
+
+                    if(sincronized != 4){
+
+                        estatRF = 7;
+
+                    }else {
+
+                        estatRF = 0;
+                        sincronized = 0;
+
+                    }
 
                 }
 
+            }else{
+
+                estatRF = 0;
+                sincronized = 0;
+
             }
+                
             break;
         case 7:
             
@@ -275,8 +252,7 @@ void MotorRF () {
 
                 sincronized = 1;
                 estatRF = 3;
-                caracter = 16;
-                missatge[caracter] = inValue;
+                *((getSignal(0))+ caracter) = inValue;
                 caracter++;
 
             }else{
@@ -292,35 +268,50 @@ void MotorRF () {
         case 8:
             
             fiTramaPropia();
-            estatRF = 0;
+            sincronized = 0;
+            estatRF = 9;
+            
+            setFunctionLength(caracter - EXTRA_SPACES);
+            setAudioPeriode(calcula_periode(id_trama[sincronized]));
+            changeAudioStatus();
+            
+            TiResetTics(timerRF);
+            
+            break;
+            
+        case 9:
+                        
+            if (TiGetTics(timerRF) > 10000){
+                
+                sincronized++;
+                
+                if(sincronized == 3){
+                    
+                    sincronized = 0;
+                    estatRF = 0;
+                    changeAudioStatus();
+                    
+                }else{
+                    
+                    setAudioPeriode(calcula_periode(id_trama[sincronized]));
+
+                    TiResetTics(timerRF);
+                    
+                }
+                
+                
+                
+            }
             
             break;
     }
 }
 
-unsigned char* getSignal(unsigned char offset){
-    return (missatge+offset);
-}
 
 int getLength(){
     return caracter;
 }
 
-
-char getFrequency(char index){
-    
-    return frequency[index];
-    
-}
-
-char getVpp(){
-    
-    return vpp;
-    
-}
-
-char getOffset(){
-    
-    return offset;
-    
+Senyal* getSignals(){
+    return senyals;
 }

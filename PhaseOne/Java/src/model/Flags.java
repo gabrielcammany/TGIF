@@ -2,8 +2,9 @@ package model;
 
 public class Flags {
 
-    public static final byte GROUP_ID_H = (byte) (Integer.parseInt("02", 16));
-    public static final byte GROUP_ID_L = (byte) (Integer.parseInt("00", 16));
+    public static final byte GROUP_ID_H = (byte) (Integer.parseInt("35", 16));
+    public static final byte GROUP_ID_M = (byte) (Integer.parseInt("31", 16));
+    public static final byte GROUP_ID_L = (byte) (Integer.parseInt("32", 16));
 
     public static final byte flag_desar = (byte) (Integer.parseInt("80", 16));
     public static final byte flag_desar_ncon = (byte) (Integer.parseInt("81", 16));

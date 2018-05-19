@@ -1,6 +1,8 @@
 #include "AuTAudio.h"
 #include <xc.h>
-static char timerAudio, estat,periode;
+
+static unsigned char estat;
+static unsigned int periode, timerAudio;
 
 void AuInit(){
     SET_AUDIO_DIR();
@@ -21,6 +23,13 @@ void setAudioPeriode(char nouPeriode){
 
 char getAudioStatus(void){
     return estat != 2;
+}
+
+
+char calcula_periode(char digit){
+    
+    return ( digit + 1 ) * 5; 
+    
 }
 
 void MotorAudio(){
@@ -45,6 +54,14 @@ void MotorAudio(){
     }
 }
 
+void muteAudio(){
+    estat = 2;
+    AUDIO_OFF();
+}
+
+void unMuteAudio(){
+    estat = 0;
+}
 
 char changeAudioStatus(){
     //Post Canvia l'estat d'audio

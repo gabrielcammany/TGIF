@@ -33,6 +33,9 @@ char getAudioPeriode(void);
 void setAudioPeriode(char nouPeriode);
 // Pre: nouPeriode >= 1
 
+char calcula_periode(char digit);
 
+void muteAudio();
 
+void unMuteAudio();
 #endif	/* AUTAUDIO_H */
