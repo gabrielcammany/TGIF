@@ -34,9 +34,7 @@
 #define EXTRA_ID_STRING 3
 
 
-void myItoa(int num);
-//Pre: 0<= num <= 9999
-//Post: deixa a temp[3..0] el num en ASCII
+unsigned char actualitzaTemps(char *array, unsigned char valor, char size);
 
 void Menu(void);
 //Pre: La SIO està inicialitzada

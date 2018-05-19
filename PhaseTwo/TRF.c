@@ -16,8 +16,6 @@ static unsigned char inValue,id_trama[MAX_ID_RF];
 
 static int caracter;
 
-static Senyal senyals[MAX_SIGNALS];
-
 void initCadenaRF(unsigned char *cadena, unsigned char size){
     int i;
     for(i = 0; i < size; i++){
@@ -26,15 +24,6 @@ void initCadenaRF(unsigned char *cadena, unsigned char size){
     
 }
 
-void initSignals(){
-    int i;
-    for(i = 0; i < MAX_SIGNALS; i++){
-        senyals[i].periods[0] = 0;
-        senyals[i].times[0] = 0;
-        
-    }
-    
-}
 
 void RFInit(){
     
@@ -45,7 +34,6 @@ void RFInit(){
     
     estatRF =  sincronized =  pos = caracter = 0;
     initCadenaRF(id_trama, MAX_ID);
-    initSignals();
     
 }
 
@@ -310,8 +298,4 @@ void MotorRF () {
 
 int getLength(){
     return caracter;
-}
-
-Senyal* getSignals(){
-    return senyals;
 }

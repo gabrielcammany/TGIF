@@ -5,10 +5,9 @@
 
 
 static long timestamp, signal_avg;
-static unsigned int timerPropaganda,timerAudioPropaganda, index_function;
+static unsigned int timerPropaganda,timerAudioPropaganda, index_function, signal_max, signal_min;
 static unsigned char audioStatus, estatPropaganda, reset_time = 4, 
-        signal_index, signal_list, opcio, identificador, bit_time,
-        signal_max, signal_min;
+        signal_index, signal_list, opcio, identificador, bit_time;
 static char rtime[6],
         id[MAX_ID],
         btime[MAX_BIT_TIME];
@@ -47,81 +46,39 @@ void initCTime(char *cadena, unsigned char size){
 }
 
 
-void actualitzaTemps(){
-    //Post: Incrementa el ID que esta per pantalla si no hi ha cap afegit, en cas
-    //contrari, incrementa fins arribar al numero
+unsigned char actualitzaTemps(char *array, unsigned char valor, char size){
+    char i, overflow = 0, vreturn = 0;
     
-    switch(reset_time){
+    for(i = size - 1; i > (valor) - 2; i--){
         
-        case 4:
+        if(overflow){
             
-            reset_time = (rtime[4] == '9' ? reset_time-1 : reset_time); 
-            rtime[4] = (rtime[4]<'9' ? (rtime[4] + 1) : '0');
-            if(reset_time != 4){
-                rtime[3] = '1';
+            if( (*(array + i)) < '1' && i == (valor - 1)){
+                
+                vreturn++;
+                (*(array + i)) = (*(array + i)) + 1;
+                
+            }else{
+                
+                overflow = ((*(array + i)) == '9');
+                *(array + i) = ((*(array + i)) < '9' ? ((*(array + i)) + 1) : '0');
+                if(!overflow)break;
+                
             }
             
+        }else{
             
-            break;
-        case 3:
+            overflow = ((*(array + i )) == '9');
+            (*(array + i)) = ((*(array + i))<'9' ? ((*(array + i)) + 1) : '0');
             
-            rtime[3] = (rtime[4] == '9' ? (rtime[3] + 1) : rtime[3]);
-            rtime[4] = (rtime[4]<'9' ? (rtime[4] + 1) : '0');
+            if(!overflow)break;
             
-            reset_time = (rtime[3] == '9' ? reset_time-1 : reset_time); 
-            
-            if(reset_time != 3){
-                rtime[3] = '0';
-                rtime[2] = '1';
-            }
-            break;
-        case 2:
-            rtime[3] = (rtime[4] == '9' ? (rtime[3] + 1) : rtime[3]);
-            rtime[2] = (rtime[3] > '9' ? (rtime[2] + 1) : rtime[2]);
-            
-            rtime[3] = (rtime[3] > '9' ? '0' : rtime[3]);
-            rtime[4] = (rtime[4] <'9' ? (rtime[4] + 1) : '0');
-            
-            reset_time = (rtime[2] == '9' ? reset_time-1 : reset_time); 
-            
-            if(reset_time != 3){
-                rtime[3] = '0';
-                rtime[2] = '0';
-                rtime[1] = '1';
-            }
-            break;
-        case 1:
-            
-            rtime[1] = (rtime[2] == '9' ? (rtime[1] + 1) : rtime[1]);
-            rtime[2] = (rtime[2] == '9' ? '0' : rtime[2]);
-            rtime[2] = (rtime[3] == '9' ? (rtime[2] + 1) : rtime[2]);
-            rtime[3] = (rtime[4] == '9' ? (rtime[3] + 1) : rtime[3]);
-            rtime[3] = (rtime[3] == '9' ? '0' : rtime[3]);
-            rtime[4] = (rtime[4] <'9' ? (rtime[4] + 1) : '0');
-            
-            reset_time = (rtime[2] == '9' ? reset_time-1 : reset_time); 
-            
-            if(reset_time != 3){
-                rtime[2] = '1';
-            }
-            
-            
-            rtime[4] = (rtime[4]<'9' ? (rtime[4] + 1) : '0');
-            rtime[3] = (rtime[3]<'9' ? (rtime[3] + 1) : '0');
-            rtime[2] = (rtime[2]<'9' ? (rtime[2] + 1) : '0');
-            reset_time = (rtime[2] == '9' ? reset_time-1 : reset_time); 
-            rtime[1] = (rtime[1]<'9' ? (rtime[1] + 1) : '0');
-            break;
-        case 0:
-            rtime[4] = (rtime[4]<'9' ? (rtime[4] + 1) : '0');
-            rtime[3] = (rtime[3]<'9' ? (rtime[3] + 1) : '0');
-            rtime[2] = (rtime[2]<'9' ? (rtime[2] + 1) : '0');
-            rtime[1] = (rtime[1]<'9' ? (rtime[1] + 1) : '0');
-            rtime[0] = (rtime[0]<'9' ? (rtime[0] + 1) : '0');
-            break;
+        }
         
     }
     
+    return (valor) - vreturn;
+        
 }
 
 char getIDPos(unsigned char pos){
@@ -157,8 +114,8 @@ char* detect_signal(char signal){
 
 char* signal_config(char signal){
     
-    return (signal > 3 ? "\r\t\t* 24.700 miliseconds configuration frame\r\n\0" : 
-        "\r\t\t* 12.720 miliseconds configuration frame\r\n\0");
+    return (signal > 3 ? "\r\t\t* 24.700 milliseconds configuration frame\r\n\0" : 
+        "\r\t\t* 12.720 milliseconds configuration frame\r\n\0");
     
 }
 
@@ -176,24 +133,24 @@ inline void function_values(void){
     SiPutsCooperatiu("\r\n\r************************\r\n\0");
     SiPutsCooperatiu("\r Current Function Values: \r\n\0");
     SiPutsCooperatiu("\r************************\r\n\0");
-    SiPutsCooperatiu("\rMinimum value ");
-    if(getVMin() != ' '){
-        SiSendChar(getVMin());
-        SiPutsCooperatiu("V\r\n\0");
+    SiPutsCooperatiu("\rMinimum value \0");
+    if(*(getVMin()) != ' '){
+        SiPutsCooperatiu(getVMin());
+        SiPutsCooperatiu(" V\r\n\0");
     }else{
         SiPutsCooperatiu("-\r\n\n\0");
     }
-    SiPutsCooperatiu("\rMaximum value ");
-    if(getVMin() != ' '){
-        SiSendChar((getVMax()));
-        SiPutsCooperatiu("V\r\n\0");
+    SiPutsCooperatiu("\rMaximum value \0");
+    if(*(getVMin()) != ' '){
+        SiPutsCooperatiu((getVMax()));
+        SiPutsCooperatiu(" V\r\n\0");
     }else{
         SiPutsCooperatiu("-\r\n\n\0");
     }
-    SiPutsCooperatiu("\rAverage value ");
-    if(getVMin() != ' '){
-        SiSendChar(getVAvg());
-        SiPutsCooperatiu("V\r\n\n\0");
+    SiPutsCooperatiu("\rAverage value \0");
+    if(*(getVMin()) != ' '){
+        SiPutsCooperatiu(getVAvg());
+        SiPutsCooperatiu(" V\r\n\n\0");
     }else{
         SiPutsCooperatiu("-\r\n\n\0");
     }
@@ -281,7 +238,7 @@ void MotorPropaganda(void){
             if (TiGetTics(timerPropaganda) > UN_SEGON){
                 TiResetTics(timerPropaganda);
                 if (++timestamp == UN_SEGON*3) timestamp=0;
-                actualitzaTemps();
+                reset_time = actualitzaTemps(rtime,reset_time,5);
             }
             
             break;
@@ -324,7 +281,7 @@ void MotorPropaganda(void){
             if (TiGetTics(timerPropaganda) > UN_SEGON){
                 TiResetTics(timerPropaganda);
                 if (++timestamp == UN_SEGON*3) timestamp=0;
-                actualitzaTemps();
+                reset_time = actualitzaTemps(rtime,reset_time,5);
             } 
             break;
 
@@ -348,7 +305,8 @@ void MotorPropaganda(void){
             SiPutsCooperatiu("\r*******************\n\r\0");
             estatPropaganda=31;
             index_function = EXTRA_SPACES - 1;
-            signal_max = signal_min = signal_avg = 0;
+            signal_max = signal_avg = 0;
+            signal_min = 0xFF;
             
             playOptionMusic();
             break;
@@ -409,7 +367,8 @@ void MotorPropaganda(void){
                 
             }else{
                 
-                if( (*(getSignals()+signal_index)).times[0] != 0){
+                if( (*(getSignals()+signal_index)).times[MAX_TIMES - 2] != '0' || 
+                        (*(getSignals()+signal_index)).show_times != (MAX_TIMES - 2)){
                     
                     signal_list++;
                     
@@ -417,10 +376,10 @@ void MotorPropaganda(void){
                     SiSendChar(signal_list + '0');
                     SiPutsCooperatiu(detect_signal(signal_index));
                     SiPutsCooperatiu("\r\t\t* Received ");
-                    SiPutsCooperatiu((*(getSignals()+signal_index)).times);
+                    SiPutsCooperatiu((*(getSignals()+signal_index)).times + (*(getSignals()+signal_index)).show_times);
                     SiPutsCooperatiu(" times\r\n\0");
                     SiPutsCooperatiu("\r\t\t* Generated ");
-                    SiPutsCooperatiu((*(getSignals()+signal_index)).periods);
+                    SiPutsCooperatiu(" TODO ");
                     SiPutsCooperatiu(" periods\r\n\0");
                     SiPutsCooperatiu(signal_config(signal_index));
                     
@@ -488,7 +447,7 @@ void MotorPropaganda(void){
                 
                 if (++timestamp == UN_SEGON*3) timestamp=0;
                 
-                actualitzaTemps();
+                reset_time = actualitzaTemps(rtime,reset_time,5);
                 
                 SiPutsCooperatiu(TIMESTAMP);
                 SiPutsCooperatiu(rtime+reset_time);
@@ -508,10 +467,10 @@ void MotorPropaganda(void){
                 if(index_function < MAX_SIGNAL){
                     
                     *(getSignal(0) + (index_function)) = (char) AdGetMostra();
-                    if( *(getSignal(0) + (index_function)) > signal_max){
+                    if( *(getSignal(0) + (index_function)) >= signal_max){
                         signal_max = *(getSignal(0) + (index_function));
                     }
-                    if( *(getSignal(0) + (index_function)) < signal_min){
+                    if( *(getSignal(0) + (index_function)) <= signal_min){
                         signal_min = *(getSignal(0) + (index_function));
                     }
                     signal_avg = signal_avg + *(getSignal(0) + (index_function));
@@ -521,9 +480,20 @@ void MotorPropaganda(void){
                     
                 }else {
                     
+                    signal_min = ((signal_min * 5) / 254) + '0';
+                    signal_max = ((signal_max * 5) / 254) + '0';
+                    signal_avg = (((signal_avg / index_function) * 5) / 254) + '0';
                     
+                    setVpp('-');
+                    setOffset(signal_min);
+                    setVMin(signal_min);
+                    setVMax(signal_max);
+                    setVAvg(signal_avg);
                     setFunctionSignal(CUSTOM);
+                    
+                    newSignal(CUSTOM);
                     setFunctionLength(MAX_SIGNAL - EXTRA_SPACES);
+                    
                     muteAudio();
                     estatPropaganda = audioStatus = 0;
                     Menu();
@@ -559,17 +529,17 @@ void MotorPropaganda(void){
 }
 
 #define     MAXCOLUMNES 16
-#define     MAXCADENES 2
+#define     MAXCADENES 3
 #define     MAXSIGNALS 6
 
 static char estatLCD = 0;
-const unsigned char cadena[MAXCADENES][MAXCOLUMNES] = {{" Waiting for ID "},{"ID set          "}}; //Més val que tingui 16 caràcters...
+const unsigned char cadena[MAXCADENES][MAXCOLUMNES] = {{" Waiting for ID "},{"ID set          "},{"Function Stored!"}}; //Més val que tingui 16 caràcters...
 
 unsigned char headerString[MAXSIGNALS][MAXCOLUMNES] = {{"SINE          Hz"},{"PULSE         Hz"},{"SAWTOOTH      Hz"},
 {"TRIANGLE      Hz"},{"RANDOM        Hz"},{"CUSTOM        Hz"}};
 unsigned char subheaderString[MAXCOLUMNES] = {"0 V.        0 V."};
 
-static unsigned char timerLCD, i,j, quina, swap, header;
+static unsigned char timerLCD, i,j, quina, swap, header, cinitCadena;
 static char primeraLinia[MAXCOLUMNES], segonaLinia[MAXCOLUMNES];
 
 void setCadena(char *cadenaToSet){
@@ -586,7 +556,7 @@ void initMotorLCD(void){
     LcClear();
     //Hi ha caselles de la segona línia que sempre valdran el mateix, les preparo!
     //initCadena(primeraLinia);
-    quina = swap = i = 0;
+    quina = swap = i = cinitCadena = 0;
     
     initCadena(segonaLinia,MAXCOLUMNES);
     setCadena(primeraLinia);
@@ -638,25 +608,31 @@ void MotorLCD(void){
         case 0:
                     
             if(getFunctionLength() > 0){
-                
-                header = (getTypeSignal() > 4 ? getTypeSignal() - 12 : getTypeSignal() - 1);
-                prepareHeader();
-                
+
+                    header = (getTypeSignal() > 4 ? getTypeSignal() - 12 : getTypeSignal() - 1);
+                    prepareHeader();
+
             }
             
             estatLCD = 1;
             
             break;
         case 1:
-                   
-            if(getFunctionLength() > 0){ 
+            
+            if(getVpp() == '-'){
                 
-                LcPutChar(headerString[header][j++]);
+                LcPutChar(cadena[2][j++]);
                 
             }else{
-                
-                LcPutChar(primeraLinia[j++]);
-                
+                if(getFunctionLength() > 0){ 
+
+                    LcPutChar(headerString[header][j++]);
+
+                }else{
+
+                    LcPutChar(primeraLinia[j++]);
+
+                }
             }
             
             if (j==16) j= 0;
@@ -673,7 +649,7 @@ void MotorLCD(void){
 
         case 2: //Preparo el string
             
-            if(!quina){
+            if(!quina && getVpp() != '-'){
                 
                 swapLinia();
                 
@@ -691,15 +667,22 @@ void MotorLCD(void){
                 
                 estatLCD = 4;
                 
+            }
+            
+            if(getVpp() == '-'){
+                
+                estatLCD = 4;
+                
             }else{
                 
                 if(getFunctionLength() > 0){ 
-                    
+
                     prepareSubHeader();
-                    
+
+                    estatLCD = 4;
+
                 }
                 
-                estatLCD = 4;
             }
             
             break;
@@ -743,7 +726,7 @@ void MotorLCD(void){
             break;
         case 5:
             
-            if(getFunctionLength() > 0){ 
+            if(getFunctionLength() > 0 && getVpp() != '-'){ 
                 
                 LcPutChar(subheaderString[i]);
                     
@@ -768,7 +751,15 @@ void MotorLCD(void){
                 
                 estatLCD = 0;
                 LcGotoXY(0,0);
-                j = i = 0;
+                if(getVpp() == '-' && segonaLinia[0] == ' '){
+                    cinitCadena++;
+                    if(cinitCadena == 16)cinitCadena = 0;
+                    j = cinitCadena;
+                }else{
+                    j = 0;
+                }
+                
+                i = 0;
                 
             }
             

@@ -10,6 +10,18 @@
 
 #define EXTRA_SPACES            9
 #define MAX_SIGNAL             (300 + EXTRA_SPACES)
+#define MAX_SIGNALS             6
+#define MAX_TIMES               5
+#define MAX_PERIODS             7
+
+
+typedef struct{
+    char times[MAX_TIMES];
+    char show_times;
+    long periods;
+}Senyal;
+
+#include "PrTPropaganda.h"
 
 void initTFunction();
 
@@ -19,11 +31,11 @@ char getVpp();
 
 char getOffset();
 
-char getVMin();
+char* getVMin();
 
-char getVMax();
+char* getVMax();
 
-char getVAvg();
+char* getVAvg();
 
 void set_function_values(char vpp, char offset, char vmin, char vmax, char vavg, char frequency, char signal);
 
@@ -38,4 +50,18 @@ void setFunctionSignal(char);
 void setFunctionLength(int);
 
 int getFunctionLength();
+
+void setVpp(char);
+
+void setOffset(char);
+
+void setVMin(char);
+
+void setVMax(char);
+
+void setVAvg(char);
+
+Senyal* getSignals();
+
+void newSignal(char type);
 #endif
