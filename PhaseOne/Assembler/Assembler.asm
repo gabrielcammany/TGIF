@@ -68,7 +68,7 @@ FLAG_SPEED EQU 0x8C
 FLAG_AD EQU 0x8D
 
 ;*********************************
-; VECTORS DE RESET I INTERRUPCI� *
+; VECTORS DE RESET I INTERRUPCIï¿½ *
 ;*********************************
     
     ORG 0x000000
@@ -84,7 +84,7 @@ LOW_INT_VECTOR
     retfie FAST
 
 ;***********************************
-;* RUTINES DE SERVEI D'INTERRUPCI� *
+;* RUTINES DE SERVEI D'INTERRUPCIï¿½ *
 ;***********************************
 
 HIGH_INT
