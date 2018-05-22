@@ -13,38 +13,17 @@ static char rtime[6],
         btime[MAX_BIT_TIME];
 
 
-void initCadena(char *cadena, unsigned char size){
+void initCadena(char *cadena, unsigned char size, char value){
     int i;
     for(i = 0; i < size; i++){
         if(i == size -1){
             cadena[i] = 0;
         }else{
-            cadena[i] = ' ';
+            cadena[i] = value;
         }
     }
     
 }
-
-void clearCadena(char *cadena, unsigned char size){
-    int i;
-    for(i = 0; i < size; i++){
-        cadena[i] = 0;
-    }
-    
-}
-
-void initCTime(char *cadena, unsigned char size){
-    int i;
-    for(i = 0; i < size; i++){
-        if(i == size -1){
-            cadena[i] = 0;
-        }else{
-            cadena[i] = '0';
-        }
-    }
-    
-}
-
 
 unsigned char actualitzaTemps(char *array, unsigned char valor, char size){
     char i, overflow = 0, vreturn = 0;
@@ -179,12 +158,12 @@ void initPropaganda(void){
     audioStatus = 0;
     identificador  = bit_time = 0;
     
-    initCadena(id,MAX_ID);
-    clearCadena(btime,MAX_BIT_TIME);
+    initCadena(id,MAX_ID,' ');
+    initCadena(btime,MAX_BIT_TIME, 0);
     
     muteAudio();
     
-    initCTime(rtime,6);
+    initCadena(rtime,6, '0');
     
 }
 
@@ -475,7 +454,7 @@ void MotorPropaganda(void){
                     }
                     signal_avg = signal_avg + *(getSignal(0) + (index_function));
                     
-                    SiSendChar(*(getSignal(0) + (index_function)));
+                    //SiSendChar(*(getSignal(0) + (index_function)));
                     index_function++;
                     
                 }else {
@@ -556,9 +535,9 @@ void initMotorLCD(void){
     LcClear();
     //Hi ha caselles de la segona línia que sempre valdran el mateix, les preparo!
     //initCadena(primeraLinia);
-    quina = swap = i = cinitCadena = 0;
+    quina = swap = i = cinitCadena = j = 0;
     
-    initCadena(segonaLinia,MAXCOLUMNES);
+    initCadena(segonaLinia,MAXCOLUMNES, ' ');
     setCadena(primeraLinia);
     
 }
@@ -653,7 +632,7 @@ void MotorLCD(void){
                 
                 swapLinia();
                 
-                if(id[0] != ' ' && !identificador){
+                if(id[0] != ' '){
                     
                     if(id[1] != ' ' && id[2] != ' '){
                         
@@ -661,11 +640,17 @@ void MotorLCD(void){
                         swap = 3;
                         estatLCD = 3;
                         
+                    }else{
+                        
+                        estatLCD = 4;
+                        
                     }
                     
+                }else{
+                    
+                    estatLCD = 4;
+                    
                 }
-                
-                estatLCD = 4;
                 
             }
             
@@ -696,7 +681,7 @@ void MotorLCD(void){
                 *(primeraLinia + MAXCOLUMNES - 2) = id[1];
                 *(primeraLinia + MAXCOLUMNES - 3) = id[0];
                 swap = 2;
-                initCadena(segonaLinia,MAXCOLUMNES);
+                initCadena(segonaLinia,MAXCOLUMNES,' ');
                 
             }else if(quina && swap == 2 && !identificador){
                 

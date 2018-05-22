@@ -83,8 +83,8 @@ public class Listener extends MouseAdapter implements ActionListener {
             timer.interrupt();
 
             //System.out.println("Recieved coinfimr:asd33");
-            while (reciever.isAlive()) ;
-            while (timer.isAlive()) ;
+            while (reciever.isAlive());
+            while (timer.isAlive());
 
             view.setGreenStatus();
 
@@ -304,47 +304,56 @@ public class Listener extends MouseAdapter implements ActionListener {
     }
 
     public boolean defaultValues(){
-        return op.getType().equals("sinusoïdal") && op.getOffset() == 0 && op.getPaP() == 5;
+        return op.getType().equals("Sinusoïdal") && op.getOffset() == 0 && op.getPaP() == 5;
     }
 
     private void writeFunction() throws Exception{
+
         byte recieved = 0;
         if (isComplexFunction()) {
 
             switch (op.getType()){
 
-                case "aleatori":
+                case "Aleatori":
                     sp.writeByte(Flags.complex_random);
                     break;
-                case "custom":
+                case "Custom":
+                    sp.writeByte(Flags.complex_custom);
+                    break;
+                default:
                     sp.writeByte(Flags.complex_custom);
                     break;
             }
-            while ((recieved = sp.readByte()) == 0) ;
+
 
         } else {
 
             if(!defaultValues()){
+
                 switch (op.getType()){
-                    case "sinusoïdal":
+                    case "Sinusoïdal":
                         sp.writeByte(Flags.ncomplex_sin);
                         break;
-                    case "tren de polsos":
+                    case "Tren de polsos":
                         sp.writeByte(Flags.ncomplex_tren);
                         break;
-                    case "triangular":
+                    case "Triangular":
                         sp.writeByte(Flags.ncomplex_trian);
                         break;
-                    case "dent de serra":
+                    case "Dent de serra":
                         sp.writeByte(Flags.ncomplex_dent);
+                        break;
+                    default:
+                        sp.writeByte(Flags.ncomplex_sin);
                         break;
                 }
             }else{
                 sp.writeByte(Flags.ncomplex_default);
             }
-            while ((recieved = sp.readByte()) == 0) ;
 
         }
+
+        while ((recieved = sp.readByte()) == 0) ;
     }
 
     public void enviar(boolean confirmacio) {
@@ -361,11 +370,13 @@ public class Listener extends MouseAdapter implements ActionListener {
             if (confirmacio) {
 
                 sp.writeByte(Flags.flag_desar);
-                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar) ;
+                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar);
 
             }else{
+
                 sp.writeByte(Flags.flag_desar_ncon);
-                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar) ;
+                while ((recieved = sp.readByte()) == 0 || recieved != Flags.flag_desar_ncon) ;
+
             }
 
             //System.out.println("Recieved coinfim: " + recieved);
@@ -376,26 +387,28 @@ public class Listener extends MouseAdapter implements ActionListener {
             //Part de id RF
             sp.writeByte(Flags.GROUP_ID_H);
             while ((recieved = sp.readByte()) == 0) ;
-            //System.out.println("Recieved ID: " + recieved);
+            System.out.println("Recieved ID: " + recieved);
 
             sp.writeByte(Flags.GROUP_ID_M);
             while ((recieved = sp.readByte()) == 0) ;
-            //System.out.println("Recieved ID2: " + recieved);
+            System.out.println("Recieved ID2: " + recieved);
 
             sp.writeByte(Flags.GROUP_ID_L);
             while ((recieved = sp.readByte()) == 0) ;
-            //System.out.println("Recieved ID2: " + recieved);
+            System.out.println("Recieved ID3: " + recieved);
 
             writeFunction();
 
             sp.writeByte((byte)this.period);
+            System.out.println("Recieved period: " + this.period);
             while ((recieved = sp.readByte()) == 0) ;
-            //System.out.println("Recieved period: " + recieved);
 
             sp.writeByte((byte)this.op.getPaP());
+            System.out.println("Recieved pap: " + this.op.getPaP());
             while ((recieved = sp.readByte()) == 0) ;
 
             sp.writeByte((byte)this.op.getOffset());
+            System.out.println("Recieved offset: " + this.op.getOffset());
             while ((recieved = sp.readByte()) == 0) ;
 
             int sum = 0;
@@ -404,12 +417,16 @@ public class Listener extends MouseAdapter implements ActionListener {
             Arrays.sort(array);
 
             sp.writeByte((byte)((array[0]*5)/254));
+            System.out.println(" Recieved max " + ((array[0]*5)/254));
             while ((recieved = sp.readByte()) == 0) ;
 
             sp.writeByte((byte)((array[array.length-1] * 5) / 254));
+            System.out.println(" Recieved min " + (byte)((array[array.length-1] * 5) / 254));
             while ((recieved = sp.readByte()) == 0) ;
 
             sp.writeByte((byte)(((sum / array.length) * 5) / 254));
+
+            System.out.println(" Recieved avg " + (byte)(((sum / array.length) * 5) / 254));
             while ((recieved = sp.readByte()) == 0) ;
 
             int i = 0;
@@ -421,16 +438,19 @@ public class Listener extends MouseAdapter implements ActionListener {
                 view.changeProgressBar(false);
                 view.setGreenStatus();
 
-                System.out.println(" Pos " + i + " " + recieved);
+                System.out.println(" Pos " + i + " " + (recieved & 0xFF));
 
                 i++;
 
             }
 
+            sp.writeByte(utf8Bytes[utf8Bytes.length-1]);
+            while ((recieved = sp.readByte()) == 0) ;
+
             this.getConnectionThread().setStart_time(System.nanoTime());
 
 
-            System.out.println(" Done! Total: " + i);
+            System.out.println(" Done! Total: " + i );
 
         } catch (Exception e1) {
 

@@ -29,12 +29,11 @@ public class PortThread implements Runnable {
 
                 recieved = sp.readByte();
 
+                System.out.println("Recieved coinfim: " + recieved);
+
                 if (recieved != 0) {
 
-                    //System.out.println("Recieved coinfim: " + recieved);
-
                     if (recieved == Flags.flag_desar_ncon) {
-
 
                         controller.stopTimer();
                         controller.updateStatusView(true);
