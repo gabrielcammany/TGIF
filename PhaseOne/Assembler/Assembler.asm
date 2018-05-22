@@ -68,7 +68,7 @@ FLAG_SPEED EQU 0x8C
 FLAG_AD EQU 0x8D
 
 ;*********************************
-; VECTORS DE RESET I INTERRUPCI� *
+; VECTORS DE RESET I INTERRUPCIï¿½ *
 ;*********************************
     
     ORG 0x000000
@@ -84,7 +84,7 @@ LOW_INT_VECTOR
     retfie FAST
 
 ;***********************************
-;* RUTINES DE SERVEI D'INTERRUPCI� *
+;* RUTINES DE SERVEI D'INTERRUPCIï¿½ *
 ;***********************************
 
 HIGH_INT
@@ -634,12 +634,11 @@ ROTATE
     
 REBRE_CONFIG   
     btfss PIR1,RCIF,0
-    goto REBRE_CONFIG
+	goto REBRE_CONFIG
     
     movff RCREG, SIGNAL_TYPE ;Movem el caracter a la posicio de la ram corresponent
     
     movff SIGNAL_TYPE,TXREG
-    
     call USART_ESPERA
     
     return
@@ -647,6 +646,7 @@ REBRE_CONFIG
 DESA
     
     call USART_DESAR
+    
      ;Quan ens apreten el boto no necessitem enviar al pc la confirmacio
     clrf TEMPS_UN,0
     clrf RCREG,0
@@ -660,14 +660,34 @@ DESA
     
     movlw POSICIO_A_DESAR_RAM
     movwf FSR0L, 0
+    incf COMPTA_BYTES,1,0 
     
-    movff AUXILIAR, POSTINC0
+DESA_INFO_TRAMA   
+    btfss PIR1,RCIF,0
+	goto DESA_INFO_TRAMA ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esperem
+
+    movlw 0x0B
+    cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
+	goto DESA_BUCLE_INFO
+	
+    movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent
+    
+    movff COMPTA_BYTES, TXREG ;Movem el caracter a la posicio de la ram corresponent
+    call USART_ESPERA
+    
+    incf COMPTA_BYTES,1,0 ;Incrementem en numero de bytes rebut
+    
+    goto DESA_INFO_TRAMA
+
+DESA_BUCLE_INFO
+    clrf COMPTA_BYTES,0
+    goto DESA_CONTINUA_BUCLE
 
 DESA_BUCLE
     btfss PIR1,RCIF,0
 	goto DESA_BUCLE ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esperem
-	
-    movlw 0x97 ; 150
+
+    movlw 0x96 ; 150
     cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
 	goto COMPROVA_FINAL
 
@@ -677,7 +697,7 @@ DESA_CONTINUA_BUCLE
     incf COMPTA_BYTES,1,0 ;Incrementem en numero de bytes rebut
     
     movff COMPTA_BYTES, TXREG ;Movem el caracter a la posicio de la ram corresponent
-	call USART_ESPERA
+    call USART_ESPERA
     
     goto DESA_BUCLE ;Esperem una nova dada
     
@@ -697,7 +717,6 @@ DESA_CPLX_FINAL
 DESA_CPLX_LAST_BYTES
     bsf SIGNAL_TYPE,7,0
     clrf COMPTA_BYTES,0
-    incf COMPTA_BYTES,1,0
     
     goto DESA_CONTINUA_BUCLE
     
