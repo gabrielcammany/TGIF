@@ -410,7 +410,8 @@ ENVIAR_RF
     clrf BYTE,0
     clrf RESTANT,0
     
-    movff POSTINC0, AUXILIAR
+    movlw 0x40
+    movlw AUXILIAR
     
     call COMPUTE_DIV_10
     

@@ -208,41 +208,49 @@ void MotorRF () {
 
             break;
         case 6:
+            if(inValue == START_BYTE && sincronized = 2){
+                
+                sincronized = 2;
+                estatRF = 3;
+                caracter = 0;
+                exitStateInstructions();
+                
+            }else{
+                if(sincronized == 2){
 
-            if(sincronized == 2){
+                    if (caracter < 3 ){
 
-                if (caracter < 3 ){
+                        id_trama[caracter] = inValue;
 
-                    id_trama[caracter] = inValue;
-                    
-                    SiSendChar(inValue + '0');
-                    caracter++;
-                    estatRF = 3;
-                    exitStateInstructions();
+                        SiSendChar(inValue + '0');
+                        caracter++;
+                        estatRF = 3;
+                        exitStateInstructions();
 
-                }else{
+                    }else{
 
 
-                    if(sincronized != 4){
+                        if(sincronized != 4){
 
-                        estatRF = 7;
+                            estatRF = 7;
 
-                    }else {
+                        }else {
 
-                        estatRF = 0;
-                        sincronized = 0;
+                            estatRF = 0;
+                            sincronized = 0;
+
+                        }
 
                     }
 
+                }else{
+
+                    estatRF = 0;
+                    sincronized = 0;
+
                 }
-
-            }else{
-
-                estatRF = 0;
-                sincronized = 0;
-
             }
-                
+
             break;
         case 7:
             
