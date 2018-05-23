@@ -353,12 +353,56 @@ UNDERSCORE_7_SEG
 ;*********************** - BLOC RF - ***********************
 ;***********************************************************
     
+    
+NETEJA_RF
+    movf TEMPS_UN_RF,0,0
+    cpfseq TEMPS_UN,0
+    goto SET_PRIMERA_PART ;Primers 5 mseg
+    
+NETEJA_RF_SEGONA
+    movf TEMPS_ZERO_RF,0,0
+    cpfseq TEMPS_UN,0
+    goto SET_SEGONA_PART ;Segon 5 mseg
+    
+    goto ESPERA_CANAL_ZERO
+    
+SET_PRIMERA_PART
+    bsf LATC, 5, 0
+    goto NETEJA_RF
+    
+SET_SEGONA_PART
+    bcf LATC, 5, 0
+    goto NETEJA_RF_SEGONA
+    
+ESPERA_CANAL_ZERO
+    incf RESTANT,1,0
+    clrf TEMPS_UN,0
+    
+    movlw 0x0A
+    cpfsgt RESTANT,0
+    goto NETEJA_RF
+    
+    goto TEMPS_10
+    
+TEMPS_10
+    movlw 0x0A
+    cpfslt TEMPS_UN,0
+    return
+    bcf LATC, 5, 0
+    goto TEMPS_10
+    
 ENVIAR_RF
         
     movlw 0x00
     cpfsgt COMPTA_BYTES,0
     goto ENVIAR_RF_ERROR
+    clrf TEMPS_UN,0
+    clrf RESTANT,0
+    bcf LATC,5,0
     
+    call NETEJA_RF
+    
+    clrf TEMPS_UN,0
     clrf FSR0H, 0
     movlw POSICIO_A_DESAR_RAM
     movwf FSR0L, 0
@@ -369,7 +413,6 @@ ENVIAR_RF
     movff POSTINC0, AUXILIAR
     
     call COMPUTE_DIV_10
-    clrf TEMPS_UN,0
     
     movff PORTD, SET_SEG_OLD
         

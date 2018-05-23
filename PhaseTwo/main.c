@@ -96,7 +96,7 @@ int main(void){
         MotorAudio();
         MotorPropaganda();
         MotorSIO();
-        //MotorRF();
+        MotorRF();
         //MotorFunction();
   
     }

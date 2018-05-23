@@ -1,5 +1,5 @@
 MPLINK 5.08, LINKER
-Linker Map File - Created Tue May 22 10:01:11 2018
+Linker Map File - Created Wed May 23 08:03:24 2018
 
                                  Section Info
                   Section       Type    Address   Location Size(Bytes)
@@ -8,7 +8,7 @@ Linker Map File - Created Tue May 22 10:01:11 2018
                    .cinit    romdata   0x000004    program   0x000002
                    .org_1       code   0x000008    program   0x000004
                    .org_2       code   0x000018    program   0x000098
-                   .org_3       code   0x0000c0    program   0x00050e
+                   .org_3       code   0x0000c0    program   0x000554
 .config_300001_BUILD/DEFAULT/PRODUCTION/ASSEMBL    romdata   0x300001    program   0x000001
 .config_300003_BUILD/DEFAULT/PRODUCTION/ASSEMBL    romdata   0x300003    program   0x000001
 .config_300005_BUILD/DEFAULT/PRODUCTION/ASSEMBL    romdata   0x300005    program   0x000001
@@ -22,111 +22,117 @@ Linker Map File - Created Tue May 22 10:01:11 2018
                             0x000000    0x000005      
                             0x000008    0x00000b      
                             0x000018    0x0000af      
-                            0x0000c0    0x0005cd      
+                            0x0000c0    0x000613      
                             0x300001    0x300001      
                             0x300003    0x300003      
                             0x300005    0x300006      
-            1460 out of 8472 program addresses used, program memory utilization is 17%
+            1530 out of 8472 program addresses used, program memory utilization is 18%
 
 
 
                               Symbols - Sorted by Name
                      Name    Address   Location    Storage File                     
                 ---------  ---------  ---------  --------- ---------                
-              ACTIVA_LED0   0x0005bc    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ACTIVA_LEDS   0x0004ce    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               ADCON_DONE   0x0002f8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               BAIXADA_10   0x000562    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              BAIXADA_LED   0x00053a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           BAIXADA_LED_10   0x00056a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        BAIXADA_LED_FINAL   0x00055a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                 BLINKING   0x0004ee    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        CANVIA_ESTAT_DOWN   0x000508    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-      CANVIA_ESTAT_ESPERA   0x000510    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          CANVIA_ESTAT_UP   0x00052e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          CANVI_10_ESPERA   0x000524    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           COMPROVA_FINAL   0x0003b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           COMPUTE_DIV_10   0x000248    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-             CONTINUA_FOR   0x000200    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     CONTINUE_BAIXADA_LED   0x00054a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                     DESA   0x000352    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           DESACTIVA_LED0   0x0005c0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           DESACTIVA_LEDS   0x0004d4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               DESA_BUCLE   0x000392    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          DESA_BUCLE_INFO   0x00038c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-      DESA_CONTINUA_BUCLE   0x0003a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          DESA_CPLX_FINAL   0x0003c2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     DESA_CPLX_LAST_BYTES   0x0003c8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          DESA_INFO_TRAMA   0x00036c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-            ENCENDRE_HALF   0x0004c0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           ENCENDRE_HEART   0x0004ba    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-ENVIAR_BIT_PRIMERA_MEITAT   0x000224    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
- ENVIAR_BIT_SEGONA_MEITAT   0x000230    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               ENVIAR_FOR   0x0001b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         ENVIAR_FOR_SEGON   0x0001ba    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                ENVIAR_RF   0x000188    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          ENVIAR_RF_ERROR   0x00023c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         ENVIA_PARAMETRES   0x0001e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ESPERA_16MS   0x0004b0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-      ESPERA_BAIXAR_DESAR   0x0004a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     ESPERA_BAIXAR_ENVIAR   0x0004a8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ESPERA_CENT   0x000570    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          ESPERA_POLSADOR   0x0003ec    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-      ESPERA_POLSADOR_DEL   0x00042e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-    ESPERA_POLSADOR_DESAR   0x00040e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     ESPERA_POLSADOR_DOWN   0x0003f4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ESPERA_VINT   0x00057a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-       FINAL_CANVI_ESPERA   0x00051c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              FINAL_DESAR   0x0003b8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          FINAL_ENVIAR_RF   0x00021a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ACTIVA_LED0   0x000602    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ACTIVA_LEDS   0x000514    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               ADCON_DONE   0x00033e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               BAIXADA_10   0x0005a8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              BAIXADA_LED   0x000580    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           BAIXADA_LED_10   0x0005b0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        BAIXADA_LED_FINAL   0x0005a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                 BLINKING   0x000534    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        CANVIA_ESTAT_DOWN   0x00054e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+      CANVIA_ESTAT_ESPERA   0x000556    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          CANVIA_ESTAT_UP   0x000574    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          CANVI_10_ESPERA   0x00056a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           COMPROVA_FINAL   0x0003f8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           COMPUTE_DIV_10   0x00028e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+             CONTINUA_FOR   0x000246    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     CONTINUE_BAIXADA_LED   0x000590    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                     DESA   0x000398    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           DESACTIVA_LED0   0x000606    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           DESACTIVA_LEDS   0x00051a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               DESA_BUCLE   0x0003d8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          DESA_BUCLE_INFO   0x0003d2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+      DESA_CONTINUA_BUCLE   0x0003e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          DESA_CPLX_FINAL   0x000408    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     DESA_CPLX_LAST_BYTES   0x00040e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          DESA_INFO_TRAMA   0x0003b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+            ENCENDRE_HALF   0x000506    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           ENCENDRE_HEART   0x000500    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+ENVIAR_BIT_PRIMERA_MEITAT   0x00026a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+ ENVIAR_BIT_SEGONA_MEITAT   0x000276    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               ENVIAR_FOR   0x0001f8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         ENVIAR_FOR_SEGON   0x000200    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                ENVIAR_RF   0x0001c4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          ENVIAR_RF_ERROR   0x000282    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         ENVIA_PARAMETRES   0x00022c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ESPERA_16MS   0x0004f6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+      ESPERA_BAIXAR_DESAR   0x0004e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     ESPERA_BAIXAR_ENVIAR   0x0004ee    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        ESPERA_CANAL_ZERO   0x0001a8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ESPERA_CENT   0x0005b6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          ESPERA_POLSADOR   0x000432    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+      ESPERA_POLSADOR_DEL   0x000474    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+    ESPERA_POLSADOR_DESAR   0x000454    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     ESPERA_POLSADOR_DOWN   0x00043a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ESPERA_VINT   0x0005c0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+       FINAL_CANVI_ESPERA   0x000562    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              FINAL_DESAR   0x0003fe    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          FINAL_ENVIAR_RF   0x000260    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                  HIGH_INT   0x00001a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
             HI_INT_VECTOR   0x000008    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
          INCREMENTA_7_SEG   0x00017a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        INCREMENTA_ESPERA   0x000466    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           INCREMENTA_FOR   0x000206    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        INCREMENTA_ESPERA   0x0004ac    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           INCREMENTA_FOR   0x00024c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                INIT_7_SEG   0x00016c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                INIT_ADCON   0x000026    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                INIT_PORTS   0x00006e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                  INIT_SIO   0x00005c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                INIT_TIMER   0x000094    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                 INIT_VARS   0x000034    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                 LEDS_OFF   0x0005c4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                  LEDS_ON   0x0005b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                 LEDS_OFF   0x00060a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                  LEDS_ON   0x0005f8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                      LOOP   0x0000de    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
            LOW_INT_VECTOR   0x000018    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                      MAIN   0x0000ca    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           MIG_INTENSITAT   0x0004da    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         PETICIO_DEL_INFO   0x00044a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-       PETICIO_DESAR_INFO   0x00045e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                 POLSADOR   0x0003d0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          POLS_DESAR_INFO   0x000470    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         POLS_ENVIAR_INFO   0x000480    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                PUJADA_10   0x0005aa    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               PUJADA_LED   0x000584    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         PUJADA_LED_FINAL   0x0005a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-             REBRE_CONFIG   0x00033e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           MIG_INTENSITAT   0x000520    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                NETEJA_RF   0x000188    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         NETEJA_RF_SEGONA   0x000190    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         PETICIO_DEL_INFO   0x000490    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+       PETICIO_DESAR_INFO   0x0004a4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                 POLSADOR   0x000416    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          POLS_DESAR_INFO   0x0004b6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         POLS_ENVIAR_INFO   0x0004c6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                PUJADA_10   0x0005f0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               PUJADA_LED   0x0005ca    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         PUJADA_LED_FINAL   0x0005e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+             REBRE_CONFIG   0x000384    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
                     REBUT   0x00010e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           RESET_POLSADOR   0x00046c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           RESET_POLSADOR   0x0004b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
               RESET_TIMER   0x0000a4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
              RESET_VECTOR   0x000000    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                   ROTATE   0x00033c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                   ROTATE   0x000382    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         SET_PRIMERA_PART   0x00019c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          SET_SEGONA_PART   0x0001a2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                 TEMPS_10   0x0001b8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
            UNBLOCK_THREAD   0x000164    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
          UNDERSCORE_7_SEG   0x000182    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              USART_ADCON   0x0002ee    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         USART_BIT_ENVIAT   0x0002d6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        USART_BORRAR_INFO   0x0002de    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          USART_CONNECTAT   0x0002b0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               USART_DATA   0x000278    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              USART_DESAR   0x000290    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         USART_DESAR_NCON   0x000288    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              USART_DESAT   0x000298    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-       USART_DESCONNECTAT   0x0002c8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-             USART_ENVIAR   0x000280    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           USART_ERROR_RF   0x0002e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-             USART_ESPERA   0x0002a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        USART_ESPERA_INFO   0x0002a8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     USART_PROGRESS_RESET   0x000254    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              USART_SPEED   0x000264    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              USART_ADCON   0x000334    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         USART_BIT_ENVIAT   0x00031c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        USART_BORRAR_INFO   0x000324    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          USART_CONNECTAT   0x0002f6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               USART_DATA   0x0002be    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              USART_DESAR   0x0002d6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         USART_DESAR_NCON   0x0002ce    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              USART_DESAT   0x0002de    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+       USART_DESCONNECTAT   0x00030e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+             USART_ENVIAR   0x0002c6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           USART_ERROR_RF   0x00032c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+             USART_ESPERA   0x0002e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        USART_ESPERA_INFO   0x0002ee    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     USART_PROGRESS_RESET   0x00029a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              USART_SPEED   0x0002aa    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
 
 
 
@@ -150,82 +156,88 @@ ENVIAR_BIT_PRIMERA_MEITAT   0x000224    program     static /home/gabriel/MPLABXP
                INIT_7_SEG   0x00016c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
          INCREMENTA_7_SEG   0x00017a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
          UNDERSCORE_7_SEG   0x000182    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                ENVIAR_RF   0x000188    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               ENVIAR_FOR   0x0001b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         ENVIAR_FOR_SEGON   0x0001ba    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         ENVIA_PARAMETRES   0x0001e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-             CONTINUA_FOR   0x000200    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           INCREMENTA_FOR   0x000206    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          FINAL_ENVIAR_RF   0x00021a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-ENVIAR_BIT_PRIMERA_MEITAT   0x000224    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
- ENVIAR_BIT_SEGONA_MEITAT   0x000230    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          ENVIAR_RF_ERROR   0x00023c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           COMPUTE_DIV_10   0x000248    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     USART_PROGRESS_RESET   0x000254    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              USART_SPEED   0x000264    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               USART_DATA   0x000278    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-             USART_ENVIAR   0x000280    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         USART_DESAR_NCON   0x000288    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              USART_DESAR   0x000290    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              USART_DESAT   0x000298    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-             USART_ESPERA   0x0002a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        USART_ESPERA_INFO   0x0002a8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          USART_CONNECTAT   0x0002b0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-       USART_DESCONNECTAT   0x0002c8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         USART_BIT_ENVIAT   0x0002d6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        USART_BORRAR_INFO   0x0002de    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           USART_ERROR_RF   0x0002e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              USART_ADCON   0x0002ee    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               ADCON_DONE   0x0002f8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                   ROTATE   0x00033c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-             REBRE_CONFIG   0x00033e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                     DESA   0x000352    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          DESA_INFO_TRAMA   0x00036c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          DESA_BUCLE_INFO   0x00038c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               DESA_BUCLE   0x000392    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-      DESA_CONTINUA_BUCLE   0x0003a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           COMPROVA_FINAL   0x0003b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              FINAL_DESAR   0x0003b8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          DESA_CPLX_FINAL   0x0003c2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     DESA_CPLX_LAST_BYTES   0x0003c8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                 POLSADOR   0x0003d0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          ESPERA_POLSADOR   0x0003ec    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     ESPERA_POLSADOR_DOWN   0x0003f4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-    ESPERA_POLSADOR_DESAR   0x00040e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-      ESPERA_POLSADOR_DEL   0x00042e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         PETICIO_DEL_INFO   0x00044a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-       PETICIO_DESAR_INFO   0x00045e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        INCREMENTA_ESPERA   0x000466    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           RESET_POLSADOR   0x00046c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          POLS_DESAR_INFO   0x000470    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         POLS_ENVIAR_INFO   0x000480    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-      ESPERA_BAIXAR_DESAR   0x0004a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     ESPERA_BAIXAR_ENVIAR   0x0004a8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ESPERA_16MS   0x0004b0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           ENCENDRE_HEART   0x0004ba    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-            ENCENDRE_HALF   0x0004c0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ACTIVA_LEDS   0x0004ce    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           DESACTIVA_LEDS   0x0004d4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           MIG_INTENSITAT   0x0004da    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                 BLINKING   0x0004ee    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        CANVIA_ESTAT_DOWN   0x000508    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-      CANVIA_ESTAT_ESPERA   0x000510    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-       FINAL_CANVI_ESPERA   0x00051c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          CANVI_10_ESPERA   0x000524    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-          CANVIA_ESTAT_UP   0x00052e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              BAIXADA_LED   0x00053a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-     CONTINUE_BAIXADA_LED   0x00054a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-        BAIXADA_LED_FINAL   0x00055a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               BAIXADA_10   0x000562    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           BAIXADA_LED_10   0x00056a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ESPERA_CENT   0x000570    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ESPERA_VINT   0x00057a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-               PUJADA_LED   0x000584    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-         PUJADA_LED_FINAL   0x0005a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                PUJADA_10   0x0005aa    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                  LEDS_ON   0x0005b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-              ACTIVA_LED0   0x0005bc    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-           DESACTIVA_LED0   0x0005c0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
-                 LEDS_OFF   0x0005c4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                NETEJA_RF   0x000188    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         NETEJA_RF_SEGONA   0x000190    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         SET_PRIMERA_PART   0x00019c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          SET_SEGONA_PART   0x0001a2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        ESPERA_CANAL_ZERO   0x0001a8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                 TEMPS_10   0x0001b8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                ENVIAR_RF   0x0001c4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               ENVIAR_FOR   0x0001f8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         ENVIAR_FOR_SEGON   0x000200    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         ENVIA_PARAMETRES   0x00022c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+             CONTINUA_FOR   0x000246    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           INCREMENTA_FOR   0x00024c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          FINAL_ENVIAR_RF   0x000260    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+ENVIAR_BIT_PRIMERA_MEITAT   0x00026a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+ ENVIAR_BIT_SEGONA_MEITAT   0x000276    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          ENVIAR_RF_ERROR   0x000282    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           COMPUTE_DIV_10   0x00028e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     USART_PROGRESS_RESET   0x00029a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              USART_SPEED   0x0002aa    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               USART_DATA   0x0002be    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+             USART_ENVIAR   0x0002c6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         USART_DESAR_NCON   0x0002ce    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              USART_DESAR   0x0002d6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              USART_DESAT   0x0002de    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+             USART_ESPERA   0x0002e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        USART_ESPERA_INFO   0x0002ee    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          USART_CONNECTAT   0x0002f6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+       USART_DESCONNECTAT   0x00030e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         USART_BIT_ENVIAT   0x00031c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        USART_BORRAR_INFO   0x000324    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           USART_ERROR_RF   0x00032c    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              USART_ADCON   0x000334    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               ADCON_DONE   0x00033e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                   ROTATE   0x000382    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+             REBRE_CONFIG   0x000384    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                     DESA   0x000398    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          DESA_INFO_TRAMA   0x0003b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          DESA_BUCLE_INFO   0x0003d2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               DESA_BUCLE   0x0003d8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+      DESA_CONTINUA_BUCLE   0x0003e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           COMPROVA_FINAL   0x0003f8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              FINAL_DESAR   0x0003fe    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          DESA_CPLX_FINAL   0x000408    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     DESA_CPLX_LAST_BYTES   0x00040e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                 POLSADOR   0x000416    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          ESPERA_POLSADOR   0x000432    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     ESPERA_POLSADOR_DOWN   0x00043a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+    ESPERA_POLSADOR_DESAR   0x000454    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+      ESPERA_POLSADOR_DEL   0x000474    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         PETICIO_DEL_INFO   0x000490    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+       PETICIO_DESAR_INFO   0x0004a4    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        INCREMENTA_ESPERA   0x0004ac    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           RESET_POLSADOR   0x0004b2    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          POLS_DESAR_INFO   0x0004b6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         POLS_ENVIAR_INFO   0x0004c6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+      ESPERA_BAIXAR_DESAR   0x0004e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     ESPERA_BAIXAR_ENVIAR   0x0004ee    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ESPERA_16MS   0x0004f6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           ENCENDRE_HEART   0x000500    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+            ENCENDRE_HALF   0x000506    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ACTIVA_LEDS   0x000514    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           DESACTIVA_LEDS   0x00051a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           MIG_INTENSITAT   0x000520    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                 BLINKING   0x000534    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        CANVIA_ESTAT_DOWN   0x00054e    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+      CANVIA_ESTAT_ESPERA   0x000556    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+       FINAL_CANVI_ESPERA   0x000562    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          CANVI_10_ESPERA   0x00056a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+          CANVIA_ESTAT_UP   0x000574    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              BAIXADA_LED   0x000580    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+     CONTINUE_BAIXADA_LED   0x000590    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+        BAIXADA_LED_FINAL   0x0005a0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               BAIXADA_10   0x0005a8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           BAIXADA_LED_10   0x0005b0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ESPERA_CENT   0x0005b6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ESPERA_VINT   0x0005c0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+               PUJADA_LED   0x0005ca    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+         PUJADA_LED_FINAL   0x0005e6    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                PUJADA_10   0x0005f0    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                  LEDS_ON   0x0005f8    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+              ACTIVA_LED0   0x000602    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+           DESACTIVA_LED0   0x000606    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
+                 LEDS_OFF   0x00060a    program     static /home/gabriel/MPLABXProjects/TGIF/PhaseOne/Assembler/Assembler.asm
 
 

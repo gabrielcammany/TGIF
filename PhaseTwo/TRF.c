@@ -4,6 +4,8 @@
  *
  */
 
+#include <stdio.h>
+
 #include "TRF.h"
 
 #define END_BYTE                0x00
@@ -74,7 +76,8 @@ char comprovaID(){
   //Post: Retorna 1 en cas de que el id de la trama sigui el mateix que 
   //el ID que ha introduit l'usuari, 0 altrament.
     
-  return (getIDPos(0) == id_trama[0] && getIDPos(1) == id_trama[1] && getIDPos(2) == id_trama[2]);
+  SiSendChar('a');    
+  return (getIDPos(2) == id_trama[0] && getIDPos(1) == id_trama[1] && getIDPos(0) == id_trama[2]);
     
 }
 
@@ -86,6 +89,7 @@ void MotorRF () {
 
             if(IN == 1){
 
+                //SiSendChar('a');  
                 TiResetTics(timerRF);
                 estatRF = 1;
 
@@ -96,7 +100,7 @@ void MotorRF () {
 
             if(IN == 0){
 
-                if(TiGetTics(timerRF) > 4){
+                if(TiGetTics(timerRF) > 48){
 
                     estatRF = 2;
                     TiResetTics(timerRF);
@@ -113,18 +117,20 @@ void MotorRF () {
 
             if(IN == 1){
 
-                if(TiGetTics(timerRF) < 5){
+                if(TiGetTics(timerRF) < 50){
 
                     estatRF = 0;
 
                 }else{
 
-                    if(TiGetTics(timerRF) < 14){
+                    if(TiGetTics(timerRF) < 150){
 
+                        //SiSendChar('o');  
                         estatRF = 0;
 
                     }else{
 
+                        SiSendChar('b');  
                         inValue = 0;
                         pos = 0;
                         TiResetTics(timerRF);
@@ -138,13 +144,13 @@ void MotorRF () {
             break;
         case 3:
 
-            if(TiGetTics(timerRF) == 1){
+            if(TiGetTics(timerRF) == 10){
 
                 input = IN;
 
             }
 
-            if(IN == !input && TiGetTics(timerRF) > 1){
+            if(IN == !input && TiGetTics(timerRF) > 10){
 
                 TiResetTics(timerRF);
                 estatRF = 4;
@@ -154,9 +160,9 @@ void MotorRF () {
             break;
         case 4:
 
-            if(TiGetTics(timerRF) > 4){ 
+            if(TiGetTics(timerRF) > 49){ 
 
-                if(pos<7){
+                if(pos < 7){
 
                     estatRF = 3;
                     pos++;
@@ -183,7 +189,8 @@ void MotorRF () {
             break;
         case 5:
 
-            if(inValue == END_BYTE){
+            //TODO
+            if(caracter == 150 + 10){
 
                 sincronized = 0;
                 estatRF = 8;
@@ -191,6 +198,7 @@ void MotorRF () {
             }else{
 
                 *((getSignal(0))+ caracter) = inValue;
+                SiSendChar(inValue);    
                 caracter++;
                 estatRF = 3;
 
@@ -206,6 +214,8 @@ void MotorRF () {
                 if (caracter < 3 ){
 
                     id_trama[caracter] = inValue;
+                    
+                    SiSendChar(inValue + '0');
                     caracter++;
                     estatRF = 3;
                     exitStateInstructions();
