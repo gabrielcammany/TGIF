@@ -1,4 +1,4 @@
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  1
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ Warning[205]: Found directive in column 1. (CONFIG)
   00000010            00036 TEMPS_ZERO_RF EQU 0x10
                       00037  
   00000011            00038 TEMPS_UN_POLS EQU 0x11
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  2
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -116,7 +116,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00089 
 00001A                00090 HIGH_INT
 00001A EC?? F???      00091     call RESET_TIMER
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  3
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  3
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -175,7 +175,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 00005E 6EAB           00142     movwf RCSTA,0
                       00143     ;0010 0110 - 0x26
                       00144     
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  4
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  4
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -234,7 +234,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 00009E EC?? F???      00195     call RESET_TIMER
                       00196     
 0000A2 0012           00197     return
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  5
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  5
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -293,7 +293,7 @@ Warning[205]: Found directive in column 1. (ORG)
 0000D2 EC?? F???      00247     call INIT_PORTS
 0000D6 EC?? F???      00248     call INIT_SIO
 0000DA EC?? F???      00249     call INIT_TIMER
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  6
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  6
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -330,939 +330,948 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
 00010E AEAE           00278     btfss RCREG, 7,0 ;Qualsevol byte rebut que tingui aquest bit a 1 es refereix a una resposta del pc
 000110 0012           00279     return ;Si rebem un byte i no esta activat no hauriem dentrar aqui
                       00280     
-000112 0E80           00281     movlw FLAG_DESAR 
-000114 64AE           00282     cpfsgt RCREG,0 
-000116 EF?? F???      00283     goto DESA 
-                      00284         
-00011A 0E81           00285     movlw FLAG_DESAR_NCON 
-00011C 64AE           00286     cpfsgt RCREG,0
-00011E EF?? F???      00287     goto DESA
-                      00288     
-000122 0E82           00289     movlw FLAG_ENVIAR 
-000124 64AE           00290     cpfsgt RCREG,0
-000126 EF?? F???      00291     goto ENVIAR_RF 
-                      00292     
-00012A 0E83           00293     movlw FLAG_ENVIAR_ERROR
-00012C 64AE           00294     cpfsgt RCREG,0
-00012E EF?? F???      00295     goto ENVIAR_RF_ERROR
-                      00296     
-000132 0E84           00297     movlw FLAG_HEART 
-000134 64AE           00298     cpfsgt RCREG,0
-000136 EF?? F???      00299     goto ENCENDRE_HEART
-                      00300     
-00013A 0E85           00301     movlw FLAG_HALF 
-00013C 64AE           00302     cpfsgt RCREG,0
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  7
+000112 8A8B           00281     bsf LATC,5,0
+000114 0E80           00282     movlw FLAG_DESAR 
+000116 64AE           00283     cpfsgt RCREG,0 
+000118 EF?? F???      00284     goto DESA 
+                      00285         
+00011C 0E81           00286     movlw FLAG_DESAR_NCON 
+00011E 64AE           00287     cpfsgt RCREG,0
+000120 EF?? F???      00288     goto DESA
+                      00289     
+000124 0E82           00290     movlw FLAG_ENVIAR 
+000126 64AE           00291     cpfsgt RCREG,0
+000128 EF?? F???      00292     goto ENVIAR_RF 
+                      00293     
+00012C 0E83           00294     movlw FLAG_ENVIAR_ERROR
+00012E 64AE           00295     cpfsgt RCREG,0
+000130 EF?? F???      00296     goto ENVIAR_RF_ERROR
+                      00297     
+000134 0E84           00298     movlw FLAG_HEART 
+000136 64AE           00299     cpfsgt RCREG,0
+000138 EF?? F???      00300     goto ENCENDRE_HEART
+                      00301     
+00013C 0E85           00302     movlw FLAG_HALF 
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  7
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-00013E EF?? F???      00303     goto ENCENDRE_HALF 
-                      00304     
-000142 0E89           00305     movlw UNBLOCK 
-000144 64AE           00306     cpfsgt RCREG,0
-000146 EF?? F???      00307     goto UNBLOCK_THREAD 
-                      00308     
-00014A 0E8A           00309     movlw FLAG_DELETE_INFO 
-00014C 64AE           00310     cpfsgt RCREG,0
-00014E EF?? F???      00311     goto PETICIO_DEL_INFO
-                      00312     
-000152 0E8B           00313     movlw FLAG_DATA 
-000154 64AE           00314     cpfsgt RCREG,0
-000156 EF?? F???      00315     goto USART_DATA 
-                      00316     
-00015A 0E8C           00317     movlw FLAG_SPEED 
-00015C 64AE           00318     cpfsgt RCREG,0
-00015E EF?? F???      00319     goto USART_SPEED
-                      00320     
-000162 0012           00321     return
-                      00322 
+00013E 64AE           00303     cpfsgt RCREG,0
+000140 EF?? F???      00304     goto ENCENDRE_HALF 
+                      00305     
+000144 0E89           00306     movlw UNBLOCK 
+000146 64AE           00307     cpfsgt RCREG,0
+000148 EF?? F???      00308     goto UNBLOCK_THREAD 
+                      00309     
+00014C 0E8A           00310     movlw FLAG_DELETE_INFO 
+00014E 64AE           00311     cpfsgt RCREG,0
+000150 EF?? F???      00312     goto PETICIO_DEL_INFO
+                      00313     
+000154 0E8B           00314     movlw FLAG_DATA 
+000156 64AE           00315     cpfsgt RCREG,0
+000158 EF?? F???      00316     goto USART_DATA 
+                      00317     
+00015C 0E8C           00318     movlw FLAG_SPEED 
+00015E 64AE           00319     cpfsgt RCREG,0
+000160 EF?? F???      00320     goto USART_SPEED
+                      00321     
+000164 0012           00322     return
                       00323 
-000164                00324 UNBLOCK_THREAD
-000164 EC?? F???      00325     call USART_DESAT
-000168 848B           00326     bsf LATC,2,0
-00016A 0012           00327     return
-                      00328     
-                      00329 ;***********************************************************
-                      00330 ;******************** - 7 SEGMENTS - ***********************
-                      00331 ;***********************************************************
-                      00332 
-00016C                00333 INIT_7_SEG
-00016C 0E00           00334     movlw     0x00        ; Load TBLPTR with the base
-00016E 6EF8           00335     movwf     TBLPTRU                 ; address of the word
-000170 0E00           00336     movlw     0x00
-000172 6EF7           00337     movwf     TBLPTRH
-000174 0EC0           00338     movlw     TAULA7S
-000176 6EF6           00339     movwf     TBLPTRL 
-000178 0012           00340     return
-                      00341     
-00017A                00342 INCREMENTA_7_SEG
-00017A 0009           00343     TBLRD*+                          ; read into TABLAT and increment
-00017C CFF5 FF8C      00344     movff      TABLAT, LATD              ; get data
-000180 0012           00345     return
-                      00346     
-000182                00347 UNDERSCORE_7_SEG
-000182 0EEF           00348     movlw 0xEF
-000184 6E8C           00349     movwf LATD,0
-000186 0012           00350     return
-                      00351     
-                      00352 ;***********************************************************
-                      00353 ;*********************** - BLOC RF - ***********************
-                      00354 ;***********************************************************
-                      00355     
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  8
+                      00324 
+000166                00325 UNBLOCK_THREAD
+000166 EC?? F???      00326     call USART_DESAT
+00016A 848B           00327     bsf LATC,2,0
+00016C 0012           00328     return
+                      00329     
+                      00330 ;***********************************************************
+                      00331 ;******************** - 7 SEGMENTS - ***********************
+                      00332 ;***********************************************************
+                      00333 
+00016E                00334 INIT_7_SEG
+00016E 0E00           00335     movlw     0x00        ; Load TBLPTR with the base
+000170 6EF8           00336     movwf     TBLPTRU                 ; address of the word
+000172 0E00           00337     movlw     0x00
+000174 6EF7           00338     movwf     TBLPTRH
+000176 0EC0           00339     movlw     TAULA7S
+000178 6EF6           00340     movwf     TBLPTRL 
+00017A 0012           00341     return
+                      00342     
+00017C                00343 INCREMENTA_7_SEG
+00017C 0009           00344     TBLRD*+                          ; read into TABLAT and increment
+00017E CFF5 FF8C      00345     movff      TABLAT, LATD              ; get data
+000182 0012           00346     return
+                      00347     
+000184                00348 UNDERSCORE_7_SEG
+000184 0EEF           00349     movlw 0xEF
+000186 6E8C           00350     movwf LATD,0
+000188 0012           00351     return
+                      00352     
+                      00353 ;***********************************************************
+                      00354 ;*********************** - BLOC RF - ***********************
+                      00355 ;***********************************************************
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  8
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
                       00356     
-000188                00357 NETEJA_RF
-000188 500F           00358     movf TEMPS_UN_RF,0,0
-00018A 6200           00359     cpfseq TEMPS_UN,0
-00018C EF?? F???      00360     goto SET_PRIMERA_PART ;Primers 5 mseg
-                      00361     
-000190                00362 NETEJA_RF_SEGONA
-000190 5010           00363     movf TEMPS_ZERO_RF,0,0
-000192 6200           00364     cpfseq TEMPS_UN,0
-000194 EF?? F???      00365     goto SET_SEGONA_PART ;Segon 5 mseg
-                      00366     
-000198 EF?? F???      00367     goto ESPERA_CANAL_ZERO
-                      00368     
-00019C                00369 SET_PRIMERA_PART
-00019C 8A8B           00370     bsf LATC, 5, 0
-00019E EF?? F???      00371     goto NETEJA_RF
-                      00372     
-0001A2                00373 SET_SEGONA_PART
-0001A2 9A8B           00374     bcf LATC, 5, 0
-0001A4 EF?? F???      00375     goto NETEJA_RF_SEGONA
-                      00376     
-0001A8                00377 ESPERA_CANAL_ZERO
-0001A8 2A0A           00378     incf RESTANT,1,0
-0001AA 6A00           00379     clrf TEMPS_UN,0
-                      00380     
-0001AC 0E0A           00381     movlw 0x0A
-0001AE 640A           00382     cpfsgt RESTANT,0
-0001B0 EF?? F???      00383     goto NETEJA_RF
-                      00384     
-0001B4 EF?? F???      00385     goto TEMPS_10
-                      00386     
-0001B8                00387 TEMPS_10
-0001B8 0E0A           00388     movlw 0x0A
-0001BA 6000           00389     cpfslt TEMPS_UN,0
-0001BC 0012           00390     return
-0001BE 9A8B           00391     bcf LATC, 5, 0
-0001C0 EF?? F???      00392     goto TEMPS_10
-                      00393     
-0001C4                00394 ENVIAR_RF
-                      00395         
-0001C4 0E00           00396     movlw 0x00
-0001C6 6407           00397     cpfsgt COMPTA_BYTES,0
-0001C8 EF?? F???      00398     goto ENVIAR_RF_ERROR
-0001CC 6A00           00399     clrf TEMPS_UN,0
-0001CE 6A0A           00400     clrf RESTANT,0
-0001D0 9A8B           00401     bcf LATC,5,0
-                      00402     
-0001D2 EC?? F???      00403     call NETEJA_RF
-                      00404     
-0001D6 6A00           00405     clrf TEMPS_UN,0
-0001D8 6AEA           00406     clrf FSR0H, 0
-0001DA 0E80           00407     movlw POSICIO_A_DESAR_RAM
-0001DC 6EE9           00408     movwf FSR0L, 0
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE  9
+                      00357     
+00018A                00358 NETEJA_RF
+00018A 500F           00359     movf TEMPS_UN_RF,0,0
+00018C 6200           00360     cpfseq TEMPS_UN,0
+00018E EF?? F???      00361     goto SET_PRIMERA_PART ;Primers 5 mseg
+                      00362     
+000192                00363 NETEJA_RF_SEGONA
+000192 5010           00364     movf TEMPS_ZERO_RF,0,0
+000194 6200           00365     cpfseq TEMPS_UN,0
+000196 EF?? F???      00366     goto SET_SEGONA_PART ;Segon 5 mseg
+                      00367     
+00019A EF?? F???      00368     goto ESPERA_CANAL_ZERO
+                      00369     
+00019E                00370 SET_PRIMERA_PART
+00019E 8A8B           00371     bsf LATC, 5, 0
+0001A0 EF?? F???      00372     goto NETEJA_RF
+                      00373     
+0001A4                00374 SET_SEGONA_PART
+0001A4 9A8B           00375     bcf LATC, 5, 0
+0001A6 EF?? F???      00376     goto NETEJA_RF_SEGONA
+                      00377     
+0001AA                00378 ESPERA_CANAL_ZERO
+0001AA 2A0A           00379     incf RESTANT,1,0
+0001AC 6A00           00380     clrf TEMPS_UN,0
+                      00381     
+0001AE 0E0A           00382     movlw 0x0A
+0001B0 640A           00383     cpfsgt RESTANT,0
+0001B2 EF?? F???      00384     goto NETEJA_RF
+                      00385     
+0001B6 EF?? F???      00386     goto TEMPS_10
+                      00387     
+0001BA                00388 TEMPS_10
+0001BA 0E0A           00389     movlw 0x0A
+0001BC 6000           00390     cpfslt TEMPS_UN,0
+0001BE 0012           00391     return
+0001C0 9A8B           00392     bcf LATC, 5, 0
+0001C2 EF?? F???      00393     goto TEMPS_10
+                      00394     
+0001C6                00395 ENVIAR_RF
+                      00396         
+0001C6 0E00           00397     movlw 0x00
+0001C8 6407           00398     cpfsgt COMPTA_BYTES,0
+0001CA EF?? F???      00399     goto ENVIAR_RF_ERROR
+0001CE 6A00           00400     clrf TEMPS_UN,0
+0001D0 6A0A           00401     clrf RESTANT,0
+0001D2 9A8B           00402     bcf LATC,5,0
+                      00403     
+0001D4 EC?? F???      00404     call NETEJA_RF
+                      00405     
+0001D8 6A00           00406     clrf TEMPS_UN,0
+0001DA 6AEA           00407     clrf FSR0H, 0
+0001DC 0E80           00408     movlw POSICIO_A_DESAR_RAM
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE  9
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0001DE 6A0B           00409     clrf COPS,0
-0001E0 6A0D           00410     clrf BYTE,0
-0001E2 6A0A           00411     clrf RESTANT,0
-                      00412     
-0001E4 CFEE F00C      00413     movff POSTINC0, AUXILIAR
-                      00414     
-0001E8 EC?? F???      00415     call COMPUTE_DIV_10
+0001DE 6EE9           00409     movwf FSR0L, 0
+0001E0 6A0B           00410     clrf COPS,0
+0001E2 6A0D           00411     clrf BYTE,0
+0001E4 6A0A           00412     clrf RESTANT,0
+                      00413     
+0001E6 0E40           00414     movlw 0x40
+0001E8 6E0C           00415     movwf AUXILIAR,0
                       00416     
-0001EC CF83 F013      00417     movff PORTD, SET_SEG_OLD
-                      00418         
-0001F0 EC?? F???      00419     call INIT_7_SEG
-                      00420     
-0001F4 EC?? F???      00421     call INCREMENTA_7_SEG
+0001EA EC?? F???      00417     call COMPUTE_DIV_10
+                      00418     
+0001EE CF83 F013      00419     movff PORTD, SET_SEG_OLD
+                      00420         
+0001F2 EC?? F???      00421     call INIT_7_SEG
                       00422     
-0001F8                00423 ENVIAR_FOR 
-0001F8 500F           00424     movf TEMPS_UN_RF,0,0
-0001FA 6200           00425     cpfseq TEMPS_UN,0
-0001FC EF?? F???      00426     goto ENVIAR_BIT_PRIMERA_MEITAT
-                      00427 
-000200                00428 ENVIAR_FOR_SEGON
-000200 5010           00429     movf TEMPS_ZERO_RF,0,0
-000202 6200           00430     cpfseq TEMPS_UN,0
-000204 EF?? F???      00431     goto ENVIAR_BIT_SEGONA_MEITAT
-                      00432     
-000208 6A00           00433     clrf TEMPS_UN,0
-00020A EC?? F???      00434     call USART_BIT_ENVIAT
-00020E 2A0A           00435     incf RESTANT,1,0
-000210 2A0D           00436     incf BYTE,1,0
+0001F6 EC?? F???      00423     call INCREMENTA_7_SEG
+                      00424     
+0001FA C00C FFAD      00425     movff AUXILIAR, TXREG
+0001FE EC?? F???      00426     call USART_ESPERA
+                      00427     
+000202                00428 ENVIAR_FOR 
+000202 500F           00429     movf TEMPS_UN_RF,0,0
+000204 6200           00430     cpfseq TEMPS_UN,0
+000206 EF?? F???      00431     goto ENVIAR_BIT_PRIMERA_MEITAT
+                      00432 
+00020A                00433 ENVIAR_FOR_SEGON
+00020A 5010           00434     movf TEMPS_ZERO_RF,0,0
+00020C 6200           00435     cpfseq TEMPS_UN,0
+00020E EF?? F???      00436     goto ENVIAR_BIT_SEGONA_MEITAT
                       00437     
-000212 0E08           00438     movlw 0x08
-000214 640D           00439     cpfsgt BYTE,0
-000216 EF?? F???      00440     goto CONTINUA_FOR
-                      00441     
-00021A 6A0D           00442     clrf BYTE,0
-00021C CFEE F00C      00443     movff POSTINC0, AUXILIAR
-                      00444     
-000220 500E           00445     movf DIV_DEU,0,0
-000222 600A           00446     cpfslt RESTANT,0
-000224 EF?? F???      00447     goto INCREMENTA_FOR
-                      00448     
-000228 EF?? F???      00449     goto ENVIAR_FOR
-                      00450 
-00022C                00451 ENVIA_PARAMETRES
-00022C C00E FFAD      00452     movff DIV_DEU,TXREG
-000230 EC?? F???      00453     call USART_ESPERA
-                      00454     
-000234 C00A FFAD      00455     movff RESTANT,TXREG
-000238 EC?? F???      00456     call USART_ESPERA
-                      00457     
-00023C C00B FFAD      00458     movff COPS,TXREG
-000240 EC?? F???      00459     call USART_ESPERA
-000244 0012           00460     return
-                      00461         
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 10
+000212 6A00           00438     clrf TEMPS_UN,0
+                      00439     ;call USART_BIT_ENVIAT
+000214 2A0A           00440     incf RESTANT,1,0
+000216 2A0D           00441     incf BYTE,1,0
+                      00442     
+000218 0E07           00443     movlw 0x07
+00021A 640D           00444     cpfsgt BYTE,0
+00021C EF?? F???      00445     goto CONTINUA_FOR
+                      00446     
+000220 6A0D           00447     clrf BYTE,0
+000222 CFEE F00C      00448     movff POSTINC0, AUXILIAR
+                      00449     
+000226 C00C FFAD      00450     movff AUXILIAR, TXREG
+00022A EC?? F???      00451     call USART_ESPERA
+                      00452     
+00022E 500E           00453     movf DIV_DEU,0,0
+000230 600A           00454     cpfslt RESTANT,0
+000232 EF?? F???      00455     goto INCREMENTA_FOR
+                      00456     
+000236 EF?? F???      00457     goto ENVIAR_FOR
+                      00458 
+00023A                00459 ENVIA_PARAMETRES
+00023A C00E FFAD      00460     movff DIV_DEU,TXREG
+00023E EC?? F???      00461     call USART_ESPERA
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 10
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000246                00462 CONTINUA_FOR
-000246 420C           00463     rrncf AUXILIAR,1,0
-000248 EF?? F???      00464     goto ENVIAR_FOR 
+                      00462     
+000242 C00A FFAD      00463     movff RESTANT,TXREG
+000246 EC?? F???      00464     call USART_ESPERA
                       00465     
-00024C                00466 INCREMENTA_FOR
-00024C 2A0B           00467     incf COPS,1,0
-00024E 6A0A           00468     clrf RESTANT,0
-                      00469     
-000250 EC?? F???      00470     call INCREMENTA_7_SEG
-                      00471     
-000254 0E0A           00472     movlw 0x0A
-000256 600B           00473     cpfslt COPS,0
-000258 EF?? F???      00474     goto FINAL_ENVIAR_RF
-                      00475     
-00025C EF?? F???      00476     goto ENVIAR_FOR 
+00024A C00B FFAD      00466     movff COPS,TXREG
+00024E EC?? F???      00467     call USART_ESPERA
+000252 0012           00468     return
+                      00469         
+000254                00470 CONTINUA_FOR
+000254 420C           00471     rrncf AUXILIAR,1,0
+000256 EF?? F???      00472     goto ENVIAR_FOR 
+                      00473     
+00025A                00474 INCREMENTA_FOR
+00025A 2A0B           00475     incf COPS,1,0
+00025C 6A0A           00476     clrf RESTANT,0
                       00477     
-000260                00478 FINAL_ENVIAR_RF
-000260 6A04           00479     clrf ESTAT,0
-000262 8204           00480     bsf ESTAT,1,0
-000264 C013 FF8C      00481     movff SET_SEG_OLD, LATD
-000268 0012           00482     return
+00025E EC?? F???      00478     call INCREMENTA_7_SEG
+                      00479     
+000262 0E0A           00480     movlw 0x0A
+000264 600B           00481     cpfslt COPS,0
+000266 EF?? F???      00482     goto FINAL_ENVIAR_RF
                       00483     
-00026A                00484 ENVIAR_BIT_PRIMERA_MEITAT
-00026A B00C           00485     btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la primera part a 0
-00026C 9A8B           00486     bcf LATC, 5, 0
-00026E A00C           00487     btfss AUXILIAR,0,0 ;Si el primer es 0 fiquem la primera part a 1
-000270 8A8B           00488     bsf LATC, 5, 0
-000272 EF?? F???      00489     goto ENVIAR_FOR 
-                      00490     
-000276                00491 ENVIAR_BIT_SEGONA_MEITAT
-000276 B00C           00492     btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la segona part a 1
-000278 8A8B           00493     bsf LATC, 5, 0
-00027A A00C           00494     btfss AUXILIAR,0,0 ;Si el primer es 1 fiquem la segona part a 0
-00027C 9A8B           00495     bcf LATC, 5, 0
-00027E EF?? F???      00496     goto ENVIAR_FOR_SEGON 
-                      00497     
-000282                00498 ENVIAR_RF_ERROR
-                      00499     
-000282 0E7F           00500     movlw 0x7F
-000284 6E8C           00501     movwf LATD,0  
-000286 6A04           00502     clrf ESTAT,0
-000288 8204           00503     bsf ESTAT,1,0
-                      00504     
-00028A EF?? F???      00505     goto USART_ERROR_RF
-                      00506     
+00026A EF?? F???      00484     goto ENVIAR_FOR 
+                      00485     
+00026E                00486 FINAL_ENVIAR_RF
+00026E 6A04           00487     clrf ESTAT,0
+000270 8204           00488     bsf ESTAT,1,0
+000272 C013 FF8C      00489     movff SET_SEG_OLD, LATD
+000276 0012           00490     return
+                      00491     
+000278                00492 ENVIAR_BIT_PRIMERA_MEITAT
+000278 B00C           00493     btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la primera part a 0
+00027A 9A8B           00494     bcf LATC, 5, 0
+00027C A00C           00495     btfss AUXILIAR,0,0 ;Si el primer es 0 fiquem la primera part a 1
+00027E 8A8B           00496     bsf LATC, 5, 0
+000280 EF?? F???      00497     goto ENVIAR_FOR 
+                      00498     
+000284                00499 ENVIAR_BIT_SEGONA_MEITAT
+000284 B00C           00500     btfsc AUXILIAR,0,0 ;Mirem si el primer bit es 0, si ho es fiquem la segona part a 1
+000286 8A8B           00501     bsf LATC, 5, 0
+000288 A00C           00502     btfss AUXILIAR,0,0 ;Si el primer es 1 fiquem la segona part a 0
+00028A 9A8B           00503     bcf LATC, 5, 0
+00028C EF?? F???      00504     goto ENVIAR_FOR_SEGON 
+                      00505     
+000290                00506 ENVIAR_RF_ERROR
                       00507     
-00028E                00508 COMPUTE_DIV_10
-00028E B806           00509     btfsc SIGNAL_TYPE,4,0
-000290 0EF0           00510     movlw 0xF0 ;240 -> (300*8/10)
-                      00511     
-000292 A806           00512     btfss SIGNAL_TYPE,4,0
-000294 0E78           00513     movlw 0x78 ;120 -> (150*8/10)
+000290 0E7F           00508     movlw 0x7F
+000292 6E8C           00509     movwf LATD,0  
+000294 6A04           00510     clrf ESTAT,0
+000296 8204           00511     bsf ESTAT,1,0
+                      00512     
+000298 EF?? F???      00513     goto USART_ERROR_RF
                       00514     
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 11
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 11
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000296 6E0E           00515     movwf DIV_DEU,0
-000298 0012           00516     return
-                      00517     
-                      00518 ;***********************************************************
-                      00519 ;********************* - BLOC USART - **********************
-                      00520 ;***********************************************************
-                      00521 
-00029A                00522 USART_PROGRESS_RESET
-00029A 0E87           00523     movlw FLAG_PROGRESS_RESET
-00029C 6EAD           00524     movwf TXREG,0
-00029E EC?? F???      00525     call USART_ESPERA
-                      00526     
-0002A2 C006 FFAD      00527     movff SIGNAL_TYPE,TXREG
-0002A6 EF?? F???      00528     goto USART_ESPERA
+                      00515     
+00029C                00516 COMPUTE_DIV_10
+00029C B806           00517     btfsc SIGNAL_TYPE,4,0
+00029E 0EF8           00518     movlw 0xF8 ;240 -> (300*8/10)
+                      00519     
+0002A0 A806           00520     btfss SIGNAL_TYPE,4,0
+0002A2 0E80           00521     movlw 0x80 ;120 -> (150*8/10)
+                      00522     
+0002A4 6E0E           00523     movwf DIV_DEU,0
+0002A6 0012           00524     return
+                      00525     
+                      00526 ;***********************************************************
+                      00527 ;********************* - BLOC USART - **********************
+                      00528 ;***********************************************************
                       00529 
-0002AA                00530 USART_SPEED   
-0002AA AA9E           00531     btfss PIR1,RCIF,0
-0002AC EF?? F???      00532     goto USART_SPEED
-                      00533     
-0002B0 CFAE F00F      00534     movff RCREG, TEMPS_UN_RF ;Movem el caracter a la posicio de la ram corresponent
-                      00535     
-0002B4 EC?? F???      00536     call USART_ESPERA_INFO
-                      00537     
-0002B8 CFAE F010      00538     movff RCREG, TEMPS_ZERO_RF ;Movem el caracter a la posicio de la ram corresponent
-                      00539     
-0002BC 0012           00540     return
+0002A8                00530 USART_PROGRESS_RESET
+0002A8 0E87           00531     movlw FLAG_PROGRESS_RESET
+0002AA 6EAD           00532     movwf TXREG,0
+0002AC EC?? F???      00533     call USART_ESPERA
+                      00534     
+0002B0 C006 FFAD      00535     movff SIGNAL_TYPE,TXREG
+0002B4 EF?? F???      00536     goto USART_ESPERA
+                      00537 
+0002B8                00538 USART_SPEED   
+0002B8 AA9E           00539     btfss PIR1,RCIF,0
+0002BA EF?? F???      00540     goto USART_SPEED
                       00541     
-                      00542     
-0002BE                00543 USART_DATA
-0002BE C006 FFAD      00544     movff SIGNAL_TYPE,TXREG
-0002C2 EF?? F???      00545     goto USART_ESPERA
-                      00546     
-0002C6                00547 USART_ENVIAR
-0002C6 0E82           00548     movlw FLAG_ENVIAR
-0002C8 6EAD           00549     movwf TXREG,0
-0002CA EF?? F???      00550     goto USART_ESPERA
-                      00551     
-0002CE                00552 USART_DESAR_NCON
-0002CE 0E81           00553     movlw FLAG_DESAR_NCON
-0002D0 6EAD           00554     movwf TXREG,0
-0002D2 EF?? F???      00555     goto USART_ESPERA
-                      00556     
-0002D6                00557 USART_DESAR
-0002D6 0E80           00558     movlw FLAG_DESAR
-0002D8 6EAD           00559     movwf TXREG,0
-0002DA EF?? F???      00560     goto USART_ESPERA
-                      00561     
-0002DE                00562 USART_DESAT
-0002DE 0E01           00563     movlw FLAG_CONTINUAR
-0002E0 6EAD           00564     movwf TXREG,0
-0002E2 EF?? F???      00565     goto USART_ESPERA
-                      00566 
-0002E6                00567 USART_ESPERA
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 12
+0002BE CFAE F00F      00542     movff RCREG, TEMPS_UN_RF ;Movem el caracter a la posicio de la ram corresponent
+                      00543     
+0002C2 EC?? F???      00544     call USART_ESPERA_INFO
+                      00545     
+0002C6 CFAE F010      00546     movff RCREG, TEMPS_ZERO_RF ;Movem el caracter a la posicio de la ram corresponent
+                      00547     
+0002CA 0012           00548     return
+                      00549     
+                      00550     
+0002CC                00551 USART_DATA
+0002CC C006 FFAD      00552     movff SIGNAL_TYPE,TXREG
+0002D0 EF?? F???      00553     goto USART_ESPERA
+                      00554     
+0002D4                00555 USART_ENVIAR
+0002D4 0E82           00556     movlw FLAG_ENVIAR
+0002D6 6EAD           00557     movwf TXREG,0
+0002D8 EF?? F???      00558     goto USART_ESPERA
+                      00559     
+0002DC                00560 USART_DESAR_NCON
+0002DC 0E81           00561     movlw FLAG_DESAR_NCON
+0002DE 6EAD           00562     movwf TXREG,0
+0002E0 EF?? F???      00563     goto USART_ESPERA
+                      00564     
+0002E4                00565 USART_DESAR
+0002E4 0E80           00566     movlw FLAG_DESAR
+0002E6 6EAD           00567     movwf TXREG,0
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 12
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0002E6 A2AC           00568     btfss TXSTA,TRMT,0
-0002E8 EF?? F???      00569     goto USART_ESPERA
-0002EC 0012           00570     return
-                      00571 
-0002EE                00572 USART_ESPERA_INFO
-0002EE AA9E           00573    btfss PIR1,RCIF,0
-0002F0 EF?? F???      00574     goto USART_ESPERA_INFO
-0002F4 0012           00575    return  
-                      00576    
-0002F6                00577 USART_CONNECTAT
-0002F6 B081           00578    btfsc PORTB,0,0
-0002F8 0012           00579    return
-                      00580    
-0002FA 868A           00581    bsf LATB,3,0
-                      00582    
-0002FC 0E34           00583    movlw 0x34
-0002FE 6409           00584    cpfsgt TEMPS_CONN,0
-000300 0012           00585    return
-                      00586    
-000302 6A09           00587    clrf TEMPS_CONN,0
+0002E8 EF?? F???      00568     goto USART_ESPERA
+                      00569     
+0002EC                00570 USART_DESAT
+0002EC 0E01           00571     movlw FLAG_CONTINUAR
+0002EE 6EAD           00572     movwf TXREG,0
+0002F0 EF?? F???      00573     goto USART_ESPERA
+                      00574 
+0002F4                00575 USART_ESPERA
+0002F4 A2AC           00576     btfss TXSTA,TRMT,0
+0002F6 EF?? F???      00577     goto USART_ESPERA
+0002FA 0012           00578     return
+                      00579 
+0002FC                00580 USART_ESPERA_INFO
+0002FC AA9E           00581    btfss PIR1,RCIF,0
+0002FE EF?? F???      00582     goto USART_ESPERA_INFO
+000302 0012           00583    return  
+                      00584    
+000304                00585 USART_CONNECTAT
+000304 B081           00586    btfsc PORTB,0,0
+000306 0012           00587    return
                       00588    
-000304 0E88           00589    movlw FLAG_CONNECTION
-000306 6EAD           00590    movwf TXREG,0
-000308 EF?? F???      00591    goto USART_ESPERA
-                      00592    
-00030C 0012           00593    return
+000308 868A           00589    bsf LATB,3,0
+                      00590    
+00030A 0E34           00591    movlw 0x34
+00030C 6409           00592    cpfsgt TEMPS_CONN,0
+00030E 0012           00593    return
                       00594    
-00030E                00595 USART_DESCONNECTAT
-00030E 968A           00596    bcf LATB,3,0
-                      00597    
-000310 B208           00598    btfsc CONNECTION,1,0
-000312 0012           00599    return
+000310 6A09           00595    clrf TEMPS_CONN,0
+                      00596    
+000312 0E88           00597    movlw FLAG_CONNECTION
+000314 6EAD           00598    movwf TXREG,0
+000316 EF?? F???      00599    goto USART_ESPERA
                       00600    
-000314 6A09           00601    clrf TEMPS_CONN,0
-000316 6A08           00602    clrf CONNECTION,0
-000318 8208           00603    bsf CONNECTION,1,0
-                      00604    
-00031A 0012           00605    return
-                      00606    
-00031C                00607 USART_BIT_ENVIAT
-00031C 0E86           00608    movlw FLAG_PROGRESS
-00031E 6EAD           00609    movwf TXREG,0
-000320 EF?? F???      00610    goto USART_ESPERA
-                      00611    
-000324                00612 USART_BORRAR_INFO
-000324 0E8A           00613    movlw FLAG_DELETE_INFO
-000326 6EAD           00614    movwf TXREG,0
-000328 EF?? F???      00615    goto USART_ESPERA
-                      00616    
-00032C                00617 USART_ERROR_RF
-00032C 0E83           00618    movlw FLAG_ENVIAR_ERROR
-00032E 6EAD           00619    movwf TXREG,0
-000330 EF?? F???      00620    goto USART_ESPERA
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 13
+00031A 0012           00601    return
+                      00602    
+00031C                00603 USART_DESCONNECTAT
+00031C 968A           00604    bcf LATB,3,0
+                      00605    
+00031E B208           00606    btfsc CONNECTION,1,0
+000320 0012           00607    return
+                      00608    
+000322 6A09           00609    clrf TEMPS_CONN,0
+000324 6A08           00610    clrf CONNECTION,0
+000326 8208           00611    bsf CONNECTION,1,0
+                      00612    
+000328 0012           00613    return
+                      00614    
+00032A                00615 USART_BIT_ENVIAT
+00032A 0E86           00616    movlw FLAG_PROGRESS
+00032C 6EAD           00617    movwf TXREG,0
+00032E EF?? F???      00618    goto USART_ESPERA
+                      00619    
+000332                00620 USART_BORRAR_INFO
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 13
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00621    
-000334                00622 USART_ADCON   
-000334 0E64           00623    movlw 0x64
-000336 6400           00624    cpfsgt TEMPS_UN,0
-000338 0012           00625    return   
-                      00626    
-00033A 6A0C           00627    clrf AUXILIAR,0
-00033C 82C2           00628    bsf ADCON0,1,0
+000332 0E8A           00621    movlw FLAG_DELETE_INFO
+000334 6EAD           00622    movwf TXREG,0
+000336 EF?? F???      00623    goto USART_ESPERA
+                      00624    
+00033A                00625 USART_ERROR_RF
+00033A 0E83           00626    movlw FLAG_ENVIAR_ERROR
+00033C 6EAD           00627    movwf TXREG,0
+00033E EF?? F???      00628    goto USART_ESPERA
                       00629    
-00033E                00630 ADCON_DONE
-00033E B2C2           00631    btfsc ADCON0,1,0
-000340 EF?? F???      00632    goto ADCON_DONE
-                      00633    
-000344 0E8D           00634    movlw FLAG_AD
-000346 6EAD           00635    movwf TXREG,0
-000348 EC?? F???      00636    call USART_ESPERA
+000342                00630 USART_ADCON   
+000342 0E64           00631    movlw 0x64
+000344 6400           00632    cpfsgt TEMPS_UN,0
+000346 0012           00633    return   
+                      00634    
+000348 6A0C           00635    clrf AUXILIAR,0
+00034A 82C2           00636    bsf ADCON0,1,0
                       00637    
-00034C CFC3 F00C      00638    movff ADRESL,AUXILIAR
-000350 CFC4 F00A      00639    movff ADRESH,RESTANT
-                      00640    
-000354 460A           00641    rlncf RESTANT,1,0   
-000356 460A           00642    rlncf RESTANT,1,0
-000358 460A           00643    rlncf RESTANT,1,0
-00035A 460A           00644    rlncf RESTANT,1,0
-00035C 460A           00645    rlncf RESTANT,1,0
-00035E 460A           00646    rlncf RESTANT,1,0
-                      00647    
-000360 420C           00648    rrncf AUXILIAR,1,0
-000362 420C           00649    rrncf AUXILIAR,1,0
-                      00650    
-000364 0E3F           00651    movlw 0x3F
-000366 160C           00652    andwf AUXILIAR,1,0
-                      00653    
-000368 500A           00654    movf RESTANT,0,0
-00036A 260C           00655    addwf AUXILIAR,1,0
-                      00656    
-00036C 0E00           00657    movlw 0x00
-00036E 640C           00658    cpfsgt AUXILIAR,0 
-000370 2A0C           00659    incf AUXILIAR,1,0
-                      00660    
-000372 C00C FFAD      00661    movff AUXILIAR,TXREG
-000376 EC?? F???      00662    call USART_ESPERA
-                      00663    
-00037A 6A00           00664    clrf TEMPS_UN,0
-                      00665    
-00037C 6A0C           00666    clrf AUXILIAR,0
-00037E 6A0A           00667    clrf RESTANT,0
+00034C                00638 ADCON_DONE
+00034C B2C2           00639    btfsc ADCON0,1,0
+00034E EF?? F???      00640    goto ADCON_DONE
+                      00641    
+000352 0E8D           00642    movlw FLAG_AD
+000354 6EAD           00643    movwf TXREG,0
+000356 EC?? F???      00644    call USART_ESPERA
+                      00645    
+00035A CFC3 F00C      00646    movff ADRESL,AUXILIAR
+00035E CFC4 F00A      00647    movff ADRESH,RESTANT
+                      00648    
+000362 460A           00649    rlncf RESTANT,1,0   
+000364 460A           00650    rlncf RESTANT,1,0
+000366 460A           00651    rlncf RESTANT,1,0
+000368 460A           00652    rlncf RESTANT,1,0
+00036A 460A           00653    rlncf RESTANT,1,0
+00036C 460A           00654    rlncf RESTANT,1,0
+                      00655    
+00036E 420C           00656    rrncf AUXILIAR,1,0
+000370 420C           00657    rrncf AUXILIAR,1,0
+                      00658    
+000372 0E3F           00659    movlw 0x3F
+000374 160C           00660    andwf AUXILIAR,1,0
+                      00661    
+000376 500A           00662    movf RESTANT,0,0
+000378 260C           00663    addwf AUXILIAR,1,0
+                      00664    
+00037A 0E00           00665    movlw 0x00
+00037C 640C           00666    cpfsgt AUXILIAR,0 
+00037E 2A0C           00667    incf AUXILIAR,1,0
                       00668    
-000380 0012           00669    return
-                      00670    
-000382                00671 ROTATE
-000382 0012           00672    return
+000380 C00C FFAD      00669    movff AUXILIAR,TXREG
+000384 EC?? F???      00670    call USART_ESPERA
+                      00671    
+000388 6A00           00672    clrf TEMPS_UN,0
                       00673    
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 14
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 14
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-                      00674 ;***********************************************************
-                      00675 ;********************* - BLOC DESAR - **********************
-                      00676 ;***********************************************************
-                      00677     
-000384                00678 REBRE_CONFIG   
-000384 AA9E           00679     btfss PIR1,RCIF,0
-000386 EF?? F???      00680         goto REBRE_CONFIG
-                      00681     
-00038A CFAE F006      00682     movff RCREG, SIGNAL_TYPE ;Movem el caracter a la posicio de la ram corresponent
-                      00683     
-00038E C006 FFAD      00684     movff SIGNAL_TYPE,TXREG
-000392 EC?? F???      00685     call USART_ESPERA
-                      00686     
-000396 0012           00687     return
-                      00688     
-000398                00689 DESA
-                      00690     
-000398 EC?? F???      00691     call USART_DESAR
-                      00692     
-                      00693      ;Quan ens apreten el boto no necessitem enviar al pc la confirmacio
-00039C 6A00           00694     clrf TEMPS_UN,0
-00039E 6AAE           00695     clrf RCREG,0
-0003A0 6A06           00696     clrf SIGNAL_TYPE,0
-                      00697     
-0003A2 EC?? F???      00698     call REBRE_CONFIG
-                      00699     
-0003A6 6A07           00700     clrf COMPTA_BYTES,0
-0003A8 6A04           00701     clrf ESTAT,0
-0003AA 6AEA           00702     clrf FSR0H,0
-                      00703     
-0003AC 0E80           00704     movlw POSICIO_A_DESAR_RAM
-0003AE 6EE9           00705     movwf FSR0L, 0
-0003B0 2A07           00706     incf COMPTA_BYTES,1,0 
+00038A 6A0C           00674    clrf AUXILIAR,0
+00038C 6A0A           00675    clrf RESTANT,0
+                      00676    
+00038E 0012           00677    return
+                      00678    
+000390                00679 ROTATE
+000390 0012           00680    return
+                      00681    
+                      00682 ;***********************************************************
+                      00683 ;********************* - BLOC DESAR - **********************
+                      00684 ;***********************************************************
+                      00685     
+000392                00686 REBRE_CONFIG   
+000392 AA9E           00687     btfss PIR1,RCIF,0
+000394 EF?? F???      00688         goto REBRE_CONFIG
+                      00689     
+000398 CFAE F006      00690     movff RCREG, SIGNAL_TYPE ;Movem el caracter a la posicio de la ram corresponent
+                      00691     
+00039C C006 FFAD      00692     movff SIGNAL_TYPE,TXREG
+0003A0 EC?? F???      00693     call USART_ESPERA
+                      00694     
+0003A4 0012           00695     return
+                      00696     
+0003A6                00697 DESA
+                      00698     
+0003A6 EC?? F???      00699     call USART_DESAR
+                      00700     
+                      00701      ;Quan ens apreten el boto no necessitem enviar al pc la confirmacio
+0003AA 6A00           00702     clrf TEMPS_UN,0
+0003AC 6AAE           00703     clrf RCREG,0
+0003AE 6A06           00704     clrf SIGNAL_TYPE,0
+                      00705     
+0003B0 EC?? F???      00706     call REBRE_CONFIG
                       00707     
-0003B2                00708 DESA_INFO_TRAMA   
-0003B2 AA9E           00709     btfss PIR1,RCIF,0
-0003B4 EF?? F???      00710         goto DESA_INFO_TRAMA ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esper
+0003B4 6A07           00708     clrf COMPTA_BYTES,0
+0003B6 6A04           00709     clrf ESTAT,0
+0003B8 6AEA           00710     clrf FSR0H,0
+                      00711     
+0003BA 0E80           00712     movlw POSICIO_A_DESAR_RAM
+0003BC 6EE9           00713     movwf FSR0L, 0
+0003BE 2A07           00714     incf COMPTA_BYTES,1,0 
+                      00715     
+                      00716     
+0003C0                00717 DESA_INFO_TRAMA   
+0003C0 AA9E           00718     btfss PIR1,RCIF,0
+0003C2 EF?? F???      00719         goto DESA_INFO_TRAMA ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esper
                             em
-                      00711 
-0003B8 0E0B           00712     movlw 0x0B
-0003BA 6007           00713     cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
-0003BC EF?? F???      00714         goto DESA_BUCLE_INFO
-                      00715         
-0003C0 CFAE FFEE      00716     movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent
-                      00717     
-0003C4 C007 FFAD      00718     movff COMPTA_BYTES, TXREG ;Movem el caracter a la posicio de la ram corresponent
-0003C8 EC?? F???      00719     call USART_ESPERA
-                      00720     
-0003CC 2A07           00721     incf COMPTA_BYTES,1,0 ;Incrementem en numero de bytes rebut
-                      00722     
-0003CE EF?? F???      00723     goto DESA_INFO_TRAMA
-                      00724 
-0003D2                00725 DESA_BUCLE_INFO
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 15
+                      00720 
+0003C6 0E0B           00721     movlw 0x0B
+0003C8 6007           00722     cpfslt COMPTA_BYTES,0
+0003CA EF?? F???      00723         goto DESA_BUCLE_INFO
+                      00724         
+0003CE CFAE FFEE      00725     movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 15
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0003D2 6A07           00726     clrf COMPTA_BYTES,0
-0003D4 EF?? F???      00727     goto DESA_CONTINUA_BUCLE
-                      00728 
-0003D8                00729 DESA_BUCLE
-0003D8 AA9E           00730     btfss PIR1,RCIF,0
-0003DA EF?? F???      00731         goto DESA_BUCLE ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esperem
-                      00732 
-0003DE 0E96           00733     movlw 0x96 ; 150
-0003E0 6007           00734     cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
-0003E2 EF?? F???      00735         goto COMPROVA_FINAL
-                      00736 
-0003E6                00737 DESA_CONTINUA_BUCLE
-0003E6 CFAE FFEE      00738     movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent
-                      00739     
-0003EA 2A07           00740     incf COMPTA_BYTES,1,0 ;Incrementem en numero de bytes rebut
-                      00741     
-0003EC C007 FFAD      00742     movff COMPTA_BYTES, TXREG ;Movem el caracter a la posicio de la ram corresponent
-0003F0 EC?? F???      00743     call USART_ESPERA
-                      00744     
-0003F4 EF?? F???      00745     goto DESA_BUCLE ;Esperem una nova dada
-                      00746     
-0003F8                00747 COMPROVA_FINAL
-0003F8 B806           00748     btfsc SIGNAL_TYPE,4,0
-0003FA EF?? F???      00749         goto DESA_CPLX_FINAL
+                      00726     
+0003D2 C007 FFAD      00727     movff COMPTA_BYTES, TXREG ;Movem el caracter a la posicio de la ram corresponent
+0003D6 EC?? F???      00728     call USART_ESPERA
+                      00729     
+0003DA 2A07           00730     incf COMPTA_BYTES,1,0 ;Incrementem en numero de bytes rebut
+                      00731     
+0003DC EF?? F???      00732     goto DESA_INFO_TRAMA
+                      00733 
+0003E0                00734 DESA_BUCLE_INFO
+0003E0 6A07           00735     clrf COMPTA_BYTES,0
+0003E2 EF?? F???      00736     goto DESA_CONTINUA_BUCLE
+                      00737 
+0003E6                00738 DESA_BUCLE
+0003E6 AA9E           00739     btfss PIR1,RCIF,0
+0003E8 EF?? F???      00740         goto DESA_BUCLE ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esperem
+                      00741 
+0003EC 0E96           00742     movlw 0x96 ; 150
+0003EE 6007           00743     cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
+0003F0 EF?? F???      00744         goto COMPROVA_FINAL
+                      00745 
+0003F4                00746 DESA_CONTINUA_BUCLE
+0003F4 CFAE FFEE      00747     movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent
+                      00748     
+0003F8 2A07           00749     incf COMPTA_BYTES,1,0 ;Incrementem en numero de bytes rebut
                       00750     
-0003FE                00751 FINAL_DESAR   
-0003FE 9E06           00752     bcf SIGNAL_TYPE,7,0
-000400 EC?? F???      00753     call UNDERSCORE_7_SEG
-000404 EF?? F???      00754     goto CANVIA_ESTAT_UP
+0003FA C007 FFAD      00751     movff COMPTA_BYTES, TXREG ;Movem el caracter a la posicio de la ram corresponent
+0003FE EC?? F???      00752     call USART_ESPERA
+                      00753     
+000402 EF?? F???      00754     goto DESA_BUCLE ;Esperem una nova dada
                       00755     
-000408                00756 DESA_CPLX_FINAL
-000408 BE06           00757     btfsc SIGNAL_TYPE,7,0
-00040A EF?? F???      00758     goto FINAL_DESAR
+000406                00756 COMPROVA_FINAL
+000406 B806           00757     btfsc SIGNAL_TYPE,4,0
+000408 EF?? F???      00758         goto DESA_CPLX_FINAL
                       00759     
-00040E                00760 DESA_CPLX_LAST_BYTES
-00040E 8E06           00761     bsf SIGNAL_TYPE,7,0
-000410 6A07           00762     clrf COMPTA_BYTES,0
-                      00763     
-000412 EF?? F???      00764     goto DESA_CONTINUA_BUCLE
-                      00765     
-                      00766 ;***********************************************************
-                      00767 ;****************** - BLOC POLSADORS - *********************
-                      00768 ;***********************************************************
-                      00769  
-000416                00770 POLSADOR
-                      00771     
-000416 0E00           00772     movlw 0x00
-000418 6412           00773     cpfsgt ESTAT_P,0
-00041A EF?? F???      00774     goto ESPERA_POLSADOR
-                      00775     
-00041E B012           00776     btfsc ESTAT_P,0,0
-000420 EF?? F???      00777     goto ESPERA_POLSADOR_DOWN   
-                      00778     
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 16
+00040C                00760 FINAL_DESAR   
+00040C 9E06           00761     bcf SIGNAL_TYPE,7,0
+00040E EC?? F???      00762     call UNDERSCORE_7_SEG
+000412 EF?? F???      00763     goto CANVIA_ESTAT_UP
+                      00764     
+000416                00765 DESA_CPLX_FINAL
+000416 BE06           00766     btfsc SIGNAL_TYPE,7,0
+000418 EF?? F???      00767     goto FINAL_DESAR
+                      00768     
+00041C                00769 DESA_CPLX_LAST_BYTES
+00041C 8E06           00770     bsf SIGNAL_TYPE,7,0
+00041E 6A07           00771     clrf COMPTA_BYTES,0
+                      00772     
+000420 EF?? F???      00773     goto DESA_CONTINUA_BUCLE
+                      00774     
+                      00775 ;***********************************************************
+                      00776 ;****************** - BLOC POLSADORS - *********************
+                      00777 ;***********************************************************
+                      00778  
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 16
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000424 B212           00779     btfsc ESTAT_P,1,0
-000426 EF?? F???      00780     goto ESPERA_POLSADOR_DESAR
-                      00781     
-00042A B412           00782     btfsc ESTAT_P,2,0
-00042C EF?? F???      00783     goto ESPERA_POLSADOR_DEL
+000424                00779 POLSADOR
+                      00780     
+000424 0E00           00781     movlw 0x00
+000426 6412           00782     cpfsgt ESTAT_P,0
+000428 EF?? F???      00783     goto ESPERA_POLSADOR
                       00784     
-000430 0012           00785     return
-                      00786     
-000432                00787 ESPERA_POLSADOR
-000432 A481           00788     btfss PORTB,2,0 
-000434 EF?? F???      00789     goto POLS_DESAR_INFO
-000438 0012           00790     return
-                      00791     
-00043A                00792 ESPERA_POLSADOR_DOWN   
+00042C B012           00785     btfsc ESTAT_P,0,0
+00042E EF?? F???      00786     goto ESPERA_POLSADOR_DOWN   
+                      00787     
+000432 B212           00788     btfsc ESTAT_P,1,0
+000434 EF?? F???      00789     goto ESPERA_POLSADOR_DESAR
+                      00790     
+000438 B412           00791     btfsc ESTAT_P,2,0
+00043A EF?? F???      00792     goto ESPERA_POLSADOR_DEL
                       00793     
-00043A 0E64           00794     movlw 0x64
-00043C 6000           00795     cpfslt TEMPS_UN,0
-00043E EC?? F???      00796     call INCREMENTA_ESPERA
-                      00797     
-000442 A481           00798     btfss PORTB,2,0 
-000444 0012           00799     return
+00043E 0012           00794     return
+                      00795     
+000440                00796 ESPERA_POLSADOR
+000440 A481           00797     btfss PORTB,2,0 
+000442 EF?? F???      00798     goto POLS_DESAR_INFO
+000446 0012           00799     return
                       00800     
-000446 0E14           00801     movlw 0x14
-000448 6011           00802     cpfslt TEMPS_UN_POLS,0
-00044A EF?? F???      00803     goto RESET_POLSADOR
-                      00804     
-00044E 6A12           00805     clrf ESTAT_P,0
-000450 8212           00806     bsf ESTAT_P,1,0 
-                      00807         
+000448                00801 ESPERA_POLSADOR_DOWN   
+                      00802     
+000448 0E64           00803     movlw 0x64
+00044A 6000           00804     cpfslt TEMPS_UN,0
+00044C EC?? F???      00805     call INCREMENTA_ESPERA
+                      00806     
+000450 A481           00807     btfss PORTB,2,0 
 000452 0012           00808     return
-                      00809 
-000454                00810 ESPERA_POLSADOR_DESAR
-000454 0E64           00811     movlw 0x64
-000456 6000           00812     cpfslt TEMPS_UN,0
-000458 EC?? F???      00813     call INCREMENTA_ESPERA
-                      00814     
-00045C 0E14           00815     movlw 0x14
-00045E 6011           00816     cpfslt TEMPS_UN_POLS,0
-000460 EF?? F???      00817     goto PETICIO_DESAR_INFO
-                      00818         
-000464 B481           00819     btfsc PORTB,2,0 
-000466 0012           00820     return
-                      00821     
-000468 6A00           00822     clrf TEMPS_UN,0
-00046A EC?? F???      00823     call ESPERA_16MS
-                      00824     
-00046E 6A12           00825     clrf ESTAT_P,0
-000470 8412           00826     bsf ESTAT_P,2,0 
-000472 0012           00827     return
-                      00828     
-000474                00829 ESPERA_POLSADOR_DEL
-000474 0E64           00830     movlw 0x64
-000476 6000           00831     cpfslt TEMPS_UN,0
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 17
+                      00809     
+000454 0E14           00810     movlw 0x14
+000456 6011           00811     cpfslt TEMPS_UN_POLS,0
+000458 EF?? F???      00812     goto RESET_POLSADOR
+                      00813     
+00045C 6A12           00814     clrf ESTAT_P,0
+00045E 8212           00815     bsf ESTAT_P,1,0 
+                      00816         
+000460 0012           00817     return
+                      00818 
+000462                00819 ESPERA_POLSADOR_DESAR
+000462 0E64           00820     movlw 0x64
+000464 6000           00821     cpfslt TEMPS_UN,0
+000466 EC?? F???      00822     call INCREMENTA_ESPERA
+                      00823     
+00046A 0E14           00824     movlw 0x14
+00046C 6011           00825     cpfslt TEMPS_UN_POLS,0
+00046E EF?? F???      00826     goto PETICIO_DESAR_INFO
+                      00827         
+000472 B481           00828     btfsc PORTB,2,0 
+000474 0012           00829     return
+                      00830     
+000476 6A00           00831     clrf TEMPS_UN,0
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 17
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000478 EC?? F???      00832     call INCREMENTA_ESPERA
+000478 EC?? F???      00832     call ESPERA_16MS
                       00833     
-00047C A481           00834     btfss PORTB,2,0 
-00047E 0012           00835     return
-                      00836     
-000480 EC?? F???      00837     call ESPERA_16MS
-                      00838     
-000484 0E14           00839     movlw 0x14
-000486 6011           00840     cpfslt TEMPS_UN_POLS,0
-000488 EF?? F???      00841     goto RESET_POLSADOR
-                      00842         
-00048C EF?? F???      00843     goto PETICIO_DEL_INFO
-                      00844     
+00047C 6A12           00834     clrf ESTAT_P,0
+00047E 8412           00835     bsf ESTAT_P,2,0 
+000480 0012           00836     return
+                      00837     
+000482                00838 ESPERA_POLSADOR_DEL
+000482 0E64           00839     movlw 0x64
+000484 6000           00840     cpfslt TEMPS_UN,0
+000486 EC?? F???      00841     call INCREMENTA_ESPERA
+                      00842     
+00048A A481           00843     btfss PORTB,2,0 
+00048C 0012           00844     return
                       00845     
-000490                00846 PETICIO_DEL_INFO
-000490 6A12           00847     clrf ESTAT_P,0
-000492 6A04           00848     clrf ESTAT,0
-000494 688C           00849     setf LATD,0
-000496 EC?? F???      00850     call DESACTIVA_LEDS
-                      00851     
-00049A 6A06           00852     clrf SIGNAL_TYPE,0
-00049C 6A07           00853     clrf COMPTA_BYTES,0
-00049E EC?? F???      00854     call USART_BORRAR_INFO
-                      00855     
-0004A2 0012           00856     return
-                      00857     
-0004A4                00858 PETICIO_DESAR_INFO
-0004A4 6A12           00859     clrf ESTAT_P,0
-0004A6 EC?? F???      00860     call USART_DESAR_NCON
-0004AA 0012           00861     return
-                      00862     
-                      00863     
-0004AC                00864 INCREMENTA_ESPERA
-0004AC 2A11           00865     incf TEMPS_UN_POLS,1,0
-0004AE 6A00           00866     clrf TEMPS_UN,0
-0004B0 0012           00867     return
-                      00868 
-0004B2                00869 RESET_POLSADOR
-0004B2 6A12           00870     clrf ESTAT_P,0
-0004B4 0012           00871     return
+00048E EC?? F???      00846     call ESPERA_16MS
+                      00847     
+000492 0E14           00848     movlw 0x14
+000494 6011           00849     cpfslt TEMPS_UN_POLS,0
+000496 EF?? F???      00850     goto RESET_POLSADOR
+                      00851         
+00049A EF?? F???      00852     goto PETICIO_DEL_INFO
+                      00853     
+                      00854     
+00049E                00855 PETICIO_DEL_INFO
+00049E 6A12           00856     clrf ESTAT_P,0
+0004A0 6A04           00857     clrf ESTAT,0
+0004A2 688C           00858     setf LATD,0
+0004A4 EC?? F???      00859     call DESACTIVA_LEDS
+                      00860     
+0004A8 6A06           00861     clrf SIGNAL_TYPE,0
+0004AA 6A07           00862     clrf COMPTA_BYTES,0
+0004AC EC?? F???      00863     call USART_BORRAR_INFO
+                      00864     
+0004B0 0012           00865     return
+                      00866     
+0004B2                00867 PETICIO_DESAR_INFO
+0004B2 6A12           00868     clrf ESTAT_P,0
+0004B4 EC?? F???      00869     call USART_DESAR_NCON
+0004B8 0012           00870     return
+                      00871     
                       00872     
-                      00873     
-0004B6                00874 POLS_DESAR_INFO     
-0004B6 EC?? F???      00875     call ESPERA_16MS
-0004BA EC?? F???      00876     call ESPERA_16MS
-                      00877    
-0004BE 8012           00878     bsf ESTAT_P,0,0 
-0004C0 6A11           00879     clrf TEMPS_UN_POLS,0    
-0004C2 6A00           00880     clrf TEMPS_UN,0
+0004BA                00873 INCREMENTA_ESPERA
+0004BA 2A11           00874     incf TEMPS_UN_POLS,1,0
+0004BC 6A00           00875     clrf TEMPS_UN,0
+0004BE 0012           00876     return
+                      00877 
+0004C0                00878 RESET_POLSADOR
+0004C0 6A12           00879     clrf ESTAT_P,0
+0004C2 0012           00880     return
                       00881     
-0004C4 0012           00882     return
-                      00883     
-0004C6                00884 POLS_ENVIAR_INFO
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 18
+                      00882     
+0004C4                00883 POLS_DESAR_INFO     
+0004C4 EC?? F???      00884     call ESPERA_16MS
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 18
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0004C6 948B           00885     bcf LATC,2,0
-0004C8 968B           00886     bcf LATC,3,0
-0004CA 6A00           00887     clrf TEMPS_UN,0
-0004CC EC?? F???      00888     call ESPERA_16MS
-0004D0 EC?? F???      00889     call ESPERA_BAIXAR_ENVIAR
+0004C8 EC?? F???      00885     call ESPERA_16MS
+                      00886    
+0004CC 8012           00887     bsf ESTAT_P,0,0 
+0004CE 6A11           00888     clrf TEMPS_UN_POLS,0    
+0004D0 6A00           00889     clrf TEMPS_UN,0
                       00890     
-0004D4 0E00           00891     movlw 0x00
-0004D6 6406           00892     cpfsgt SIGNAL_TYPE,0
-0004D8 EF?? F???      00893     goto ENVIAR_RF_ERROR
-                      00894     
-0004DC EC?? F???      00895     call USART_PROGRESS_RESET
-0004E0 EC?? F???      00896     call ENVIAR_RF
-                      00897     
-0004E4 0012           00898     return
+0004D2 0012           00891     return
+                      00892     
+0004D4                00893 POLS_ENVIAR_INFO
+0004D4 948B           00894     bcf LATC,2,0
+0004D6 968B           00895     bcf LATC,3,0
+0004D8 6A00           00896     clrf TEMPS_UN,0
+0004DA EC?? F???      00897     call ESPERA_16MS
+0004DE EC?? F???      00898     call ESPERA_BAIXAR_ENVIAR
                       00899     
-                      00900 
-0004E6                00901 ESPERA_BAIXAR_DESAR
-0004E6 A481           00902     btfss PORTB,2,0
-0004E8 EF?? F???      00903     goto ESPERA_BAIXAR_DESAR
-0004EC 0012           00904     return
-                      00905     
-0004EE                00906 ESPERA_BAIXAR_ENVIAR
-0004EE A281           00907     btfss PORTB,1,0
-0004F0 EF?? F???      00908     goto ESPERA_BAIXAR_ENVIAR
-0004F4 0012           00909     return
-                      00910     
-0004F6                00911 ESPERA_16MS
-0004F6 0E0A           00912     movlw 0x0A
-0004F8 6400           00913     cpfsgt TEMPS_UN,0
-0004FA EF?? F???      00914     goto ESPERA_16MS
-0004FE 0012           00915     return
-                      00916     
-                      00917 ;***********************************************************
-                      00918 ;********************* - BLOC LEDS - ***********************
-                      00919 ;***********************************************************
-                      00920     
-000500                00921 ENCENDRE_HEART
-                      00922     ;call USART_DESAT
-000500 EC?? F???      00923     call CANVIA_ESTAT_UP
-                      00924     ;bsf LATC,3,0
-000504 0012           00925     return
-                      00926     
-000506                00927 ENCENDRE_HALF
-000506 6AAE           00928     clrf RCREG,0
-000508 EC?? F???      00929     call USART_DESAT
-00050C 6A04           00930     clrf ESTAT,0
-00050E 8004           00931     bsf ESTAT, 0,0
-000510 6A01           00932     clrf TEMPS_LED,0
-000512 0012           00933     return
-                      00934     
+0004E2 0E00           00900     movlw 0x00
+0004E4 6406           00901     cpfsgt SIGNAL_TYPE,0
+0004E6 EF?? F???      00902     goto ENVIAR_RF_ERROR
+                      00903     
+0004EA EC?? F???      00904     call USART_PROGRESS_RESET
+0004EE EC?? F???      00905     call ENVIAR_RF
+                      00906     
+0004F2 0012           00907     return
+                      00908     
+                      00909 
+0004F4                00910 ESPERA_BAIXAR_DESAR
+0004F4 A481           00911     btfss PORTB,2,0
+0004F6 EF?? F???      00912     goto ESPERA_BAIXAR_DESAR
+0004FA 0012           00913     return
+                      00914     
+0004FC                00915 ESPERA_BAIXAR_ENVIAR
+0004FC A281           00916     btfss PORTB,1,0
+0004FE EF?? F???      00917     goto ESPERA_BAIXAR_ENVIAR
+000502 0012           00918     return
+                      00919     
+000504                00920 ESPERA_16MS
+000504 0E0A           00921     movlw 0x0A
+000506 6400           00922     cpfsgt TEMPS_UN,0
+000508 EF?? F???      00923     goto ESPERA_16MS
+00050C 0012           00924     return
+                      00925     
+                      00926 ;***********************************************************
+                      00927 ;********************* - BLOC LEDS - ***********************
+                      00928 ;***********************************************************
+                      00929     
+00050E                00930 ENCENDRE_HEART
+                      00931     ;call USART_DESAT
+00050E EC?? F???      00932     call CANVIA_ESTAT_UP
+                      00933     ;bsf LATC,3,0
+000512 0012           00934     return
                       00935     
-000514                00936 ACTIVA_LEDS
-000514 848B           00937     bsf LATC,2,0
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 19
+000514                00936 ENCENDRE_HALF
+000514 6AAE           00937     clrf RCREG,0
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 19
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000516 868B           00938     bsf LATC,3,0
-000518 0012           00939     return
-                      00940     
-00051A                00941 DESACTIVA_LEDS
-00051A 948B           00942     bcf LATC,2,0
-00051C 968B           00943     bcf LATC,3,0
-00051E 0012           00944     return
-                      00945     
-000520                00946 MIG_INTENSITAT
-000520 0E0A           00947     movlw 0x0A
-000522 6401           00948     cpfsgt TEMPS_LED,0    
-000524 EF?? F???      00949     goto ACTIVA_LEDS
-                      00950     
-000528 EC?? F???      00951     call DESACTIVA_LEDS
-                      00952     
-00052C 0E14           00953     movlw 0x14
-00052E 6001           00954     cpfslt TEMPS_LED,0
-000530 6A01           00955     clrf TEMPS_LED,0
-                      00956     
-000532 0012           00957     return
-                      00958     
-000534                00959 BLINKING
-                      00960     
-000534 B204           00961     btfsc ESTAT, 1,0
-000536 EF?? F???      00962     goto PUJADA_LED
-                      00963     
-00053A B404           00964     btfsc ESTAT, 2,0
-00053C EF?? F???      00965     goto ESPERA_CENT
-                      00966     
-000540 B604           00967     btfsc ESTAT, 3,0
-000542 EF?? F???      00968     goto ESPERA_VINT
+000516 EC?? F???      00938     call USART_DESAT
+00051A 6A04           00939     clrf ESTAT,0
+00051C 8004           00940     bsf ESTAT, 0,0
+00051E 6A01           00941     clrf TEMPS_LED,0
+000520 0012           00942     return
+                      00943     
+                      00944     
+000522                00945 ACTIVA_LEDS
+000522 848B           00946     bsf LATC,2,0
+000524 868B           00947     bsf LATC,3,0
+000526 0012           00948     return
+                      00949     
+000528                00950 DESACTIVA_LEDS
+000528 948B           00951     bcf LATC,2,0
+00052A 968B           00952     bcf LATC,3,0
+00052C 0012           00953     return
+                      00954     
+00052E                00955 MIG_INTENSITAT
+00052E 0E0A           00956     movlw 0x0A
+000530 6401           00957     cpfsgt TEMPS_LED,0    
+000532 EF?? F???      00958     goto ACTIVA_LEDS
+                      00959     
+000536 EC?? F???      00960     call DESACTIVA_LEDS
+                      00961     
+00053A 0E14           00962     movlw 0x14
+00053C 6001           00963     cpfslt TEMPS_LED,0
+00053E 6A01           00964     clrf TEMPS_LED,0
+                      00965     
+000540 0012           00966     return
+                      00967     
+000542                00968 BLINKING
                       00969     
-000546 B804           00970     btfsc ESTAT, 4,0
-000548 EF?? F???      00971     goto BAIXADA_LED
+000542 B204           00970     btfsc ESTAT, 1,0
+000544 EF?? F???      00971     goto PUJADA_LED
                       00972     
-00054C 0012           00973     return
-                      00974     
+000548 B404           00973     btfsc ESTAT, 2,0
+00054A EF?? F???      00974     goto ESPERA_CENT
                       00975     
-                      00976     
-00054E                00977 CANVIA_ESTAT_DOWN
-00054E 6A01           00978     clrf TEMPS_LED
-000550 6A04           00979     clrf ESTAT,0
-                      00980     
-000552 8804           00981     bsf ESTAT,4,0
-000554 0012           00982     return
-                      00983        
-000556                00984 CANVIA_ESTAT_ESPERA
+00054E B604           00976     btfsc ESTAT, 3,0
+000550 EF?? F???      00977     goto ESPERA_VINT
+                      00978     
+000554 B804           00979     btfsc ESTAT, 4,0
+000556 EF?? F???      00980     goto BAIXADA_LED
+                      00981     
+00055A 0012           00982     return
+                      00983     
+                      00984     
                       00985     
-000556 6A04           00986     clrf ESTAT,0
-000558 B606           00987     btfsc SIGNAL_TYPE,3,0
-00055A EF?? F???      00988     goto CANVI_10_ESPERA
+00055C                00986 CANVIA_ESTAT_DOWN
+00055C 6A01           00987     clrf TEMPS_LED
+00055E 6A04           00988     clrf ESTAT,0
                       00989     
-00055E 8404           00990     bsf ESTAT,2,0
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 20
+000560 8804           00990     bsf ESTAT,4,0
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 20
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-000560 2A03           00991     incf HEART_BEAT,1,0
-                      00992         
-000562                00993 FINAL_CANVI_ESPERA
-000562 6A01           00994     clrf TEMPS_LED
-000564 EF?? F???      00995     goto LEDS_ON
-000568 0012           00996     return
-                      00997     
-00056A                00998 CANVI_10_ESPERA
-00056A 8604           00999     bsf ESTAT,3,0
-00056C 0E14           01000     movlw 0x14
-00056E 6E03           01001     movwf HEART_BEAT,0
-000570 EF?? F???      01002     goto FINAL_CANVI_ESPERA
-                      01003     
-000574                01004 CANVIA_ESTAT_UP
-000574 6A04           01005     clrf ESTAT,0
-000576 6A01           01006     clrf TEMPS_LED,0
-000578 6A03           01007     clrf HEART_BEAT,0
-00057A 7002           01008     btg QUIN_LED,0,0
-00057C 8204           01009     bsf ESTAT,1,0
-00057E 0012           01010     return
-                      01011    
-000580                01012 BAIXADA_LED    
-                      01013     
-000580 5003           01014     movf HEART_BEAT, 0,0
-000582 6401           01015     cpfsgt TEMPS_LED,0
-000584 EF?? F???      01016     goto LEDS_ON
-                      01017     
-000588 B606           01018     btfsc SIGNAL_TYPE,3,0
-00058A EF?? F???      01019     goto BAIXADA_LED_10
-                      01020         
-00058E 5005           01021     movf TEMPS_MAX,0,0
-                      01022 
-000590                01023 CONTINUE_BAIXADA_LED
+000562 0012           00991     return
+                      00992        
+000564                00993 CANVIA_ESTAT_ESPERA
+                      00994     
+000564 6A04           00995     clrf ESTAT,0
+000566 B606           00996     btfsc SIGNAL_TYPE,3,0
+000568 EF?? F???      00997     goto CANVI_10_ESPERA
+                      00998     
+00056C 8404           00999     bsf ESTAT,2,0
+00056E 2A03           01000     incf HEART_BEAT,1,0
+                      01001         
+000570                01002 FINAL_CANVI_ESPERA
+000570 6A01           01003     clrf TEMPS_LED
+000572 EF?? F???      01004     goto LEDS_ON
+000576 0012           01005     return
+                      01006     
+000578                01007 CANVI_10_ESPERA
+000578 8604           01008     bsf ESTAT,3,0
+00057A 0E14           01009     movlw 0x14
+00057C 6E03           01010     movwf HEART_BEAT,0
+00057E EF?? F???      01011     goto FINAL_CANVI_ESPERA
+                      01012     
+000582                01013 CANVIA_ESTAT_UP
+000582 6A04           01014     clrf ESTAT,0
+000584 6A01           01015     clrf TEMPS_LED,0
+000586 6A03           01016     clrf HEART_BEAT,0
+000588 7002           01017     btg QUIN_LED,0,0
+00058A 8204           01018     bsf ESTAT,1,0
+00058C 0012           01019     return
+                      01020    
+00058E                01021 BAIXADA_LED    
+                      01022     
+00058E 5003           01023     movf HEART_BEAT, 0,0
 000590 6401           01024     cpfsgt TEMPS_LED,0
-000592 EF?? F???      01025     goto LEDS_OFF
+000592 EF?? F???      01025     goto LEDS_ON
                       01026     
-000596 6A01           01027     clrf TEMPS_LED,0
-                      01028     
-000598 B606           01029     btfsc SIGNAL_TYPE,3,0
-00059A EF?? F???      01030     goto BAIXADA_10
-                      01031     
-00059E 0603           01032     decf HEART_BEAT,1,0
-                      01033     
-0005A0                01034 BAIXADA_LED_FINAL
-0005A0 B8D8           01035     btfsc STATUS,N,0
-0005A2 EF?? F???      01036     goto CANVIA_ESTAT_UP
-0005A6 0012           01037     return
-                      01038     
-0005A8                01039 BAIXADA_10
-0005A8 0E04           01040     movlw 0x04
-0005AA 5E03           01041     subwf HEART_BEAT,1,0
-0005AC EF?? F???      01042     goto BAIXADA_LED_FINAL
-                      01043 
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 21
+000596 B606           01027     btfsc SIGNAL_TYPE,3,0
+000598 EF?? F???      01028     goto BAIXADA_LED_10
+                      01029         
+00059C 5005           01030     movf TEMPS_MAX,0,0
+                      01031 
+00059E                01032 CONTINUE_BAIXADA_LED
+00059E 6401           01033     cpfsgt TEMPS_LED,0
+0005A0 EF?? F???      01034     goto LEDS_OFF
+                      01035     
+0005A4 6A01           01036     clrf TEMPS_LED,0
+                      01037     
+0005A6 B606           01038     btfsc SIGNAL_TYPE,3,0
+0005A8 EF?? F???      01039     goto BAIXADA_10
+                      01040     
+0005AC 0603           01041     decf HEART_BEAT,1,0
+                      01042     
+0005AE                01043 BAIXADA_LED_FINAL
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 21
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0005B0                01044 BAIXADA_LED_10
-0005B0 0405           01045     decf TEMPS_MAX,0,0
-0005B2 EF?? F???      01046     goto CONTINUE_BAIXADA_LED
+0005AE B8D8           01044     btfsc STATUS,N,0
+0005B0 EF?? F???      01045     goto CANVIA_ESTAT_UP
+0005B4 0012           01046     return
                       01047     
-0005B6                01048 ESPERA_CENT
-0005B6 0E74           01049     movlw 0x74
-0005B8 6001           01050     cpfslt TEMPS_LED,0
-0005BA EF?? F???      01051     goto CANVIA_ESTAT_DOWN
-                      01052     
-0005BE 0012           01053     return
-                      01054     
-0005C0                01055 ESPERA_VINT
-0005C0 0E14           01056     movlw 0x14
-0005C2 6001           01057     cpfslt TEMPS_LED,0
-0005C4 EF?? F???      01058     goto CANVIA_ESTAT_DOWN
-                      01059     
-0005C8 0012           01060     return
+0005B6                01048 BAIXADA_10
+0005B6 0E04           01049     movlw 0x04
+0005B8 5E03           01050     subwf HEART_BEAT,1,0
+0005BA EF?? F???      01051     goto BAIXADA_LED_FINAL
+                      01052 
+0005BE                01053 BAIXADA_LED_10
+0005BE 0405           01054     decf TEMPS_MAX,0,0
+0005C0 EF?? F???      01055     goto CONTINUE_BAIXADA_LED
+                      01056     
+0005C4                01057 ESPERA_CENT
+0005C4 0E74           01058     movlw 0x74
+0005C6 6001           01059     cpfslt TEMPS_LED,0
+0005C8 EF?? F???      01060     goto CANVIA_ESTAT_DOWN
                       01061     
-0005CA                01062 PUJADA_LED
+0005CC 0012           01062     return
                       01063     
-0005CA 5003           01064     movf HEART_BEAT, 0,0
-0005CC 6401           01065     cpfsgt TEMPS_LED,0
-0005CE EF?? F???      01066     goto LEDS_ON
-                      01067         
-0005D2 5005           01068     movf TEMPS_MAX,0,0
-0005D4 6201           01069     cpfseq TEMPS_LED,0
-0005D6 EF?? F???      01070     goto LEDS_OFF
-                      01071     
-0005DA 6A01           01072     clrf TEMPS_LED,0
-                      01073     
-0005DC 0E00           01074     movlw 0x00
-0005DE 6407           01075     cpfsgt COMPTA_BYTES,0
-0005E0 EF?? F???      01076     goto PUJADA_10
-                      01077     
-0005E4 2A03           01078     incf HEART_BEAT,1,0
-                      01079     
-0005E6                01080 PUJADA_LED_FINAL
-0005E6 5005           01081     movf TEMPS_MAX,0,0
-0005E8 6203           01082     cpfseq HEART_BEAT,0
-0005EA 0012           01083     return
-                      01084     
-0005EC EF?? F???      01085     goto CANVIA_ESTAT_ESPERA
+0005CE                01064 ESPERA_VINT
+0005CE 0E14           01065     movlw 0x14
+0005D0 6001           01066     cpfslt TEMPS_LED,0
+0005D2 EF?? F???      01067     goto CANVIA_ESTAT_DOWN
+                      01068     
+0005D6 0012           01069     return
+                      01070     
+0005D8                01071 PUJADA_LED
+                      01072     
+0005D8 5003           01073     movf HEART_BEAT, 0,0
+0005DA 6401           01074     cpfsgt TEMPS_LED,0
+0005DC EF?? F???      01075     goto LEDS_ON
+                      01076         
+0005E0 5005           01077     movf TEMPS_MAX,0,0
+0005E2 6201           01078     cpfseq TEMPS_LED,0
+0005E4 EF?? F???      01079     goto LEDS_OFF
+                      01080     
+0005E8 6A01           01081     clrf TEMPS_LED,0
+                      01082     
+0005EA 0E00           01083     movlw 0x00
+0005EC 6407           01084     cpfsgt COMPTA_BYTES,0
+0005EE EF?? F???      01085     goto PUJADA_10
                       01086     
-0005F0                01087 PUJADA_10
-0005F0 0E05           01088     movlw 0x05
-0005F2 2603           01089     addwf HEART_BEAT,1,0
-0005F4 EF?? F???      01090     goto PUJADA_LED_FINAL
-                      01091     
-                      01092     
-0005F8                01093 LEDS_ON
-0005F8 B002           01094     btfsc QUIN_LED,0,0
-0005FA EF?? F???      01095     goto ACTIVA_LED0
-                      01096     
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 22
+0005F2 2A03           01087     incf HEART_BEAT,1,0
+                      01088     
+0005F4                01089 PUJADA_LED_FINAL
+0005F4 5005           01090     movf TEMPS_MAX,0,0
+0005F6 6203           01091     cpfseq HEART_BEAT,0
+0005F8 0012           01092     return
+                      01093     
+0005FA EF?? F???      01094     goto CANVIA_ESTAT_ESPERA
+                      01095     
+0005FE                01096 PUJADA_10
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 22
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0005FE 848B           01097     bsf LATC,2,0
-000600 0012           01098     return
-                      01099 
-000602                01100 ACTIVA_LED0    
-000602 868B           01101     bsf LATC,3,0
-000604 0012           01102     return
-                      01103     
-000606                01104 DESACTIVA_LED0
-000606 968B           01105     bcf LATC,3,0
-000608 0012           01106     return
-                      01107     
-00060A                01108 LEDS_OFF
-00060A B002           01109     btfsc QUIN_LED,0,0
-00060C EF?? F???      01110     goto DESACTIVA_LED0
-                      01111     
-000610 948B           01112     bcf LATC,2,0
-000612 0012           01113     return
-                      01114    
-                      01115     END
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 23
+0005FE 0E05           01097     movlw 0x05
+000600 2603           01098     addwf HEART_BEAT,1,0
+000602 EF?? F???      01099     goto PUJADA_LED_FINAL
+                      01100     
+                      01101     
+000606                01102 LEDS_ON
+000606 B002           01103     btfsc QUIN_LED,0,0
+000608 EF?? F???      01104     goto ACTIVA_LED0
+                      01105     
+00060C 848B           01106     bsf LATC,2,0
+00060E 0012           01107     return
+                      01108 
+000610                01109 ACTIVA_LED0    
+000610 868B           01110     bsf LATC,3,0
+000612 0012           01111     return
+                      01112     
+000614                01113 DESACTIVA_LED0
+000614 968B           01114     bcf LATC,3,0
+000616 0012           01115     return
+                      01116     
+000618                01117 LEDS_OFF
+000618 B002           01118     btfsc QUIN_LED,0,0
+00061A EF?? F???      01119     goto DESACTIVA_LED0
+                      01120     
+00061E 948B           01121     bcf LATC,2,0
+000620 0012           01122     return
+                      01123    
+                      01124     END
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 23
 
 
 SYMBOL TABLE
@@ -1278,12 +1287,12 @@ ACKSTAT                           00000006
 ACQT0                             00000003
 ACQT1                             00000004
 ACQT2                             00000005
-ACTIVA_LED0                       00000602
-ACTIVA_LEDS                       00000514
+ACTIVA_LED0                       00000610
+ACTIVA_LEDS                       00000522
 ADCON0                            00000FC2
 ADCON1                            00000FC1
 ADCON2                            00000FC0
-ADCON_DONE                        0000033E
+ADCON_DONE                        0000034C
 ADCS0                             00000000
 ADCS1                             00000001
 ADCS2                             00000002
@@ -1316,12 +1325,12 @@ AN7                               00000002
 AN8                               00000002
 AN9                               00000003
 AUXILIAR                          0000000C
-BAIXADA_10                        000005A8
-BAIXADA_LED                       00000580
-BAIXADA_LED_10                    000005B0
-BAIXADA_LED_FINAL                 000005A0
+BAIXADA_10                        000005B6
+BAIXADA_LED                       0000058E
+BAIXADA_LED_10                    000005BE
+BAIXADA_LED_FINAL                 000005AE
 BANKED                            00000001
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 24
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 24
 
 
 SYMBOL TABLE
@@ -1334,7 +1343,7 @@ BCLIF                             00000003
 BCLIP                             00000003
 BF                                00000000
 BGST                              00000005
-BLINKING                          00000534
+BLINKING                          00000542
 BOR                               00000000
 BRG16                             00000003
 BRGH                              00000002
@@ -1351,10 +1360,10 @@ C2N                               00000001
 C2OUT_CMCON                       00000007
 C2OUT_PORTA                       00000005
 C2P                               00000002
-CANVIA_ESTAT_DOWN                 0000054E
-CANVIA_ESTAT_ESPERA               00000556
-CANVIA_ESTAT_UP                   00000574
-CANVI_10_ESPERA                   0000056A
+CANVIA_ESTAT_DOWN                 0000055C
+CANVIA_ESTAT_ESPERA               00000564
+CANVIA_ESTAT_UP                   00000582
+CANVI_10_ESPERA                   00000578
 CCP1                              00000002
 CCP1CON                           00000FBD
 CCP1IE                            00000002
@@ -1380,7 +1389,7 @@ CCP2_PORTB                        00000003
 CCP2_PORTC                        00000001
 CCPR1                             00000FBE
 CCPR1H                            00000FBF
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 25
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 25
 
 
 SYMBOL TABLE
@@ -1408,12 +1417,12 @@ CMCON                             00000FB4
 CMIE                              00000006
 CMIF                              00000006
 CMIP                              00000006
-COMPROVA_FINAL                    000003F8
+COMPROVA_FINAL                    00000406
 COMPTA_BYTES                      00000007
-COMPUTE_DIV_10                    0000028E
+COMPUTE_DIV_10                    0000029C
 CONNECTION                        00000008
-CONTINUA_FOR                      00000246
-CONTINUE_BAIXADA_LED              00000590
+CONTINUA_FOR                      00000254
+CONTINUE_BAIXADA_LED              0000059E
 COPS                              0000000B
 CREN                              00000004
 CS                                00000002
@@ -1439,21 +1448,21 @@ DDRB                              TRISB
 DDRC                              TRISC
 DDRD                              TRISD
 DDRE                              TRISE
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 26
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 26
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-DESA                              00000398
-DESACTIVA_LED0                    00000606
-DESACTIVA_LEDS                    0000051A
-DESA_BUCLE                        000003D8
-DESA_BUCLE_INFO                   000003D2
-DESA_CONTINUA_BUCLE               000003E6
-DESA_CPLX_FINAL                   00000408
-DESA_CPLX_LAST_BYTES              0000040E
-DESA_INFO_TRAMA                   000003B2
+DESA                              000003A6
+DESACTIVA_LED0                    00000614
+DESACTIVA_LEDS                    00000528
+DESA_BUCLE                        000003E6
+DESA_BUCLE_INFO                   000003E0
+DESA_CONTINUA_BUCLE               000003F4
+DESA_CPLX_FINAL                   00000416
+DESA_CPLX_LAST_BYTES              0000041C
+DESA_INFO_TRAMA                   000003C0
 DIV_DEU                           0000000E
 DONE                              00000001
 D_A                               00000005
@@ -1473,38 +1482,38 @@ EEIE                              00000004
 EEIF                              00000004
 EEIP                              00000004
 EEPGD                             00000007
-ENCENDRE_HALF                     00000506
-ENCENDRE_HEART                    00000500
-ENVIAR_BIT_PRIMERA_MEITAT         0000026A
-ENVIAR_BIT_SEGONA_MEITAT          00000276
-ENVIAR_FOR                        000001F8
-ENVIAR_FOR_SEGON                  00000200
-ENVIAR_RF                         000001C4
-ENVIAR_RF_ERROR                   00000282
-ENVIA_PARAMETRES                  0000022C
-ESPERA_16MS                       000004F6
-ESPERA_BAIXAR_DESAR               000004E6
-ESPERA_BAIXAR_ENVIAR              000004EE
-ESPERA_CANAL_ZERO                 000001A8
-ESPERA_CENT                       000005B6
-ESPERA_POLSADOR                   00000432
-ESPERA_POLSADOR_DEL               00000474
-ESPERA_POLSADOR_DESAR             00000454
-ESPERA_POLSADOR_DOWN              0000043A
-ESPERA_VINT                       000005C0
+ENCENDRE_HALF                     00000514
+ENCENDRE_HEART                    0000050E
+ENVIAR_BIT_PRIMERA_MEITAT         00000278
+ENVIAR_BIT_SEGONA_MEITAT          00000284
+ENVIAR_FOR                        00000202
+ENVIAR_FOR_SEGON                  0000020A
+ENVIAR_RF                         000001C6
+ENVIAR_RF_ERROR                   00000290
+ENVIA_PARAMETRES                  0000023A
+ESPERA_16MS                       00000504
+ESPERA_BAIXAR_DESAR               000004F4
+ESPERA_BAIXAR_ENVIAR              000004FC
+ESPERA_CANAL_ZERO                 000001AA
+ESPERA_CENT                       000005C4
+ESPERA_POLSADOR                   00000440
+ESPERA_POLSADOR_DEL               00000482
+ESPERA_POLSADOR_DESAR             00000462
+ESPERA_POLSADOR_DOWN              00000448
+ESPERA_VINT                       000005CE
 ESTAT                             00000004
 ESTAT_P                           00000012
 FAST                              00000001
 FERR                              00000002
-FINAL_CANVI_ESPERA                00000562
-FINAL_DESAR                       000003FE
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 27
+FINAL_CANVI_ESPERA                00000570
+FINAL_DESAR                       0000040C
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 27
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-FINAL_ENVIAR_RF                   00000260
+FINAL_ENVIAR_RF                   0000026E
 FLAG_AD                           0000008D
 FLAG_CONNECTION                   00000088
 FLAG_CONTINUAR                    00000001
@@ -1555,19 +1564,19 @@ HLVDL3                            00000003
 IBF                               00000007
 IBOV                              00000005
 IDLEN                             00000007
-INCREMENTA_7_SEG                  0000017A
-INCREMENTA_ESPERA                 000004AC
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 28
+INCREMENTA_7_SEG                  0000017C
+INCREMENTA_ESPERA                 000004BA
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 28
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
-INCREMENTA_FOR                    0000024C
+INCREMENTA_FOR                    0000025A
 INDF0                             00000FEF
 INDF1                             00000FE7
 INDF2                             00000FDF
-INIT_7_SEG                        0000016C
+INIT_7_SEG                        0000016E
 INIT_ADCON                        00000026
 INIT_PORTS                        0000006E
 INIT_SIO                          0000005C
@@ -1616,7 +1625,7 @@ LATA0                             00000000
 LATA1                             00000001
 LATA2                             00000002
 LATA3                             00000003
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 29
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 29
 
 
 SYMBOL TABLE
@@ -1657,8 +1666,8 @@ LATE                              00000F8D
 LATE0                             00000000
 LATE1                             00000001
 LATE2                             00000002
-LEDS_OFF                          0000060A
-LEDS_ON                           000005F8
+LEDS_OFF                          00000618
+LEDS_ON                           00000606
 LOOP                              000000DE
 LOW_INT_VECTOR                    00000018
 LVDCON                            00000FD2
@@ -1675,17 +1684,17 @@ LVV1                              00000001
 LVV2                              00000002
 LVV3                              00000003
 MAIN                              000000CA
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 30
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 30
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
 MCLR                              00000003
-MIG_INTENSITAT                    00000520
+MIG_INTENSITAT                    0000052E
 N                                 00000004
-NETEJA_RF                         00000188
-NETEJA_RF_SEGONA                  00000190
+NETEJA_RF                         0000018A
+NETEJA_RF_SEGONA                  00000192
 NOT_A                             00000005
 NOT_ADDRESS                       00000005
 NOT_BOR                           00000000
@@ -1734,7 +1743,7 @@ PD                                00000002
 PDC0                              00000000
 PDC1                              00000001
 PDC2                              00000002
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 31
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 31
 
 
 SYMBOL TABLE
@@ -1747,8 +1756,8 @@ PDC6                              00000006
 PEIE                              00000006
 PEIE_GIEL                         00000006
 PEN                               00000002
-PETICIO_DEL_INFO                  00000490
-PETICIO_DESAR_INFO                000004A4
+PETICIO_DEL_INFO                  0000049E
+PETICIO_DESAR_INFO                000004B2
 PGC                               00000006
 PGD                               00000007
 PGM                               00000005
@@ -1760,9 +1769,9 @@ PLLEN                             00000006
 PLUSW0                            00000FEB
 PLUSW1                            00000FE3
 PLUSW2                            00000FDB
-POLSADOR                          00000416
-POLS_DESAR_INFO                   000004B6
-POLS_ENVIAR_INFO                  000004C6
+POLSADOR                          00000424
+POLS_DESAR_INFO                   000004C4
+POLS_ENVIAR_INFO                  000004D4
 POR                               00000001
 PORTA                             00000F80
 PORTB                             00000F81
@@ -1793,7 +1802,7 @@ PSP4                              00000004
 PSP5                              00000005
 PSP6                              00000006
 PSP7                              00000007
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 32
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 32
 
 
 SYMBOL TABLE
@@ -1807,9 +1816,9 @@ PSSAC0                            00000002
 PSSAC1                            00000003
 PSSBD0                            00000000
 PSSBD1                            00000001
-PUJADA_10                         000005F0
-PUJADA_LED                        000005CA
-PUJADA_LED_FINAL                  000005E6
+PUJADA_10                         000005FE
+PUJADA_LED                        000005D8
+PUJADA_LED_FINAL                  000005F4
 PWM1CON                           00000FB7
 QUIN_LED                          00000002
 R                                 00000002
@@ -1852,7 +1861,7 @@ RCREG                             00000FAE
 RCSTA                             00000FAB
 RD                                00000000
 RD0                               00000000
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 33
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 33
 
 
 SYMBOL TABLE
@@ -1870,14 +1879,14 @@ RE0                               00000000
 RE1                               00000001
 RE2                               00000002
 RE3                               00000003
-REBRE_CONFIG                      00000384
+REBRE_CONFIG                      00000392
 REBUT                             0000010E
-RESET_POLSADOR                    000004B2
+RESET_POLSADOR                    000004C0
 RESET_TIMER                       000000A4
 RESET_VECTOR                      00000000
 RESTANT                           0000000A
 RI                                00000004
-ROTATE                            00000382
+ROTATE                            00000390
 RSEN                              00000001
 RX                                00000007
 RX9                               00000006
@@ -1897,8 +1906,8 @@ SDI                               00000004
 SDO                               00000005
 SEN                               00000000
 SENDB                             00000003
-SET_PRIMERA_PART                  0000019C
-SET_SEGONA_PART                   000001A2
+SET_PRIMERA_PART                  0000019E
+SET_SEGONA_PART                   000001A4
 SET_SEG_OLD                       00000013
 SIGNAL_TYPE                       00000006
 SMP                               00000007
@@ -1911,7 +1920,7 @@ SPBRG                             00000FAF
 SPBRGH                            00000FB0
 SPEN                              00000007
 SREN                              00000005
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 34
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 34
 
 
 SYMBOL TABLE
@@ -1970,7 +1979,7 @@ T2OUTPS3                          00000006
 T3CCP1                            00000003
 T3CCP2                            00000006
 T3CKPS0                           00000004
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 35
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 35
 
 
 SYMBOL TABLE
@@ -1985,7 +1994,7 @@ TBLPTR                            00000FF6
 TBLPTRH                           00000FF7
 TBLPTRL                           00000FF6
 TBLPTRU                           00000FF8
-TEMPS_10                          000001B8
+TEMPS_10                          000001BA
 TEMPS_CONN                        00000009
 TEMPS_LED                         00000001
 TEMPS_MAX                         00000005
@@ -2029,7 +2038,7 @@ TOSU                              00000FFF
 TOUTPS0                           00000003
 TOUTPS1                           00000004
 TOUTPS2                           00000005
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 36
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 36
 
 
 SYMBOL TABLE
@@ -2088,7 +2097,7 @@ TX9D                              00000000
 TXCKP                             00000004
 TXEN                              00000005
 TXIE                              00000004
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 37
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 37
 
 
 SYMBOL TABLE
@@ -2100,23 +2109,23 @@ TXREG                             00000FAD
 TXSTA                             00000FAC
 UA                                00000001
 UNBLOCK                           00000089
-UNBLOCK_THREAD                    00000164
-UNDERSCORE_7_SEG                  00000182
-USART_ADCON                       00000334
-USART_BIT_ENVIAT                  0000031C
-USART_BORRAR_INFO                 00000324
-USART_CONNECTAT                   000002F6
-USART_DATA                        000002BE
-USART_DESAR                       000002D6
-USART_DESAR_NCON                  000002CE
-USART_DESAT                       000002DE
-USART_DESCONNECTAT                0000030E
-USART_ENVIAR                      000002C6
-USART_ERROR_RF                    0000032C
-USART_ESPERA                      000002E6
-USART_ESPERA_INFO                 000002EE
-USART_PROGRESS_RESET              0000029A
-USART_SPEED                       000002AA
+UNBLOCK_THREAD                    00000166
+UNDERSCORE_7_SEG                  00000184
+USART_ADCON                       00000342
+USART_BIT_ENVIAT                  0000032A
+USART_BORRAR_INFO                 00000332
+USART_CONNECTAT                   00000304
+USART_DATA                        000002CC
+USART_DESAR                       000002E4
+USART_DESAR_NCON                  000002DC
+USART_DESAT                       000002EC
+USART_DESCONNECTAT                0000031C
+USART_ENVIAR                      000002D4
+USART_ERROR_RF                    0000033A
+USART_ESPERA                      000002F4
+USART_ESPERA_INFO                 000002FC
+USART_PROGRESS_RESET              000002A8
+USART_SPEED                       000002B8
 VCFG0                             00000004
 VCFG1                             00000005
 VDIRMAG                           00000007
@@ -2147,7 +2156,7 @@ _CCP2MX_RB3_3H                    000000FE
 _CCP2MX_RC1_3H                    000000FF
 _CONFIG1H                         00300001
 _CONFIG2H                         00300003
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 38
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 38
 
 
 SYMBOL TABLE
@@ -2206,7 +2215,7 @@ _OSC_INTIO1_1H                    000000F9
 _OSC_INTIO2_1H                    000000F8
 _OSC_LP_1H                        000000F0
 _OSC_RCIO_1H                      000000F7
-MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-23-2018  10:03:24         PAGE 39
+MPASM 5.77  /HOME/GABRIEL/MPLABXPROJECTS/TGI   5-25-2018  8:36:49         PAGE 39
 
 
 SYMBOL TABLE

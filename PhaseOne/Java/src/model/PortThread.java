@@ -21,15 +21,13 @@ public class PortThread implements Runnable {
 
     public void run() {
         byte recieved;
-        int i = 0;
+        int i = 0,count = 0;
 
         while (!Thread.currentThread().isInterrupted()) {
 
             try {
 
                 recieved = sp.readByte();
-
-                System.out.println("Recieved coinfim: " + recieved);
 
                 if (recieved != 0) {
 
@@ -88,7 +86,6 @@ public class PortThread implements Runnable {
                     controller.getConnectionThread().setStart_time(System.nanoTime());
 
                 }
-
 
             } catch (Exception e) {
                 e.printStackTrace();

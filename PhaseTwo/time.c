@@ -74,7 +74,7 @@ void TiInit () {
 	}
 	h_Tics=0;
 	// Suposo que anem a 8MHz
-	T1CONbits.TCKPS1 = 0;
+	T2CONbits.TCKPS1 = 0;
 	T1CONbits.TCKPS0 = 1; // Preescaler a 1/8, pols de 2us
 	// La resta de valors de T1CON per defecte
 	PR1 = 200;	// 500 * 2us = 1ms , no anem a 8 si nó a 32

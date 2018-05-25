@@ -3,6 +3,9 @@
 #include <xc.h>
 
 
+
+#define WRITE_ENABLE            LATAbits.LATA4=0
+#define WRITE_DISABLE         LATAbits.LATA4=1
 //
 //--------------------------------CONSTANTS---AREA-----------
 
@@ -17,7 +20,7 @@
 
 static unsigned char frequency[5];
 
-static unsigned int timerFunction, periode, length;
+static unsigned int timerFunction, periode, length, lecture;
 static unsigned char estatFunction,vpp, offset, signal;
 static unsigned char missatge[MAX_SIGNAL];
 static char vmin[2], vmax[2], vavg[2];
@@ -87,6 +90,12 @@ void initTFunction(){
     frequency[3] = '0';
     frequency[4] = 0;
     
+    TRISBbits.TRISB10 = TRISBbits.TRISB11 = TRISBbits.TRISB12 = 0;
+    TRISBbits.TRISB13 = TRISBbits.TRISB14 = TRISBbits.TRISB15 = 0;
+    TRISAbits.TRISA2 = TRISAbits.TRISA3 = TRISAbits.TRISA4 = 0;
+    
+    AD1PCFGbits.PCFG0 = AD1PCFGbits.PCFG1 = AD1PCFGbits.PCFG9 = 1; //No vull entrada analògica (AN11)!!
+    AD1PCFGbits.PCFG10 = AD1PCFGbits.PCFG11 = AD1PCFGbits.PCFG12 = 1; //No vull entrada analògica (AN12)!!
     
     initSignals();
     
@@ -94,22 +103,56 @@ void initTFunction(){
     
 }
 
+void setFunctionPeriod(char period){
+    
+    periode = period * 10;
+    
+}
+
+void changeValue(){
+    
+    
+    WRITE_ENABLE;
+    LATBbits.LATB10 = ( missatge[lecture] & 0x1  );
+    LATBbits.LATB11 = ( missatge[lecture] & 0x2  );
+    LATBbits.LATB12 = ( missatge[lecture] & 0x4  );
+    LATBbits.LATB13 = ( missatge[lecture] & 0x8  );
+    LATBbits.LATB14 = ( missatge[lecture] & 0x01 );
+    LATBbits.LATB15 = ( missatge[lecture] & 0x20 );
+    LATAbits.LATA2  = ( missatge[lecture] & 0x40 );
+    LATAbits.LATA3  = ( missatge[lecture] & 0x80 );
+    WRITE_DISABLE;    
+    
+}
+
 void MotorFunction(){
     switch(estatFunction){
-        case 0:
-            if (TiGetTics(timerFunction)>=periode){
-                TiResetTics(timerFunction);
-                estatFunction = 1;
-            }
+        case 0:   
             break;
-        case 1:
-            if (TiGetTics(timerFunction)>=periode){
-                TiResetTics(timerFunction);
-                estatFunction = 0;
-            }
+            
+        case 1:   
+            
+            lecture = 0;
+            TiResetTics(timerFunction);
             break;
+            
         case 2:
-            //Callo
+            
+            if (TiGetTics(timerFunction)>=periode){
+                
+                estatFunction = 3;
+                lecture++;
+                if(lecture == length)lecture = 0;
+                
+            }
+            
+            break;
+        case 3:
+            
+            changeValue();
+            TiResetTics(timerFunction);
+            estatFunction = 2;
+            
             break;
     }
 }
@@ -123,8 +166,12 @@ void set_function_values(char fvpp, char foffset, char fvmin, char fvmax, char f
     vavg[0] = fvavg;
     signal = fsignal;
     
+    periode = ffrequency * 10;
     
-    convertFrecuency(ffrequency * 10);
+    
+    convertFrecuency(periode);
+    
+    periode = ((ffrequency * 10) * 4 / 2550);
     frequency[4] += '0';
     frequency[3] += '0';
     frequency[2] += '0';

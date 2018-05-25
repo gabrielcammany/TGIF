@@ -1,8 +1,6 @@
 #include "SwTSwitch.h"
 
-void SwInit(){
-    TRISBbits.TRISB13 = 1;
-    TRISBbits.TRISB12 = 1;
+void SwInit(){    
     AD1PCFGbits.PCFG11 = 1; //No vull entrada analògica (AN11)!!
     AD1PCFGbits.PCFG12 = 1; //No vull entrada analògica (AN12)!!
     CNPU1bits.CN13PUE = 1;

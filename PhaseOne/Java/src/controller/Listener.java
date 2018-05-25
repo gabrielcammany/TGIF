@@ -67,7 +67,6 @@ public class Listener extends MouseAdapter implements ActionListener {
             return;
 
         }
-        System.out.print(this.period + " ");
 
         if (portThread != null) {
 
@@ -347,8 +346,11 @@ public class Listener extends MouseAdapter implements ActionListener {
                         sp.writeByte(Flags.ncomplex_sin);
                         break;
                 }
+
             }else{
+
                 sp.writeByte(Flags.ncomplex_default);
+
             }
 
         }

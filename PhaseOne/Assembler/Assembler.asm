@@ -278,6 +278,7 @@ REBUT
     btfss RCREG, 7,0 ;Qualsevol byte rebut que tingui aquest bit a 1 es refereix a una resposta del pc
     return ;Si rebem un byte i no esta activat no hauriem dentrar aqui
     
+    bsf LATC,5,0
     movlw FLAG_DESAR 
     cpfsgt RCREG,0 
     goto DESA 
@@ -411,7 +412,7 @@ ENVIAR_RF
     clrf RESTANT,0
     
     movlw 0x40
-    movlw AUXILIAR
+    movwf AUXILIAR,0
     
     call COMPUTE_DIV_10
     
@@ -420,6 +421,9 @@ ENVIAR_RF
     call INIT_7_SEG
     
     call INCREMENTA_7_SEG
+    
+    movff AUXILIAR, TXREG
+    call USART_ESPERA
     
 ENVIAR_FOR 
     movf TEMPS_UN_RF,0,0
@@ -432,16 +436,19 @@ ENVIAR_FOR_SEGON
     goto ENVIAR_BIT_SEGONA_MEITAT
     
     clrf TEMPS_UN,0
-    call USART_BIT_ENVIAT
+    ;call USART_BIT_ENVIAT
     incf RESTANT,1,0
     incf BYTE,1,0
     
-    movlw 0x08
+    movlw 0x07
     cpfsgt BYTE,0
     goto CONTINUA_FOR
     
     clrf BYTE,0
     movff POSTINC0, AUXILIAR
+    
+    movff AUXILIAR, TXREG
+    call USART_ESPERA
     
     movf DIV_DEU,0,0
     cpfslt RESTANT,0
@@ -508,10 +515,10 @@ ENVIAR_RF_ERROR
     
 COMPUTE_DIV_10
     btfsc SIGNAL_TYPE,4,0
-    movlw 0xF0 ;240 -> (300*8/10)
+    movlw 0xF8 ;240 -> (300*8/10)
     
     btfss SIGNAL_TYPE,4,0
-    movlw 0x78 ;120 -> (150*8/10)
+    movlw 0x80 ;120 -> (150*8/10)
     
     movwf DIV_DEU,0
     return
@@ -706,12 +713,13 @@ DESA
     movwf FSR0L, 0
     incf COMPTA_BYTES,1,0 
     
+    
 DESA_INFO_TRAMA   
     btfss PIR1,RCIF,0
 	goto DESA_INFO_TRAMA ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esperem
 
     movlw 0x0B
-    cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
+    cpfslt COMPTA_BYTES,0
 	goto DESA_BUCLE_INFO
 	
     movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent
