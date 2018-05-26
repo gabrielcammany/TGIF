@@ -569,10 +569,10 @@ void swapLinia(){
 
 inline void prepareHeader(){
     
-    headerString[header][13] = getFrequency(3);
-    headerString[header][12] = getFrequency(2);
-    headerString[header][11] = getFrequency(1);
-    headerString[header][10] = getFrequency(0);
+    headerString[header][13] = getFrequency(0);
+    headerString[header][12] = getFrequency(1);
+    headerString[header][11] = getFrequency(2);
+    headerString[header][10] = getFrequency(3);
     
 }
 
@@ -588,7 +588,7 @@ void MotorLCD(void){
                     
             if(getFunctionLength() > 0){
 
-                    header = (getTypeSignal() > 4 ? getTypeSignal() - 12 : getTypeSignal() - 1);
+                    header = getTypeSignal();
                     prepareHeader();
 
             }
@@ -603,6 +603,7 @@ void MotorLCD(void){
                 LcPutChar(cadena[2][j++]);
                 
             }else{
+                
                 if(getFunctionLength() > 0){ 
 
                     LcPutChar(headerString[header][j++]);
@@ -612,6 +613,7 @@ void MotorLCD(void){
                     LcPutChar(primeraLinia[j++]);
 
                 }
+                
             }
             
             if (j==16) j= 0;

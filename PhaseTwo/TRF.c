@@ -14,7 +14,7 @@
 #define IN                      PORTBbits.RB13
 #define MAX_ID_RF               3
 
-static unsigned char estatRF,input, timerRF, sincronized, pos, missatge[MAX_SIGNAL];
+static unsigned char estatRF,input, timerRF, sincronized, pos, signal;
 static unsigned char inValue,id_trama[MAX_ID_RF];
 
 static int caracter, pulses;
@@ -55,21 +55,15 @@ void addBit(char input, char rotation){
     }
 }
 
-
-
-void fiTramaPropia(){
-        
-    set_function_values(missatge[4] + '0',missatge[5] + '0',missatge[6] + '0',
-            missatge[7] + '0',missatge[8] + '0', missatge[3],missatge[2]);
-    
-}
-
 inline void exitStateInstructions(){
     //Post: Reseteja les variables inValue i pos. Afegeix el
     //bit i fa el resettics
     
     inValue = pos = 0;
+    
     addBit(input,1);
+    pos++;  
+    
     TiResetTics(timerRF);
     
 }
@@ -78,7 +72,7 @@ char comprovaID(){
   //Post: Retorna 1 en cas de que el id de la trama sigui el mateix que 
   //el ID que ha introduit l'usuari, 0 altrament.   
 
-  return (getIDPos(2) == id_trama[0] && getIDPos(1) == id_trama[1] && getIDPos(0) == id_trama[2]);
+  return (getIDPos(2) == id_trama[2] && getIDPos(1) == id_trama[1] && getIDPos(0) == id_trama[0]);
     
 }
 
@@ -100,7 +94,7 @@ void MotorRF () {
 
             if(IN == 0){
 
-                if(TiGetTics(timerRF) > 48){
+                if(TiGetTics(timerRF) > 40){
 
                     estatRF = 2;
                     TiResetTics(timerRF);
@@ -120,21 +114,31 @@ void MotorRF () {
                 if((TiGetTics(timerRF)) < 60){
                     
                     pulses++;
-                    estatRF = 0;
+                    TiResetTics(timerRF);
+                    estatRF = 1;
 
                 }else{
 
-                    if(pulses < 7 && TiGetTics(timerRF) < 150){
-                          
+                    if(pulses > 6){
+                       
+                        if(TiGetTics(timerRF) < 145){
+
+                            pulses = 0;
+                            estatRF = 0;
+
+                        }else{
+
+                            sincronized = inValue = pos = pulses = caracter = signal = 0;
+                            TiResetTics(timerRF);
+                            estatRF = 3;
+
+                        } 
+                        
+                    }else{
+                        
                         pulses = 0;
                         estatRF = 0;
-
-                    }else if(TiGetTics(timerRF) > 140){
                         
-                        inValue = pos = pulses = caracter = 0;
-                        TiResetTics(timerRF);
-                        estatRF = 3;
-
                     }
                 }
             }
@@ -142,13 +146,13 @@ void MotorRF () {
             break;
         case 3:
 
-            if(TiGetTics(timerRF) > 10 && TiGetTics(timerRF) < 25){
+            if(TiGetTics(timerRF) > 10 && TiGetTics(timerRF) < 20){
 
                 input = IN;
 
             }
 
-            if(IN == !input && TiGetTics(timerRF) > 27){
+            if(IN == !input && TiGetTics(timerRF) > 20){
                       
                 TiResetTics(timerRF);
                 estatRF = 4;
@@ -168,8 +172,6 @@ void MotorRF () {
                     if(pos == 8)addBit(input,0);
                     else addBit(input,1);
                     
-                    SiSendChar(!input);
-                    
                     TiResetTics(timerRF);
 
                 }else{
@@ -180,24 +182,31 @@ void MotorRF () {
 
                     }else{
                         
+                        if(sincronized == 0)sincronized = 10;
                         estatRF = 6;
 
                     }
 
                 }
             }
-
             break;
         case 5:
 
             //TODO
-            if(caracter > 159){
+                SiSendChar(signal);
+                SiSendChar(caracter);
+            if(caracter > 159  && signal < 4){
 
                 sincronized = 0;
                 estatRF = 8;
 
-            }else{
+            }else if(caracter > 309){
 
+                sincronized = 0;
+                estatRF = 8;
+                
+            }else{
+                
                 *((getSignal(0))+ caracter) = inValue;
                 caracter++;
                 estatRF = 3;
@@ -209,12 +218,11 @@ void MotorRF () {
             break;
         case 6:
             
-            if(inValue == 64){
+            if(sincronized == 10 && inValue == 64){
                 
                 sincronized = 2;
                 estatRF = 3;
                 caracter = 0;
-                
                 exitStateInstructions();
                 
             }else{
@@ -229,7 +237,6 @@ void MotorRF () {
                         exitStateInstructions();
 
                     }else{
-
 
                         if(sincronized != 4){
 
@@ -256,10 +263,17 @@ void MotorRF () {
         case 7:
             
             if(comprovaID()){
-
+                    
+                char aux = 0;
+                
                 sincronized = 1;
                 estatRF = 3;
+                
                 *((getSignal(0))+ caracter) = inValue;
+                
+                signal = ((aux = (inValue > 8 ? inValue - 12 : inValue - 1)) == 7 ? 0 : aux);
+                
+                SiSendChar(signal + '0');
                 caracter++;
 
             }else{
@@ -274,20 +288,34 @@ void MotorRF () {
             break;
         case 8:
             
-            fiTramaPropia();
-            
-            sincronized = 0;
-            estatRF = 9;
-            
+            updateFunctionValues();
+            setFunctionSignal(signal);
             setFunctionLength(caracter - EXTRA_SPACES);
-            setAudioPeriode(calcula_periode(id_trama[0]));
-            changeAudioStatus();
-            
-            TiResetTics(timerRF);
+            estatRF = 9;
             
             break;
             
-        case 9:
+        case 9: 
+            
+            newSignal(signal);
+            updateFrecuency();
+            estatRF = 10;
+            
+            break;
+            
+        case 10:
+            
+            sincronized = 0;
+            estatRF = 11;
+            
+            setAudioPeriode(calcula_periode(id_trama[0]));
+            changeAudioStatus();
+            showFunction();
+            
+            TiResetTics(timerRF);
+            break;
+            
+        case 11:
                         
             if (TiGetTics(timerRF) > 10000){
                 

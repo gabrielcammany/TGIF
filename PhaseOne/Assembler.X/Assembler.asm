@@ -68,7 +68,7 @@ FLAG_SPEED EQU 0x8C
 FLAG_AD EQU 0x8D
 
 ;*********************************
-; VECTORS DE RESET I INTERRUPCIï¿½ *
+; VECTORS DE RESET I INTERRUPCI� *
 ;*********************************
     
     ORG 0x000000
@@ -84,7 +84,7 @@ LOW_INT_VECTOR
     retfie FAST
 
 ;***********************************
-;* RUTINES DE SERVEI D'INTERRUPCIï¿½ *
+;* RUTINES DE SERVEI D'INTERRUPCI� *
 ;***********************************
 
 HIGH_INT
@@ -125,10 +125,10 @@ INIT_VARS
     clrf ESTAT_P,0
     setf SET_SEG_OLD,0
     
-    movlw 0x05
+    movlw 0x04
     movwf TEMPS_UN_RF,0
     
-    movlw 0x0A
+    movlw 0x09
     movwf TEMPS_ZERO_RF,0
     
     movlw 0x14
@@ -278,7 +278,6 @@ REBUT
     btfss RCREG, 7,0 ;Qualsevol byte rebut que tingui aquest bit a 1 es refereix a una resposta del pc
     return ;Si rebem un byte i no esta activat no hauriem dentrar aqui
     
-    bsf LATC,5,0
     movlw FLAG_DESAR 
     cpfsgt RCREG,0 
     goto DESA 
@@ -357,12 +356,12 @@ UNDERSCORE_7_SEG
     
 NETEJA_RF
     movf TEMPS_UN_RF,0,0
-    cpfseq TEMPS_UN,0
+    cpfsgt TEMPS_UN,0
     goto SET_PRIMERA_PART ;Primers 5 mseg
     
 NETEJA_RF_SEGONA
     movf TEMPS_ZERO_RF,0,0
-    cpfseq TEMPS_UN,0
+    cpfsgt TEMPS_UN,0
     goto SET_SEGONA_PART ;Segon 5 mseg
     
     goto ESPERA_CANAL_ZERO
@@ -379,7 +378,7 @@ ESPERA_CANAL_ZERO
     incf RESTANT,1,0
     clrf TEMPS_UN,0
     
-    movlw 0x0A
+    movlw 0x09
     cpfsgt RESTANT,0
     goto NETEJA_RF
     
@@ -403,16 +402,18 @@ ENVIAR_RF
     
     call NETEJA_RF
     
+    
     clrf TEMPS_UN,0
     clrf FSR0H, 0
     movlw POSICIO_A_DESAR_RAM
     movwf FSR0L, 0
+    
     clrf COPS,0
     clrf BYTE,0
     clrf RESTANT,0
     
     movlw 0x40
-    movwf AUXILIAR,0
+    movwf AUXILIAR
     
     call COMPUTE_DIV_10
     
@@ -422,21 +423,19 @@ ENVIAR_RF
     
     call INCREMENTA_7_SEG
     
-    movff AUXILIAR, TXREG
-    call USART_ESPERA
-    
 ENVIAR_FOR 
     movf TEMPS_UN_RF,0,0
-    cpfseq TEMPS_UN,0
+    cpfsgt TEMPS_UN,0
     goto ENVIAR_BIT_PRIMERA_MEITAT
 
 ENVIAR_FOR_SEGON
     movf TEMPS_ZERO_RF,0,0
-    cpfseq TEMPS_UN,0
+    cpfsgt TEMPS_UN,0
     goto ENVIAR_BIT_SEGONA_MEITAT
     
     clrf TEMPS_UN,0
-    ;call USART_BIT_ENVIAT
+    call USART_BIT_ENVIAT
+    
     incf RESTANT,1,0
     incf BYTE,1,0
     
@@ -446,9 +445,6 @@ ENVIAR_FOR_SEGON
     
     clrf BYTE,0
     movff POSTINC0, AUXILIAR
-    
-    movff AUXILIAR, TXREG
-    call USART_ESPERA
     
     movf DIV_DEU,0,0
     cpfslt RESTANT,0
@@ -514,14 +510,19 @@ ENVIAR_RF_ERROR
     
     
 COMPUTE_DIV_10
-    btfsc SIGNAL_TYPE,4,0
-    movlw 0xF8 ;240 -> (300*8/10)
+    movlw 0x10
+    cpfslt SIGNAL_TYPE,0
+    goto CUSTOM_ALEATORI
     
-    btfss SIGNAL_TYPE,4,0
     movlw 0x80 ;120 -> (150*8/10)
-    
     movwf DIV_DEU,0
     return
+    
+CUSTOM_ALEATORI
+    movlw 0xF8 ;240 -> (300*8/10)
+    movwf DIV_DEU,0
+    return
+    
     
 ;***********************************************************
 ;********************* - BLOC USART - **********************
@@ -713,13 +714,12 @@ DESA
     movwf FSR0L, 0
     incf COMPTA_BYTES,1,0 
     
-    
 DESA_INFO_TRAMA   
     btfss PIR1,RCIF,0
 	goto DESA_INFO_TRAMA ;Mentres no valgui 1 el bit RCIF que ens indica que hi ha un byte ens esperem
 
     movlw 0x0B
-    cpfslt COMPTA_BYTES,0
+    cpfslt COMPTA_BYTES, 0 ;Si rebem el byte de final del ordinador sortim, no el desem
 	goto DESA_BUCLE_INFO
 	
     movff RCREG, POSTINC0 ;Movem el caracter a la posicio de la ram corresponent

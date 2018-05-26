@@ -37,8 +37,6 @@ char* getVMax();
 
 char* getVAvg();
 
-void set_function_values(char vpp, char offset, char vmin, char vmax, char vavg, char frequency, char signal);
-
 unsigned char* getSignal(unsigned char offset);
 //Pre: 0<= offset <= MAX_SIGNAL
 //Post: Retorna el missatge que hi ha actualment amb el offset especificat
@@ -64,4 +62,12 @@ void setVAvg(char);
 Senyal* getSignals();
 
 void newSignal(char type);
+
+char getFunctionSignal();
+
+void updateFrecuency();
+
+void updateFunctionValues();
+
+void showFunction();
 #endif

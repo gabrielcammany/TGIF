@@ -4,8 +4,8 @@
 
 
 
-#define WRITE_ENABLE            LATAbits.LATA4=0
-#define WRITE_DISABLE         LATAbits.LATA4=1
+#define WRITE_ENABLE            LATAbits.LATA3=0
+#define WRITE_DISABLE         LATAbits.LATA3=1
 //
 //--------------------------------CONSTANTS---AREA-----------
 
@@ -58,14 +58,18 @@ void initSignals(){
 }
 void convertFrecuency(int num){
     //Post: escriu el valor ascii de num a tmp;
-    frequency[4] = (char)(num/1000);
-    num = num - (frequency[4]*1000);
-    frequency[3] = (char)(num /100);
-    num = num - (frequency[3]*100);
-    frequency[2] = (char) (num /10);
-    num = num - (frequency[2]*10);
-    frequency[1] = num;
-    frequency[0] = 0;
+    frequency[4] = 0;
+    frequency[3] = (num > 999 ? (char)(num/1000) : 0);
+    
+    num = num - (frequency[3] ? (frequency[3]*1000) : 0);
+    
+    frequency[2] = (num > 99 ? (char)(num/100): 0);
+    
+    num = num - (frequency[2] ? (frequency[2]*100) : 0);
+    frequency[1] = (char) (num /10);
+    
+    num = num - (frequency[1]*10);
+    frequency[0] = num;
 
 }
 
@@ -90,9 +94,20 @@ void initTFunction(){
     frequency[3] = '0';
     frequency[4] = 0;
     
-    TRISBbits.TRISB10 = TRISBbits.TRISB11 = TRISBbits.TRISB12 = 0;
-    TRISBbits.TRISB13 = TRISBbits.TRISB14 = TRISBbits.TRISB15 = 0;
-    TRISAbits.TRISA2 = TRISAbits.TRISA3 = TRISAbits.TRISA4 = 0;
+    /*0 - B14
+    1 - RB6
+    2 - RB12
+    3 - RB11
+    4 - RA4
+    5 - RB7
+    6 - RA2
+    7 - RB10
+    WR - RA3*/
+
+    
+    TRISBbits.TRISB6 = TRISBbits.TRISB11 = TRISBbits.TRISB12 = TRISBbits.TRISB14 = 0;
+    TRISBbits.TRISB10 = TRISAbits.TRISA3 = TRISBbits.TRISB7 = 0;
+    TRISAbits.TRISA2 = TRISAbits.TRISA4 = 0;
     
     AD1PCFGbits.PCFG0 = AD1PCFGbits.PCFG1 = AD1PCFGbits.PCFG9 = 1; //No vull entrada analògica (AN11)!!
     AD1PCFGbits.PCFG10 = AD1PCFGbits.PCFG11 = AD1PCFGbits.PCFG12 = 1; //No vull entrada analògica (AN12)!!
@@ -113,15 +128,27 @@ void changeValue(){
     
     
     WRITE_ENABLE;
-    LATBbits.LATB10 = ( missatge[lecture] & 0x1  );
-    LATBbits.LATB11 = ( missatge[lecture] & 0x2  );
+    LATBbits.LATB14 = ( missatge[lecture] & 0x1  );
+    LATBbits.LATB6 = ( missatge[lecture] & 0x2  );
     LATBbits.LATB12 = ( missatge[lecture] & 0x4  );
-    LATBbits.LATB13 = ( missatge[lecture] & 0x8  );
-    LATBbits.LATB14 = ( missatge[lecture] & 0x01 );
-    LATBbits.LATB15 = ( missatge[lecture] & 0x20 );
+    LATBbits.LATB11 = ( missatge[lecture] & 0x8  );
+    LATAbits.LATA4 = ( missatge[lecture] & 0x01 );
+    LATBbits.LATB7 = ( missatge[lecture] & 0x20 );
     LATAbits.LATA2  = ( missatge[lecture] & 0x40 );
-    LATAbits.LATA3  = ( missatge[lecture] & 0x80 );
+    LATBbits.LATB10  = ( missatge[lecture] & 0x80 );
     WRITE_DISABLE;    
+    
+}
+
+void showFunction(){
+    
+    estatFunction = 1;
+    
+}
+
+void stopFunction(){
+    
+   estatFunction = 0;
     
 }
 
@@ -134,6 +161,7 @@ void MotorFunction(){
             
             lecture = 0;
             TiResetTics(timerFunction);
+            estatFunction = 2;
             break;
             
         case 2:
@@ -157,27 +185,30 @@ void MotorFunction(){
     }
 }
 
-void set_function_values(char fvpp, char foffset, char fvmin, char fvmax, char fvavg, char ffrequency, char fsignal){
-    
-    vpp = fvpp;
-    offset = foffset;
-    vmin[0] = fvmin;
-    vmax[0] = fvmax;
-    vavg[0] = fvavg;
-    signal = fsignal;
-    
-    periode = ffrequency * 10;
-    
-    
+void updateFunctionValues(){
+        
+    vpp = *(missatge+5) + '0';
+    offset = *(missatge+6) + '0';
+    *vmin = *(missatge+7) + '0';
+    *vmax = *(missatge+8) + '0';
+    *vavg = *(missatge+9) + '0';
+        
+    periode = (*(missatge+4)) * 10;
     convertFrecuency(periode);
     
-    periode = ((ffrequency * 10) * 4 / 2550);
-    frequency[4] += '0';
     frequency[3] += '0';
     frequency[2] += '0';
     frequency[1] += '0';
+    frequency[0] += '0';
     
 }
+
+void updateFrecuency(){
+    
+    periode = (periode * 4 / 2550);
+    
+}
+
 //
 //---------------------------End--PUBLIQUES---AREA-----------
 //
@@ -251,12 +282,15 @@ void setFunctionSignal(char value){
     signal = value;
 }
 
+char getFunctionSignal(){
+    return signal;
+}
+
 Senyal* getSignals(){
     return senyals;
 }
 
 void newSignal(char type){
-    Senyal *auxiliar = (senyals + (type > 4 ? type - 12 : type - 1));
-    
+    Senyal *auxiliar = (senyals + type);
     auxiliar->show_times = actualitzaTemps(auxiliar->times, auxiliar->show_times, MAX_TIMES - 1);
 }

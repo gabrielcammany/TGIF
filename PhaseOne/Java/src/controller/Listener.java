@@ -68,6 +68,11 @@ public class Listener extends MouseAdapter implements ActionListener {
 
         }
 
+        try {
+            sp.writeByte(Flags.GROUP_ID_H);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
         if (portThread != null) {
 
             if (!view.isConnected()) {
@@ -314,6 +319,7 @@ public class Listener extends MouseAdapter implements ActionListener {
             switch (op.getType()){
 
                 case "Aleatori":
+
                     sp.writeByte(Flags.complex_random);
                     break;
                 case "Custom":
@@ -384,7 +390,7 @@ public class Listener extends MouseAdapter implements ActionListener {
             //System.out.println("Recieved coinfim: " + recieved);
 
             writeFunction();
-            //System.out.println("Recieved complex: " + String.valueOf(recieved));
+            //System.out.println("Recieved complex: " + String.valueOf(recieved));ch
 
             //Part de id RF
             sp.writeByte(Flags.GROUP_ID_H);

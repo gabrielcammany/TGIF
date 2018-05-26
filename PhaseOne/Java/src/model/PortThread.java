@@ -29,7 +29,13 @@ public class PortThread implements Runnable {
 
                 recieved = sp.readByte();
 
+
+                    System.out.print((recieved & 0xFF) + "\n");
+
+
                 if (recieved != 0) {
+
+
 
                     if (recieved == Flags.flag_desar_ncon) {
 
@@ -54,8 +60,6 @@ public class PortThread implements Runnable {
                         controller.changeProgressBar();
 
                     } else if (recieved == Flags.flag_connection) {
-
-                        //System.out.println("Recieving!");
 
                     } else if (recieved == Flags.flag_progress_reset) {
 
@@ -82,7 +86,6 @@ public class PortThread implements Runnable {
                         controller.setPeriod(recieved);
 
                     }
-
                     controller.getConnectionThread().setStart_time(System.nanoTime());
 
                 }
