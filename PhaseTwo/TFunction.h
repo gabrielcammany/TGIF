@@ -70,4 +70,8 @@ void updateFrecuency();
 void updateFunctionValues();
 
 void showFunction();
+
+char inUse();
+
+void MotorFunction();
 #endif

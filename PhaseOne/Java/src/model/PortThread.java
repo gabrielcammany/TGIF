@@ -30,11 +30,7 @@ public class PortThread implements Runnable {
                 recieved = sp.readByte();
 
 
-                    System.out.print((recieved & 0xFF) + "\n");
-
-
                 if (recieved != 0) {
-
 
 
                     if (recieved == Flags.flag_desar_ncon) {
@@ -44,8 +40,6 @@ public class PortThread implements Runnable {
                         controller.enviar(false);
 
                         controller.resetTimer();
-
-                        controller.getConnectionThread().setStart_time(System.nanoTime());
 
                     } else if (recieved == Flags.flag_half) {
 
@@ -57,10 +51,16 @@ public class PortThread implements Runnable {
 
                     } else if (recieved == Flags.flag_progress) {
 
+                        count++;
+                        System.out.println(count);
                         controller.changeProgressBar();
+                        controller.getConnectionThread().setStart_time(System.nanoTime());
+                        continue;
 
                     } else if (recieved == Flags.flag_connection) {
 
+                        controller.getConnectionThread().setStart_time(System.nanoTime());
+                        continue;
                     } else if (recieved == Flags.flag_progress_reset) {
 
                         while ((recieved = sp.readByte()) == 0);
@@ -84,9 +84,14 @@ public class PortThread implements Runnable {
 
                         while ((recieved = sp.readByte()) == 0) ;
                         controller.setPeriod(recieved);
+                        controller.getConnectionThread().setStart_time(System.nanoTime());
+                        continue;
 
                     }
                     controller.getConnectionThread().setStart_time(System.nanoTime());
+
+
+                    System.out.print((recieved & 0xFF) + "\n");
 
                 }
 

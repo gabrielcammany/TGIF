@@ -46,6 +46,7 @@
 //
 
 #include <xc.h>
+#include "TFunction.h"
 
 
 #define SetD4_D7Sortida()		(TRISBbits.TRISB6 = TRISBbits.TRISB7 = TRISBbits.TRISB8 = TRISBbits.TRISB9 = 0)

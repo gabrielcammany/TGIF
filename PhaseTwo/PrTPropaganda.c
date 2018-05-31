@@ -10,7 +10,7 @@ static unsigned char audioStatus, estatPropaganda, reset_time = 4,
         signal_index, signal_list, opcio, identificador, bit_time;
 static char rtime[6],
         id[MAX_ID],
-        btime[MAX_BIT_TIME];
+        btime[MAX_BIT_TIME], periods[MAX_PERIODS];
 
 
 void initCadena(char *cadena, unsigned char size, char value){
@@ -134,6 +134,28 @@ inline void function_values(void){
         SiPutsCooperatiu("-\r\n\n\0");
     }
     
+}
+
+void convertValue(int num){
+    //Post: escriu el valor ascii de num a tmp;
+    periods[5] = 0;
+    
+    periods[4] = (num > 9999 ? (char)(num/10000) : 0);
+    
+    num = num - (periods[4] ? (periods[4]*10000) : 0);
+    
+    periods[3] = (num > 999 ? (char)(num/1000) : 0);
+    
+    num = num - (periods[3] ? (periods[3]*1000) : 0);
+    
+    periods[2] = (num > 99 ? (char)(num/100): 0);
+    
+    num = num - (periods[2] ? (periods[2]*100) : 0);
+    periods[1] = (char) (num /10);
+    
+    num = num - (periods[1]*10);
+    periods[0] = num;
+
 }
 
 inline void Menu(void){
@@ -668,6 +690,10 @@ void MotorLCD(void){
 
                     estatLCD = 4;
 
+                }else{
+                    
+                    estatLCD = 3;
+                    
                 }
                 
             }
@@ -685,7 +711,7 @@ void MotorLCD(void){
                 swap = 2;
                 initCadena(segonaLinia,MAXCOLUMNES,' ');
                 
-            }else if(quina && swap == 2 && !identificador){
+            }else if(quina && swap == 2){
                 
                 *(primeraLinia + MAXCOLUMNES - 1) = id[2];
                 *(primeraLinia + MAXCOLUMNES - 2) = id[1];

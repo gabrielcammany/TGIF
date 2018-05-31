@@ -173,7 +173,11 @@ void LcPutChar(char c) {
 // En els LCDs d'una fila, quan la columna arriba a 39, torna
 // a zero. No s'incrementa mai la fila
 	// D'entrada escric el char
-	WaitForBusy(); CantaData(c);
+	WaitForBusy(); 
+    if(inUse()){
+        return;
+    }
+    CantaData(c);
 	// i ara recalculo la posici€ del cursor
 	++ColumnaAct;
 	if (Files == 3) {

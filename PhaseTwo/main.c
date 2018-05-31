@@ -97,7 +97,7 @@ int main(void){
         MotorPropaganda();
         MotorSIO();
         MotorRF();
-        //MotorFunction();
+        MotorFunction();
   
     }
 }

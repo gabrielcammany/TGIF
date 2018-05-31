@@ -117,7 +117,7 @@ public class FunctionDisplayPanel extends JPanel {
         int i = 0;
 
         for(int value:mostres)
-            mostres_scaled[i++]=(byte)floor(256 * value / (300+ 1));
+            mostres_scaled[i++]=(byte)floor(255 * value / (300));
 
         return mostres_scaled;
     }
@@ -127,7 +127,7 @@ public class FunctionDisplayPanel extends JPanel {
         int i = 0;
 
         for(int value: Arrays.copyOf(mostres,150))
-            mostres_scaled[i++]=(byte)floor(256 * value / (300+ 1));
+            mostres_scaled[i++]=(byte)floor(255 * value / (300));
 
         return mostres_scaled;
     }

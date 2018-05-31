@@ -18,6 +18,8 @@ public class Flags {
     public static final byte flag_delete_info = (byte) (Integer.parseInt("8A", 16));
     public static final byte flag_data = (byte) (Integer.parseInt("8B", 16));
     public static final byte flag_speed = (byte) (Integer.parseInt("8C", 16));
+
+
     public static final byte flag_ad = (byte) (Integer.parseInt("8D", 16));
 
     public static final byte confirm = (byte) (Integer.parseInt("01", 16));

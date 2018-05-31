@@ -14,7 +14,7 @@
 #define IN                      PORTBbits.RB13
 #define MAX_ID_RF               3
 
-static unsigned char estatRF,input, timerRF, sincronized, pos, signal;
+static unsigned char estatRF,input, timerRF, timerRF2, sincronized, pos, signal;
 static unsigned char inValue,id_trama[MAX_ID_RF];
 
 static int caracter, pulses;
@@ -71,8 +71,8 @@ inline void exitStateInstructions(){
 char comprovaID(){
   //Post: Retorna 1 en cas de que el id de la trama sigui el mateix que 
   //el ID que ha introduit l'usuari, 0 altrament.   
-
-  return (getIDPos(2) == id_trama[2] && getIDPos(1) == id_trama[1] && getIDPos(0) == id_trama[0]);
+                
+  return ((getIDPos(2) == id_trama[2]) && getIDPos(1) == id_trama[1] && getIDPos(0) == id_trama[0]);
     
 }
 
@@ -162,7 +162,7 @@ void MotorRF () {
             break;
         case 4:
 
-            if(TiGetTics(timerRF) > 40){ 
+            if(TiGetTics(timerRF) > 49){ 
 
                 if(pos < 8){
 
@@ -193,8 +193,6 @@ void MotorRF () {
         case 5:
 
             //TODO
-                SiSendChar(signal);
-                SiSendChar(caracter);
             if(caracter > 159  && signal < 4){
 
                 sincronized = 0;
@@ -224,6 +222,7 @@ void MotorRF () {
                 estatRF = 3;
                 caracter = 0;
                 exitStateInstructions();
+                TiResetTics(timerRF2);
                 
             }else{
                 
@@ -273,7 +272,6 @@ void MotorRF () {
                 
                 signal = ((aux = (inValue > 8 ? inValue - 12 : inValue - 1)) == 7 ? 0 : aux);
                 
-                SiSendChar(signal + '0');
                 caracter++;
 
             }else{
